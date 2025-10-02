@@ -40,12 +40,12 @@ async function cargarClientes() {
   `).join("");
 }
 
-// Editar
+// Editar cliente
 function editarCliente(id) {
   window.location.href = `admin-editar.html?id=${id}`;
 }
 
-// Eliminar
+// Eliminar cliente
 async function eliminarCliente(id) {
   if (confirm('¿Estás seguro de que quieres eliminar este cliente?')) {
     const { error } = await supabase

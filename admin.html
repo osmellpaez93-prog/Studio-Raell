@@ -19,14 +19,15 @@
     </div>
   </section>
 
+  <!-- Protección: solo acceso si se usó el código maestro -->
   <script>
-    // 🔒 Protección: solo acceso si se usó el código maestro
     if (localStorage.getItem('admin') !== 'true') {
       alert('Acceso denegado. Usa el código maestro en la página de login.');
       window.location.href = 'login.html';
     }
   </script>
 
+  <!-- Carga del script de administrador -->
   <script type="module" src="./assets/js/admin.js"></script>
 </body>
 </html>
