@@ -1,7 +1,7 @@
 // assets/js/main.js
 import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
 
-// Configuraci贸n de Supabase
+// ?? CORREGIDO: URLs sin espacios al final
 const supabase = createClient(
   'https://vgrpcnknpeihzljhnfjp.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
@@ -10,24 +10,25 @@ const supabase = createClient(
 // Datos del carrusel
 const servicios = [
   {
-    img: 'https://via.placeholder.com/120/6a5acd/white?text=馃幑',
-    title: 'Transformaci贸n',
-    desc: 'Llevamos tus ideas y recuerdos a la m煤sica, creando composiciones 煤nicas...'
+    // ?? CORREGIDO: sin emojis en URLs
+    img: 'https://via.placeholder.com/120/6a5acd/white?text=Transformacion',
+    title: 'Transformación',
+    desc: 'Llevamos tus ideas y recuerdos a la música, creando composiciones únicas...'
   },
   {
-    img: 'https://via.placeholder.com/120/6a5acd/white?text=馃幖',
-    title: 'Composici贸n',
-    desc: 'Nuestros compositores acoger谩n tus ideas y las convertir谩n en melod铆as...'
+    img: 'https://via.placeholder.com/120/6a5acd/white?text=Composicion',
+    title: 'Composición',
+    desc: 'Nuestros compositores acogerán tus ideas y las convertirán en melodías...'
   },
   {
-    img: 'https://via.placeholder.com/120/6a5acd/white?text=馃帶',
-    title: 'Producci贸n',
-    desc: 'Mezclamos y masterizamos con tecnolog铆a de punta...'
+    img: 'https://via.placeholder.com/120/6a5acd/white?text=Produccion',
+    title: 'Producción',
+    desc: 'Mezclamos y masterizamos con tecnología de punta...'
   },
   {
-    img: 'https://via.placeholder.com/120/6a5acd/white?text=馃寪',
-    title: 'Exportaci贸n',
-    desc: 'Exportamos tu proyecto terminado a Spotify, Apple Music, YouTube y m谩s.'
+    img: 'https://via.placeholder.com/120/6a5acd/white?text=Exportacion',
+    title: 'Exportación',
+    desc: 'Exportamos tu proyecto terminado a Spotify, Apple Music, YouTube y más.'
   }
 ];
 
@@ -35,98 +36,36 @@ const servicios = [
 const carrusel = document.getElementById('carrusel');
 const navegacion = document.getElementById('navegacion');
 
-servicios.forEach((servicio, i) => {
-  // Item del carrusel
-  const item = document.createElement('div');
-  item.className = i === 0 ? 'item activo' : 'item';
-  item.innerHTML = `
-    <img src="${servicio.img}" alt="${servicio.title}">
-    <div class="info">
-      <h3>${servicio.title}</h3>
-      <p>${servicio.desc}</p>
-    </div>
-  `;
-  carrusel.appendChild(item);
+if (carrusel && navegacion) {
+  servicios.forEach((servicio, i) => {
+    const item = document.createElement('div');
+    item.className = i === 0 ? 'item activo' : 'item';
+    item.innerHTML = `
+      <img src="${servicio.img}" alt="${servicio.title}">
+      <div class="info">
+        <h3>${servicio.title}</h3>
+        <p>${servicio.desc}</p>
+      </div>
+    `;
+    carrusel.appendChild(item);
 
-  // Bot贸n de navegaci贸n
-  const btn = document.createElement('button');
-  btn.textContent = servicio.title;
-  btn.onclick = () => activarItem(i);
-  navegacion.appendChild(btn);
-});
+    const btn = document.createElement('button');
+    btn.textContent = servicio.title;
+    btn.onclick = () => activarItem(i);
+    navegacion.appendChild(btn);
+  });
+}
 
-// L贸gica del carrusel
+// Lógica del carrusel
 let index = 0;
 const items = document.querySelectorAll('.item');
 const fondo = document.getElementById('fondo-imagen');
 
 function activarItem(i) {
-  items[index].classList.remove('activo');
+  if (items[index]) items[index].classList.remove('activo');
   index = i;
-  items[index].classList.add('activo');
-  fondo.style.backgroundImage = `url(${servicios[i].img})`;
+  if (items[index]) items[index].classList.add('activo');
+  if (fondo) fondo.style.backgroundImage = `url(${servicios[i].img})`;
 }
 
-// Iniciar con el primer fondo
-fondo.style.backgroundImage = `url(${servicios[0].img})`;
-
-// Formulario
-document.getElementById('formulario')?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  const mensaje = document.getElementById('mensaje');
-  mensaje.textContent = 'Enviando...';
-  mensaje.style.color = '#6a5acd';
-
-  const formData = new FormData(e.target);
-  const numeroRaell = "R" + Math.floor(10000 + Math.random() * 90000) + "L";
-
-  const nuevoCliente = {
-    nombre: formData.get('nombre'),
-    email: formData.get('email'),
-    nombre_artistico: formData.get('nombreArtistico') || null,
-    cantante: formData.get('cantante'),
-    fecha_entrega: formData.get('fechaEntrega') || null,
-    descripcion: formData.get('descripcion'),
-    numero_raell: numeroRaell
-  };
-
-  try {
-    const { error } = await supabase
-      .from('clientes')
-      .insert([nuevoCliente]);
-
-    if (error) throw error;
-
-    mensaje.textContent = '鉁?隆Registro exitoso! Redirigiendo...';
-    mensaje.style.color = 'green';
-    
-    // Guardar en localStorage para mostrar en confirmaci贸n
-    localStorage.setItem('cliente', JSON.stringify({
-      ...nuevoCliente,
-      created_at: new Date().toISOString()
-    }));
-    
-    setTimeout(() => {
-      window.location.href = 'confirmacion.html';
-    }, 1500);
-
-  } catch (err) {
-    console.error('Error:', err);
-    mensaje.textContent = '鉂?Error: ' + (err.message || 'No se pudo registrar.');
-    mensaje.style.color = 'red';
-  }
-});
-
-// Men煤 de acceso
-function toggleMenu() {
-  const menu = document.getElementById("menuOpciones");
-  menu.style.display = menu.style.display === "block" ? "none" : "block";
-}
-
-window.addEventListener("click", function (e) {
-  const menu = document.getElementById("menuOpciones");
-  if (!e.target.closest(".menu-acceso")) {
-    menu.style.display = "none";
-  }
-});
+if (fondo && servicios[0])

@@ -7,16 +7,21 @@
 
 body {
   font-family: 'Segoe UI', sans-serif;
-  background: #f8f9fa;
-  color: #333;
+  background: linear-gradient(135deg, #2c1a4d, #6a5acd);
+  color: white;
   line-height: 1.6;
+  min-height: 100vh;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
 }
 
 header {
-  background: #2c1a4d;
+  background: rgba(44, 26, 77, 0.8);
   color: white;
   padding: 1rem;
   position: relative;
+  backdrop-filter: blur(10px);
 }
 
 .barra-superior {
@@ -29,6 +34,7 @@ header {
 .titulo-animado {
   font-size: 1.8rem;
   animation: fadeIn 1s ease;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
 .menu-acceso {
@@ -36,12 +42,19 @@ header {
 }
 
 .boton-registro {
-  background: #6a5acd;
-  color: white;
+  background: #ffffff;
+  color: #2c1a4d;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
   cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.boton-registro:hover {
+  background: #f0f0f0;
+  transform: scale(1.05);
 }
 
 .menu-opciones {
@@ -50,10 +63,11 @@ header {
   top: 100%;
   right: 0;
   background: white;
-  color: #333;
+  color: #2c1a4d;
   border-radius: 4px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.2);
   z-index: 10;
+  min-width: 150px;
 }
 
 .menu-opciones a {
@@ -61,16 +75,20 @@ header {
   padding: 0.75rem 1rem;
   text-decoration: none;
   color: #2c1a4d;
+  transition: all 0.2s ease;
 }
 
 .menu-opciones a:hover {
   background: #f0f0f0;
+  color: #6a5acd;
 }
 
 .subtitulo {
   text-align: center;
   margin-top: 1rem;
   font-style: italic;
+  font-size: 1.1rem;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
 #inicio {
@@ -86,6 +104,9 @@ header {
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255,255,255,0.2);
 }
 
 .fondo-imagen {
@@ -97,6 +118,7 @@ header {
   background-size: cover;
   background-position: center;
   opacity: 0.3;
+  z-index: 1;
 }
 
 .carrusel {
@@ -106,6 +128,7 @@ header {
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  z-index: 2;
 }
 
 .item {
@@ -127,6 +150,7 @@ header {
   border-radius: 50%;
   margin-bottom: 1rem;
   border: 3px solid white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
 .navegacion {
@@ -139,36 +163,43 @@ header {
 
 .navegacion button {
   padding: 0.5rem 1rem;
-  background: #6a5acd;
+  background: rgba(255,255,255,0.2);
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255,255,255,0.3);
 }
 
 .navegacion button:hover {
-  background: #5a4ac0;
+  background: rgba(255,255,255,0.3);
+  transform: scale(1.05);
 }
 
 .formulario-registro {
-  background: white;
+  background: rgba(255,255,255,0.95);
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   max-width: 600px;
   margin: 0 auto;
+  color: #333;
 }
 
 .formulario-registro h2 {
   margin-bottom: 1.5rem;
   color: #2c1a4d;
   text-align: center;
+  font-weight: bold;
 }
 
 .formulario-registro label {
   display: block;
   margin: 1rem 0 0.5rem;
   font-weight: 600;
+  color: #2c1a4d;
 }
 
 .formulario-registro input,
@@ -179,6 +210,15 @@ header {
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.formulario-registro input:focus,
+.formulario-registro select:focus,
+.formulario-registro textarea:focus {
+  border-color: #6a5acd;
+  outline: none;
+  box-shadow: 0 0 5px rgba(106, 90, 205, 0.3);
 }
 
 .formulario-registro button {
@@ -191,10 +231,12 @@ header {
   font-size: 1.1rem;
   cursor: pointer;
   margin-top: 1rem;
+  transition: all 0.3s ease;
 }
 
 .formulario-registro button:hover {
   background: #5a4ac0;
+  transform: translateY(-2px);
 }
 
 @keyframes fadeIn {
@@ -222,5 +264,9 @@ header {
   
   .zona-visual {
     height: 300px;
+  }
+  
+  .formulario-registro {
+    padding: 1.5rem;
   }
 }
