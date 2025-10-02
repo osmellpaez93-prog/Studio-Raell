@@ -5,13 +5,13 @@ const supabase = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
 );
 
-// Obtener datos del cliente desde localStorage
+// Verificar sesión
 const clienteId = localStorage.getItem('cliente_id');
 if (!clienteId) {
   window.location.href = 'login.html';
 }
 
-// Cargar datos del cliente
+// Cargar perfil
 async function cargarPerfil() {
   const { data, error } = await supabase
     .from('clientes')
@@ -24,11 +24,11 @@ async function cargarPerfil() {
     return;
   }
 
-  // Mostrar saludo y número Raell
+  // Saludo
   document.getElementById('saludoCliente').textContent = `Hola, ${data.nombre}`;
   document.getElementById('codigoRaell').textContent = `Número Raell Studio: ${data.numero_raell}`;
 
-  // Mostrar letra
+  // Letra
   const letraEl = document.getElementById('letraCancion');
   if (data.letra) {
     letraEl.textContent = data.letra;
@@ -36,21 +36,20 @@ async function cargarPerfil() {
     letraEl.textContent = 'Aún no se ha enviado ninguna letra.';
   }
 
-  // Mostrar audio
+  // Audio
   const audioEl = document.getElementById('audioMuestra');
   const sourceEl = document.getElementById('audioSource');
   if (data.audio_url) {
     sourceEl.src = data.audio_url;
     audioEl.load();
+    audioEl.style.display = 'block';
   } else {
-    sourceEl.src = '';
-    audioEl.pause();
     audioEl.style.display = 'none';
     document.querySelector('.bloque:nth-child(2) h3').textContent = 'No hay muestra musical aún.';
   }
 
-  // Renderizar comentarios
-  renderComentarios(data.comentarios);
+  // Comentarios
+  renderComentarios(data.comentarios || []);
 }
 
 // Enviar comentario
@@ -60,29 +59,39 @@ async function enviarComentario() {
 
   const { data, error } = await supabase
     .from('clientes')
-    .update({
-      comentarios: supabase.fn.jsonb_array_append('comentarios', {
-        texto,
-        fecha: new Date().toISOString(),
-        respuesta: null
-      })
-    })
-    .eq('id', clienteId);
+    .select('comentarios')
+    .eq('id', clienteId)
+    .single();
 
   if (error) {
-    document.getElementById('mensajeConfirmado').textContent = '❌ Error al enviar el comentario.';
+    alert('❌ Error al enviar el comentario.');
+    return;
+  }
+
+  const comentarios = data.comentarios || [];
+  comentarios.push({
+    texto,
+    fecha: new Date().toISOString(),
+    respuesta: null
+  });
+
+  const { error: updateError } = await supabase
+    .from('clientes')
+    .update({ comentarios })
+    .eq('id', clienteId);
+
+  if (updateError) {
+    alert('❌ Error al guardar el comentario.');
     return;
   }
 
   document.getElementById('comentarioCliente').value = '';
   document.getElementById('mensajeConfirmado').textContent = '✅ Comentario enviado correctamente.';
-
-  // Recargar comentarios
-  cargarPerfil();
+  cargarPerfil(); // Recargar para ver el nuevo comentario
 }
 
 // Renderizar comentarios
-function renderComentarios(comentarios = []) {
+function renderComentarios(comentarios) {
   const cont = document.getElementById('historialComentarios');
   if (!cont) return;
 
@@ -108,5 +117,5 @@ function cerrarSesion() {
   window.location.href = 'login.html';
 }
 
-// Cargar perfil al iniciar
+// Iniciar
 cargarPerfil();
