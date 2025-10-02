@@ -1,0 +1,226 @@
+/* assets/css/style.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f8f9fa;
+  color: #333;
+  line-height: 1.6;
+}
+
+header {
+  background: #2c1a4d;
+  color: white;
+  padding: 1rem;
+  position: relative;
+}
+
+.barra-superior {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.titulo-animado {
+  font-size: 1.8rem;
+  animation: fadeIn 1s ease;
+}
+
+.menu-acceso {
+  position: relative;
+}
+
+.boton-registro {
+  background: #6a5acd;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.menu-opciones {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  color: #333;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  z-index: 10;
+}
+
+.menu-opciones a {
+  display: block;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: #2c1a4d;
+}
+
+.menu-opciones a:hover {
+  background: #f0f0f0;
+}
+
+.subtitulo {
+  text-align: center;
+  margin-top: 1rem;
+  font-style: italic;
+}
+
+#inicio {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.zona-visual {
+  position: relative;
+  height: 400px;
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.fondo-imagen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.3;
+}
+
+.carrusel {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.item {
+  display: none;
+  text-align: center;
+  color: white;
+  z-index: 2;
+}
+
+.item.activo {
+  display: block;
+  animation: slideIn 0.6s ease;
+}
+
+.item img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  border: 3px solid white;
+}
+
+.navegacion {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.navegacion button {
+  padding: 0.5rem 1rem;
+  background: #6a5acd;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.navegacion button:hover {
+  background: #5a4ac0;
+}
+
+.formulario-registro {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.formulario-registro h2 {
+  margin-bottom: 1.5rem;
+  color: #2c1a4d;
+  text-align: center;
+}
+
+.formulario-registro label {
+  display: block;
+  margin: 1rem 0 0.5rem;
+  font-weight: 600;
+}
+
+.formulario-registro input,
+.formulario-registro select,
+.formulario-registro textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.formulario-registro button {
+  width: 100%;
+  padding: 0.75rem;
+  background: #6a5acd;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.formulario-registro button:hover {
+  background: #5a4ac0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .barra-superior {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .navegacion {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .zona-visual {
+    height: 300px;
+  }
+}
