@@ -10,7 +10,7 @@ async function cargarClientes() {
   const { data, error } = await supabase
     .from('clientes')
     .select('*') // Sin asterisco, así Supabase lo interpreta correctamente
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false }); // Ordenar por created_at
 
   if (error) {
     document.getElementById('listaClientes').innerHTML = '<p>❌ Error al cargar los clientes.</p>';
