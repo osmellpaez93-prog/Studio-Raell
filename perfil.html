@@ -3,24 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mi Proyecto - Raell Studio</title>
+  <title>Tu espacio creativo - Raell Studio</title>
   <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
   <header>
-    <h1>Mi Proyecto</h1>
+    <h1>Tu espacio creativo</h1>
     <a href="./index.html">← Volver al inicio</a>
   </header>
 
-  <section id="detalle" class="formulario-registro">
-    <p>Cargando...</p>
-  </section>
+  <section id="perfil" class="formulario-registro">
+    <p id="saludoCliente">Cargando...</p>
+    <p id="codigoRaell">Número Raell Studio: ...</p>
 
-  <div style="text-align:center; margin-top: 2rem;">
-    <a href="https://wa.me/34614255664" target="_blank" class="boton-contacto">
-      📩 Hablar con el administrador
-    </a>
-  </div>
+    <div class="bloque">
+      <h3>Letra de tu canción</h3>
+      <p id="letraCancion">Aún no se ha enviado ninguna letra.</p>
+    </div>
+
+    <div class="bloque">
+      <h3>Prueba musical</h3>
+      <audio id="audioMuestra" controls>
+        <source id="audioSource" src="" type="audio/mpeg">
+        Tu navegador no soporta audio.
+      </audio>
+    </div>
+
+    <div class="bloque">
+      <h3>Tu opinión sobre la muestra</h3>
+      <textarea id="comentarioCliente" placeholder="Escribe aquí lo que piensas sobre la letra o la música..."></textarea>
+      <button onclick="enviarComentario()">Enviar comentario</button>
+      <p id="mensajeConfirmado" class="ayuda"></p>
+    </div>
+
+    <div class="bloque">
+      <h3>Historial de comentarios</h3>
+      <div id="historialComentarios"></div>
+    </div>
+
+    <div class="botones-confirmacion" style="margin-top:30px;">
+      <button onclick="cerrarSesion()" class="boton-volver">Cerrar sesión</button>
+    </div>
+  </section>
 
   <script type="module" src="./assets/js/perfil.js"></script>
 </body>

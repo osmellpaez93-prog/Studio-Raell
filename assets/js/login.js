@@ -5,26 +5,44 @@ const supabase = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
 );
 
+// 🔑 Código maestro (cámbialo si quieres otro)
+const CODIGO_MAESTRO = "Raell-Master-1234";
+
 document.getElementById('formLogin')?.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const mensaje = document.getElementById('mensaje');
+  
   const email = document.getElementById('email').value.trim();
-  const numero = document.getElementById('numeroRaell').value.trim().toUpperCase();
+  const numero = document.getElementById('numeroRaell').value.trim();
+  const mensaje = document.getElementById('mensaje');
+
+  // ✅ Acceso directo al panel de administrador
+  if (numero === CODIGO_MAESTRO) {
+    // Guardar sesión de admin (opcional)
+    localStorage.setItem('admin', 'true');
+    window.location.href = 'admin.html';
+    return;
+  }
+
+  // ✅ Acceso normal de cliente
+  if (!email || !numero) {
+    mensaje.textContent = '❌ Por favor, ingresa tu correo y número Raell.';
+    return;
+  }
 
   try {
     const { data, error } = await supabase
-  .from('clientes')
-  .select() // Sin asterisco, así Supabase lo interpreta correctamente
-  .eq('email', email.toLowerCase())
-  .eq('numero_raell', numero)
-  .single();
+      .from('clientes')
+      .select('*')
+      .eq('email', email.toLowerCase())
+      .eq('numero_raell', numero)
+      .single();
 
     if (error || !data) {
       mensaje.textContent = '❌ Credenciales incorrectas.';
       return;
     }
 
-    // Guardar sesión en localStorage (solo para redirección)
+    // Guardar datos del cliente
     localStorage.setItem('cliente_id', data.id);
     localStorage.setItem('cliente_nombre', data.nombre);
     localStorage.setItem('cliente_numero', data.numero_raell);

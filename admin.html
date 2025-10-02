@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Panel de Administrador - Raell Studio</title>
+  <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body>
+  <header>
+    <h1>Panel de Administrador</h1>
+    <a href="./index.html">← Volver al inicio</a>
+  </header>
+
+  <section class="formulario-registro">
+    <h2>Clientes registrados</h2>
+    <div id="listaClientes">
+      <p>Cargando...</p>
+    </div>
+  </section>
+
+  <script>
+    // 🔒 Protección: solo acceso si se usó el código maestro
+    if (localStorage.getItem('admin') !== 'true') {
+      alert('Acceso denegado. Usa el código maestro en la página de login.');
+      window.location.href = 'login.html';
+    }
+  </script>
+
+  <script type="module" src="./assets/js/admin.js"></script>
+</body>
+</html>

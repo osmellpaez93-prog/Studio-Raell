@@ -16,13 +16,17 @@
     <p>Accede con tu correo y número Raell.</p>
     <form id="formLogin">
       <label for="email">Correo electrónico:</label>
-      <input type="email" id="email" required>
+      <input type="email" id="email" placeholder="tu@email.com">
 
       <label for="numeroRaell">Número Raell Studio:</label>
-      <input type="text" id="numeroRaell" placeholder="Ej. R12345L" required>
+      <input type="text" id="numeroRaell" placeholder="Ej. R12345L o código maestro" required>
+
+      <div class="ayuda" style="font-size: 0.85em; margin-top: 6px; color: #aaa;">
+        ¿Eres administrador? Usa el código maestro para acceder.
+      </div>
 
       <button type="submit">Entrar</button>
-      <p id="mensaje"></p>
+      <p id="mensaje" style="margin-top: 10px; color: red;"></p>
     </form>
 
     <p style="margin-top: 20px;">
