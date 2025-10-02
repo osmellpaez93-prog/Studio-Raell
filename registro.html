@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registro - Raell Studio</title>
+  <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body>
+  <header>
+    <h1>Raell Studio</h1>
+    <a href="./index.html">← Volver al inicio</a>
+  </header>
+
+  <section class="formulario-registro">
+    <h2>Regístrate en Raell Studio</h2>
+    <p>Cuéntanos quién eres y qué quieres crear.</p>
+
+    <form id="formulario">
+      <label for="nombre">Nombre completo:</label>
+      <input type="text" id="nombre" required>
+
+      <label for="email">Correo electrónico:</label>
+      <input type="email" id="email" required>
+
+      <label for="nombreArtistico">Nombre artístico (opcional):</label>
+      <input type="text" id="nombreArtistico">
+
+      <label for="cantante">¿Quién cantará?</label>
+      <select id="cantante" required>
+        <option value="">Selecciona</option>
+        <option value="IA">IA</option>
+        <option value="Yo">Yo</option>
+        <option value="Raell Studio">Raell Studio</option>
+      </select>
+
+      <div class="grupo-opciones">
+        <label><strong>Tiempo de entrega:</strong></label>
+        <div class="fila">
+          <label><input type="radio" name="entregaTipo" value="fecha" checked> Fecha exacta</label>
+          <label><input type="radio" name="entregaTipo" value="periodo"> Periodo</label>
+        </div>
+
+        <div id="bloqueFecha">
+          <label for="fechaEntrega">Fecha:</label>
+          <input type="date" id="fechaEntrega">
+        </div>
+
+        <div id="bloquePeriodo" class="oculto">
+          <div class="fila-fechas">
+            <div><label for="periodoInicio">Desde:</label><input type="date" id="periodoInicio"></div>
+            <div><label for="periodoFin">Hasta:</label><input type="date" id="periodoFin"></div>
+          </div>
+        </div>
+      </div>
+
+      <label for="descripcion">Describe tu idea:</label>
+      <textarea id="descripcion" rows="5" required></textarea>
+
+      <button type="submit">Enviar registro</button>
+      <p id="mensaje"></p>
+    </form>
+  </section>
+
+  <script type="module" src="./assets/js/registro.js"></script>
+</body>
+</html>

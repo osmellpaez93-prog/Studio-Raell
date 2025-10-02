@@ -2,15 +2,34 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Login - Raell Studio</title>
-  <style>
-    body { font-family: sans-serif; padding: 2rem; text-align: center; }
-    h1 { color: #6a5acd; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Iniciar sesión - Raell Studio</title>
+  <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
-  <h1>Iniciar sesión</h1>
-  <p>Próximamente disponible.</p>
-  <a href="./index.html">← Volver</a>
+  <header>
+    <h1>Iniciar sesión</h1>
+    <a href="./index.html">← Volver al inicio</a>
+  </header>
+
+  <section class="formulario-registro">
+    <p>Accede con tu correo y número Raell.</p>
+    <form id="formLogin">
+      <label for="email">Correo electrónico:</label>
+      <input type="email" id="email" required>
+
+      <label for="numeroRaell">Número Raell Studio:</label>
+      <input type="text" id="numeroRaell" placeholder="Ej. R12345L" required>
+
+      <button type="submit">Entrar</button>
+      <p id="mensaje"></p>
+    </form>
+
+    <p style="margin-top: 20px;">
+      ¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a>
+    </p>
+  </section>
+
+  <script type="module" src="./assets/js/login.js"></script>
 </body>
 </html>
