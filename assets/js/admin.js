@@ -34,8 +34,8 @@ async function cargarClientes() {
       <p><strong>Email:</strong> ${cliente.email}</p>
       <p><strong>Cantante:</strong> ${cliente.cantante}</p>
       <p><strong>Descripción:</strong> ${cliente.descripcion.substring(0, 50)}...</p>
-      <button onclick="editarCliente('${cliente.id}')" style="margin:5px; padding:6px 12px; background:#00c3ff; color:white; border:none; border-radius:4px; cursor:pointer;">Editar</button>
-      <button onclick="eliminarCliente('${cliente.id}')" style="margin:5px; padding:6px 12px; background:#ff4d4d; color:white; border:none; border-radius:4px; cursor:pointer;">Eliminar</button>
+      <button onclick="window.editarCliente('${cliente.id}')" style="margin:5px; padding:6px 12px; background:#00c3ff; color:white; border:none; border-radius:4px; cursor:pointer;">Editar</button>
+      <button onclick="window.eliminarCliente('${cliente.id}')" style="margin:5px; padding:6px 12px; background:#ff4d4d; color:white; border:none; border-radius:4px; cursor:pointer;">Eliminar</button>
     </div>
   `).join("");
 }
@@ -62,6 +62,10 @@ async function eliminarCliente(id) {
     cargarClientes();
   }
 }
+
+// Hacer las funciones globales (para que sean accesibles desde onclick)
+window.editarCliente = editarCliente;
+window.eliminarCliente = eliminarCliente;
 
 // Iniciar
 cargarClientes();
