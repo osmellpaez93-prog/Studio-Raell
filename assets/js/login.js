@@ -13,11 +13,11 @@ document.getElementById('formLogin')?.addEventListener('submit', async (e) => {
 
   try {
     const { data, error } = await supabase
-      .from('clientes')
-      .select('*')
-      .eq('email', email.toLowerCase())
-      .eq('numero_raell', numero)
-      .single();
+  .from('clientes')
+  .select() // Sin asterisco, así Supabase lo interpreta correctamente
+  .eq('email', email.toLowerCase())
+  .eq('numero_raell', numero)
+  .single();
 
     if (error || !data) {
       mensaje.textContent = '❌ Credenciales incorrectas.';
