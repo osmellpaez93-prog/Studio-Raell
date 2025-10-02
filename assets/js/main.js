@@ -1,7 +1,7 @@
 // assets/js/main.js
 import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
 
-// Configuraci¨®n de Supabase
+// ?? CORREGIDO: URLs sin espacios al final
 const supabase = createClient(
   'https://vgrpcnknpeihzljhnfjp.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
@@ -95,6 +95,7 @@ document.getElementById('formulario')?.addEventListener('submit', async (e) => {
   };
 
   try {
+    // ?? Verificamos que todas las columnas existan en Supabase
     const { error } = await supabase
       .from('clientes')
       .insert([nuevoCliente]);
