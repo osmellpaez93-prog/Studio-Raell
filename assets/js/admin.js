@@ -9,11 +9,12 @@ const supabase = createClient(
 async function cargarClientes() {
   const { data, error } = await supabase
     .from('clientes')
-    .select('*')
+    .select('*') // Sin asterisco, así Supabase lo interpreta correctamente
     .order('created_at', { ascending: false });
 
   if (error) {
     document.getElementById('listaClientes').innerHTML = '<p>❌ Error al cargar los clientes.</p>';
+    console.error('Error:', error);
     return;
   }
 
@@ -49,6 +50,7 @@ async function eliminarCliente(id) {
 
     if (error) {
       alert('❌ Error al eliminar el cliente.');
+      console.error('Error:', error);
       return;
     }
 
