@@ -34,25 +34,8 @@
         <option value="Raell Studio">Raell Studio</option>
       </select>
 
-      <div class="grupo-opciones">
-        <label><strong>Tiempo de entrega:</strong></label>
-        <div class="fila">
-          <label><input type="radio" name="entregaTipo" value="fecha" checked> Fecha exacta</label>
-          <label><input type="radio" name="entregaTipo" value="periodo"> Periodo</label>
-        </div>
-
-        <div id="bloqueFecha">
-          <label for="fechaEntrega">Fecha:</label>
-          <input type="date" id="fechaEntrega">
-        </div>
-
-        <div id="bloquePeriodo" class="oculto">
-          <div class="fila-fechas">
-            <div><label for="periodoInicio">Desde:</label><input type="date" id="periodoInicio"></div>
-            <div><label for="periodoFin">Hasta:</label><input type="date" id="periodoFin"></div>
-          </div>
-        </div>
-      </div>
+      <label for="fechaEntrega">Fecha de entrega (opcional):</label>
+      <input type="date" id="fechaEntrega">
 
       <label for="descripcion">Describe tu idea:</label>
       <textarea id="descripcion" rows="5" required></textarea>
