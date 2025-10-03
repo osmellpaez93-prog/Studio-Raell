@@ -1,3 +1,4 @@
+// assets/js/perfil.js
 import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
 
 const supabase = createClient(
@@ -5,65 +6,57 @@ const supabase = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
 );
 
-const clienteId = localStorage.getItem('cliente_id');
-if (!clienteId) {
+const proyectoId = localStorage.getItem('proyecto_id');
+if (!proyectoId) {
   window.location.href = 'login.html';
 }
 
-async function cargarPerfil() {
+async function cargarProyecto() {
   try {
     const { data, error } = await supabase
-      .from('clientes')
+      .from('proyectos')
       .select('*')
-      .eq('id', clienteId)
+      .eq('id', proyectoId)
       .single();
 
     if (error || !data) throw error;
 
-    // ✅ Verificar que los elementos existan antes de usarlos
-    const saludoEl = document.getElementById('saludoCliente');
-    const codigoEl = document.getElementById('codigoRaell');
+    document.getElementById('saludoCliente').textContent = `Hola, ${data.nombre}`;
+    document.getElementById('codigoRaell').textContent = `Número Raell Studio: ${data.numero_raell}`;
+
     const letraEl = document.getElementById('letraCancion');
+    letraEl.textContent = data.letra || 'Aún no se ha enviado ninguna letra.';
+
     const audioEl = document.getElementById('audioMuestra');
     const sourceEl = document.getElementById('audioSource');
     const audioTitle = document.querySelector('.bloque:nth-child(2) h3');
 
-    if (saludoEl) saludoEl.textContent = `Hola, ${data.nombre}`;
-    if (codigoEl) codigoEl.textContent = `Número Raell Studio: ${data.numero_raell}`;
-    if (letraEl) letraEl.textContent = data.letra || 'Aún no se ha enviado ninguna letra.';
-
-    if (audioEl && sourceEl && audioTitle) {
-      if (data.audio_url) {
-        sourceEl.src = data.audio_url;
-        audioEl.load();
-        audioEl.style.display = 'block';
-        audioTitle.textContent = 'Prueba musical';
-      } else {
-        audioEl.style.display = 'none';
-        audioTitle.textContent = 'No hay muestra musical aún.';
-      }
+    if (data.audio_url) {
+      sourceEl.src = data.audio_url;
+      audioEl.load();
+      audioEl.style.display = 'block';
+      if (audioTitle) audioTitle.textContent = 'Prueba musical';
+    } else {
+      audioEl.style.display = 'none';
+      if (audioTitle) audioTitle.textContent = 'No hay muestra musical aún.';
     }
 
     renderComentarios(data.comentarios || []);
   } catch (err) {
-    console.error('Error al cargar perfil:', err);
-    const perfilEl = document.getElementById('perfil');
-    if (perfilEl) {
-      perfilEl.innerHTML = '<p>❌ Error al cargar tu perfil. Por favor, inicia sesión de nuevo.</p>';
-    }
+    console.error('Error:', err);
+    document.getElementById('perfil').innerHTML = '<p>❌ Error al cargar tu proyecto.</p>';
   }
 }
 
 async function enviarComentario() {
-  const comentarioEl = document.getElementById('comentarioCliente');
-  const texto = comentarioEl?.value?.trim();
+  const texto = document.getElementById('comentarioCliente')?.value?.trim();
   if (!texto) return;
 
   try {
     const { data, error } = await supabase
-      .from('clientes')
+      .from('proyectos')
       .select('comentarios')
-      .eq('id', clienteId)
+      .eq('id', proyectoId)
       .single();
 
     if (error) throw error;
@@ -76,27 +69,25 @@ async function enviarComentario() {
     });
 
     const { error: updateError } = await supabase
-      .from('clientes')
+      .from('proyectos')
       .update({ comentarios })
-      .eq('id', clienteId);
+      .eq('id', proyectoId);
 
     if (updateError) throw updateError;
 
-    if (comentarioEl) comentarioEl.value = '';
-    const mensajeEl = document.getElementById('mensajeConfirmado');
-    if (mensajeEl) mensajeEl.textContent = '✅ Comentario enviado correctamente.';
+    document.getElementById('comentarioCliente').value = '';
+    const msg = document.getElementById('mensajeConfirmado');
+    if (msg) msg.textContent = '✅ Comentario enviado.';
 
-    cargarPerfil();
+    cargarProyecto();
   } catch (err) {
-    console.error('Error al enviar comentario:', err);
-    alert('❌ No se pudo enviar el comentario. Intenta de nuevo.');
+    alert('❌ Error al enviar el comentario.');
   }
 }
 
 function renderComentarios(comentarios) {
   const cont = document.getElementById('historialComentarios');
   if (!cont) return;
-
   cont.innerHTML = comentarios.length
     ? comentarios.map(c => `
         <div class="comentario-box">
@@ -113,9 +104,7 @@ function cerrarSesion() {
   window.location.href = 'login.html';
 }
 
-// Hacer funciones accesibles desde HTML
 window.enviarComentario = enviarComentario;
 window.cerrarSesion = cerrarSesion;
 
-// Iniciar
-cargarPerfil();
+cargarProyecto();
