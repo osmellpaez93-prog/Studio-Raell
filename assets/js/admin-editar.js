@@ -84,7 +84,7 @@ async function subirAudio() {
     return;
   }
 
-  // ✅ Solución definitiva: construir URL manualmente
+  // ✅ Construir URL manualmente (solución definitiva)
   const publicUrl = `https://vgrpcnknpeihzljhnfjp.supabase.co/storage/v1/object/public/audios/${encodeURIComponent(fileName)}`;
 
   // Guardar URL en la tabla clientes
@@ -94,12 +94,14 @@ async function subirAudio() {
     .eq('id', clienteId);
 
   if (updateError) {
-    alert('❌ Error al guardar la URL: ' + updateError.message);
+    alert('❌ Error al guardar la URL en la base de datos: ' + updateError.message);
+    console.error('Error de actualización:', updateError);
     return;
   }
 
-  document.getElementById('audioStatus').textContent = '✅ Audio subido y enlazado.';
-  alert('✅ Audio listo. El cliente ya puede escucharlo.');
+  alert('✅ Audio subido y enlazado correctamente.');
+  document.getElementById('audioStatus').textContent = 'Audio guardado.';
+  cargarCliente(); // Recargar para ver el audio
 }
 
 // Responder al último comentario
