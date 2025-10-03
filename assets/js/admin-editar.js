@@ -32,13 +32,11 @@ async function cargarCliente() {
     <p><strong>Descripción:</strong> ${data.descripcion}</p>
   `;
 
-  // Mostrar letra y audio si existen
   if (data.letra) document.getElementById('letraAdmin').value = data.letra;
   if (data.audio_url) {
     document.getElementById('audioStatus').textContent = 'Audio actual: ' + data.audio_url;
   }
 
-  // Renderizar comentarios
   renderComentarios(data.comentarios || []);
 }
 
@@ -52,8 +50,11 @@ async function guardarLetra() {
     .update({ letra })
     .eq('id', clienteId);
 
-  if (error) alert('❌ Error al guardar la letra.');
-  else alert('✅ Letra guardada.');
+  if (error) {
+    alert('❌ Error al guardar la letra: ' + error.message);
+  } else {
+    alert('✅ Letra guardada.');
+  }
 }
 
 // Subir y guardar audio
@@ -65,47 +66,46 @@ async function subirAudio() {
     return;
   }
 
-  // Verificar tipo de archivo
   if (!file.type.startsWith('audio/')) {
-    alert('Solo se permiten archivos de audio.');
+    alert('Solo se permiten archivos de audio (MP3, WAV, etc.).');
     return;
   }
 
-  const fileName = `${clienteId}_${Date.now()}.mp3`;
-  const { data, error } = await supabase
+  const fileName = `${clienteId}_${Date.now()}.${file.name.split('.').pop()}`;
+
+  // Subir archivo a Supabase Storage
+  const { error: uploadError } = await supabase
     .storage
     .from('audios')
-    .upload(fileName, file, {
-      cacheControl: '3600',
-      upsert: true
-    });
+    .upload(fileName, file, { upsert: true });
 
-  if (error) {
-    alert('❌ Error al subir el audio: ' + error.message);
+  if (uploadError) {
+    alert('❌ Error al subir el archivo: ' + uploadError.message);
     return;
   }
 
-  // Obtener la URL pública
-  const { data: publicURL } = supabase
-    .storage
-    .from('audios')
-    .getPublicUrl(fileName);
+  // Obtener URL pública (¡sin await!)
+  const {  publicURLData } = supabase.storage.from('audios').getPublicUrl(fileName);
+  const audioUrl = publicURLData?.publicUrl;
 
-  const audioUrl = publicURL.publicUrl;
+  if (!audioUrl) {
+    alert('❌ No se pudo generar la URL pública.');
+    return;
+  }
 
-  // Guardar la URL en la tabla clientes
+  // Guardar URL en la tabla clientes
   const { error: updateError } = await supabase
     .from('clientes')
     .update({ audio_url: audioUrl })
     .eq('id', clienteId);
 
   if (updateError) {
-    alert('❌ Error al guardar la URL del audio: ' + updateError.message);
+    alert('❌ Error al guardar la URL: ' + updateError.message);
     return;
   }
 
-  document.getElementById('audioStatus').textContent = '✅ Audio subido y guardado.';
-  alert('✅ Audio subido correctamente.');
+  document.getElementById('audioStatus').textContent = '✅ Audio subido y enlazado.';
+  alert('✅ Audio listo. El cliente ya puede escucharlo.');
 }
 
 // Responder al último comentario
@@ -119,7 +119,7 @@ async function responderComentario() {
     .eq('id', clienteId)
     .single();
 
-  if (error) {
+  if (error || !data) {
     alert('❌ Error al cargar comentarios.');
     return;
   }
@@ -130,7 +130,6 @@ async function responderComentario() {
     return;
   }
 
-  // Responder al último comentario
   comentarios[comentarios.length - 1].respuesta = respuesta;
 
   const { error: updateError } = await supabase
@@ -139,33 +138,32 @@ async function responderComentario() {
     .eq('id', clienteId);
 
   if (updateError) {
-    alert('❌ Error al enviar la respuesta.');
+    alert('❌ Error al enviar respuesta: ' + updateError.message);
     return;
   }
 
   alert('✅ Respuesta enviada.');
   document.getElementById('respuestaAdmin').value = '';
-  cargarCliente(); // Recargar para ver la respuesta
+  cargarCliente();
 }
 
 // Renderizar comentarios
 function renderComentarios(comentarios) {
   const cont = document.getElementById('comentarios');
-  if (comentarios.length === 0) {
-    cont.innerHTML = '<p>No hay comentarios aún.</p>';
-    return;
-  }
+  if (!cont) return;
 
-  cont.innerHTML = comentarios.map(c => `
-    <div style="background:rgba(255,255,255,0.1); padding:10px; margin:10px 0; border-radius:6px;">
-      <p><strong>Cliente:</strong> ${c.texto}</p>
-      <p><em>${new Date(c.fecha).toLocaleString()}</em></p>
-      ${c.respuesta ? `<p><strong>Tú:</strong> ${c.respuesta}</p>` : '<p><em>Esperando tu respuesta...</em></p>'}
-    </div>
-  `).join('');
+  cont.innerHTML = comentarios.length
+    ? comentarios.map(c => `
+        <div style="background:rgba(255,255,255,0.1); padding:10px; margin:10px 0; border-radius:6px;">
+          <p><strong>Cliente:</strong> ${c.texto}</p>
+          <p><em>${new Date(c.fecha).toLocaleString()}</em></p>
+          ${c.respuesta ? `<p><strong>Tú:</strong> ${c.respuesta}</p>` : '<p><em>Esperando tu respuesta...</em></p>'}
+        </div>
+      `).join("")
+    : '<p>No hay comentarios aún.</p>';
 }
 
-// Hacer funciones globales
+// Hacer funciones accesibles desde HTML
 window.guardarLetra = guardarLetra;
 window.subirAudio = subirAudio;
 window.responderComentario = responderComentario;
