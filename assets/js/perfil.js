@@ -13,81 +13,88 @@ if (!clienteId) {
 
 // Cargar perfil
 async function cargarPerfil() {
-  const { data, error } = await supabase
-    .from('clientes')
-    .select('*')
-    .eq('id', clienteId)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('clientes')
+      .select('*')
+      .eq('id', clienteId)
+      .single();
 
-  if (error || !data) {
-    document.getElementById('perfil').innerHTML = '<p>❌ Error al cargar tu perfil.</p>';
-    return;
+    if (error || !data) {
+      document.getElementById('perfil').innerHTML = '<p>❌ Error al cargar tu perfil.</p>';
+      return;
+    }
+
+    // Saludo
+    document.getElementById('saludoCliente').textContent = `Hola, ${data.nombre}`;
+    document.getElementById('codigoRaell').textContent = `Número Raell Studio: ${data.numero_raell}`;
+
+    // Letra
+    const letraEl = document.getElementById('letraCancion');
+    if (data.letra) {
+      letraEl.textContent = data.letra;
+    } else {
+      letraEl.textContent = 'Aún no se ha enviado ninguna letra.';
+    }
+
+    // Audio
+    const audioEl = document.getElementById('audioMuestra');
+    const sourceEl = document.getElementById('audioSource');
+    if (data.audio_url) {
+      sourceEl.src = data.audio_url;
+      audioEl.load();
+      audioEl.style.display = 'block';
+    } else {
+      audioEl.style.display = 'none';
+      const audioTitle = document.querySelector('.bloque:nth-child(2) h3');
+      if (audioTitle) audioTitle.textContent = 'No hay muestra musical aún.';
+    }
+
+    // Comentarios
+    renderComentarios(data.comentarios || []);
+  } catch (err) {
+    console.error('Error en cargarPerfil:', err);
+    document.getElementById('perfil').innerHTML = '<p>❌ Error inesperado.</p>';
   }
-
-  // Saludo
-  document.getElementById('saludoCliente').textContent = `Hola, ${data.nombre}`;
-  document.getElementById('codigoRaell').textContent = `Número Raell Studio: ${data.numero_raell}`;
-
-  // Letra
-  const letraEl = document.getElementById('letraCancion');
-  if (data.letra) {
-    letraEl.textContent = data.letra;
-  } else {
-    letraEl.textContent = 'Aún no se ha enviado ninguna letra.';
-  }
-
-  // Audio
-  const audioEl = document.getElementById('audioMuestra');
-  const sourceEl = document.getElementById('audioSource');
-  if (data.audio_url) {
-    sourceEl.src = data.audio_url;
-    audioEl.load();
-    audioEl.style.display = 'block';
-  } else {
-    audioEl.style.display = 'none';
-    document.querySelector('.bloque:nth-child(2) h3').textContent = 'No hay muestra musical aún.';
-  }
-
-  // Comentarios
-  renderComentarios(data.comentarios || []);
 }
 
 // Enviar comentario
 async function enviarComentario() {
-  const texto = document.getElementById('comentarioCliente').value.trim();
+  const texto = document.getElementById('comentarioCliente')?.value?.trim();
   if (!texto) return;
 
-  const { data, error } = await supabase
-    .from('clientes')
-    .select('comentarios')
-    .eq('id', clienteId)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('clientes')
+      .select('comentarios')
+      .eq('id', clienteId)
+      .single();
 
-  if (error) {
+    if (error) throw error;
+
+    const comentarios = data.comentarios || [];
+    comentarios.push({
+      texto,
+      fecha: new Date().toISOString(),
+      respuesta: null
+    });
+
+    const { error: updateError } = await supabase
+      .from('clientes')
+      .update({ comentarios })
+      .eq('id', clienteId);
+
+    if (updateError) throw updateError;
+
+    document.getElementById('comentarioCliente').value = '';
+    const mensaje = document.getElementById('mensajeConfirmado');
+    if (mensaje) mensaje.textContent = '✅ Comentario enviado correctamente.';
+
+    cargarPerfil();
+  } catch (err) {
+    console.error('Error al enviar comentario:', err);
     alert('❌ Error al enviar el comentario.');
-    return;
   }
-
-  const comentarios = data.comentarios || [];
-  comentarios.push({
-    texto,
-    fecha: new Date().toISOString(),
-    respuesta: null
-  });
-
-  const { error: updateError } = await supabase
-    .from('clientes')
-    .update({ comentarios })
-    .eq('id', clienteId);
-
-  if (updateError) {
-    alert('❌ Error al guardar el comentario.');
-    return;
-  }
-
-  document.getElementById('comentarioCliente').value = '';
-  document.getElementById('mensajeConfirmado').textContent = '✅ Comentario enviado correctamente.';
-  cargarPerfil(); // Recargar para ver el nuevo comentario
 }
 
 // Renderizar comentarios
@@ -116,6 +123,10 @@ function cerrarSesion() {
   localStorage.removeItem('cliente_numero');
   window.location.href = 'login.html';
 }
+
+// Hacer funciones accesibles globalmente
+window.enviarComentario = enviarComentario;
+window.cerrarSesion = cerrarSesion;
 
 // Iniciar
 cargarPerfil();
