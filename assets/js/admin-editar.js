@@ -71,7 +71,7 @@ async function subirAudio() {
     return;
   }
 
-  const fileName = `${clienteId}_${Date.now()}.${file.name.split('.').pop()}`;
+  const fileName = `${clienteId}_${Date.now()}.mp3`;
 
   // Subir archivo a Supabase Storage
   const { error: uploadError } = await supabase
@@ -84,13 +84,8 @@ async function subirAudio() {
     return;
   }
 
-  // ✅ Corrección clave: sintaxis correcta de getPublicUrl()
-  const {  publicUrl } = supabase.storage.from('audios').getPublicUrl(fileName);
-
-  if (!publicUrl) {
-    alert('❌ No se pudo generar la URL pública.');
-    return;
-  }
+  // ✅ Solución definitiva: construir URL manualmente
+  const publicUrl = `https://vgrpcnknpeihzljhnfjp.supabase.co/storage/v1/object/public/audios/${encodeURIComponent(fileName)}`;
 
   // Guardar URL en la tabla clientes
   const { error: updateError } = await supabase
