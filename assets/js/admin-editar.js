@@ -84,11 +84,10 @@ async function subirAudio() {
     return;
   }
 
-  // Obtener URL pública (¡sin await!)
-  const {  publicURLData } = supabase.storage.from('audios').getPublicUrl(fileName);
-  const audioUrl = publicURLData?.publicUrl;
+  // ✅ Corrección clave: sintaxis correcta de getPublicUrl()
+  const {  publicUrl } = supabase.storage.from('audios').getPublicUrl(fileName);
 
-  if (!audioUrl) {
+  if (!publicUrl) {
     alert('❌ No se pudo generar la URL pública.');
     return;
   }
@@ -96,7 +95,7 @@ async function subirAudio() {
   // Guardar URL en la tabla clientes
   const { error: updateError } = await supabase
     .from('clientes')
-    .update({ audio_url: audioUrl })
+    .update({ audio_url: publicUrl })
     .eq('id', clienteId);
 
   if (updateError) {
