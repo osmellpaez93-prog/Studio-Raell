@@ -1,4 +1,3 @@
-// assets/js/perfil.js
 import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
 
 const supabase = createClient(
@@ -13,26 +12,34 @@ if (!proyectoId) {
 
 async function cargarProyecto() {
   try {
-    const { data, error } = await supabase
+    const { data: proyecto, error } = await supabase
       .from('proyectos')
       .select('*')
       .eq('id', proyectoId)
       .single();
 
-    if (error || !data) throw error;
+    if (error || !proyecto) throw error;
 
-    document.getElementById('saludoCliente').textContent = `Hola, ${data.nombre}`;
-    document.getElementById('codigoRaell').textContent = `Número Raell Studio: ${data.numero_raell}`;
+    const { data: cliente, error: errorCliente } = await supabase
+      .from('clientes')
+      .select('nombre, numero_raell')
+      .eq('id', proyecto.cliente_id)
+      .single();
+
+    if (!errorCliente && cliente) {
+      document.getElementById('saludoCliente').textContent = `Hola, ${cliente.nombre}`;
+      document.getElementById('codigoRaell').textContent = `Número Raell Studio: ${cliente.numero_raell}`;
+    }
 
     const letraEl = document.getElementById('letraCancion');
-    letraEl.textContent = data.letra || 'Aún no se ha enviado ninguna letra.';
+    letraEl.textContent = proyecto.letra || 'Aún no se ha enviado ninguna letra.';
 
     const audioEl = document.getElementById('audioMuestra');
     const sourceEl = document.getElementById('audioSource');
     const audioTitle = document.querySelector('.bloque:nth-child(2) h3');
 
-    if (data.audio_url) {
-      sourceEl.src = data.audio_url;
+    if (proyecto.audio_url) {
+      sourceEl.src = proyecto.audio_url;
       audioEl.load();
       audioEl.style.display = 'block';
       if (audioTitle) audioTitle.textContent = 'Prueba musical';
@@ -41,7 +48,7 @@ async function cargarProyecto() {
       if (audioTitle) audioTitle.textContent = 'No hay muestra musical aún.';
     }
 
-    renderComentarios(data.comentarios || []);
+    renderComentarios(proyecto.comentarios || []);
   } catch (err) {
     console.error('Error:', err);
     document.getElementById('perfil').innerHTML = '<p>❌ Error al cargar tu proyecto.</p>';

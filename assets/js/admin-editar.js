@@ -1,4 +1,3 @@
-// assets/js/admin-editar.js
 import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
 
 const supabase = createClient(
@@ -6,139 +5,161 @@ const supabase = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
 );
 
-const urlParams = new URLSearchParams(window.location.search);
-const proyectoId = urlParams.get('id');
-
-if (!proyectoId) {
-  alert('ID de proyecto no válido.');
-  window.location.href = 'admin.html';
+// Obtener cliente_id desde la URL
+const clienteId = new URLSearchParams(window.location.search).get('id');
+if (!clienteId) {
+  document.getElementById('mensajeError')?.textContent = '❌ Cliente no especificado.';
+  throw new Error('Cliente ID no encontrado en la URL');
 }
 
+let proyectoActual = null;
+
+// Cargar proyecto vinculado al cliente
 async function cargarProyecto() {
-  const { data, error } = await supabase
-    .from('proyectos')
-    .select('*')
-    .eq('id', proyectoId)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('proyectos')
+      .select('*')
+      .eq('cliente_id', clienteId)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
 
-  if (error || !data) {
-    document.getElementById('datosCliente').innerHTML = '<p>❌ Proyecto no encontrado.</p>';
-    return;
+    if (error || !data) {
+      document.getElementById('mensajeError')?.textContent = '❌ Proyecto no encontrado.';
+      return;
+    }
+
+    proyectoActual = data;
+
+    // Mostrar letra actual
+    document.getElementById('letraCancion').value = data.letra || '';
+
+    // Mostrar audio actual si existe
+    const audioEl = document.getElementById('audioMuestra');
+    const sourceEl = document.getElementById('audioSource');
+    const audioTitle = document.querySelector('.bloque:nth-child(2) h3);
+
+    if (data.audio_url) {
+      sourceEl.src = data.audio_url;
+      audioEl.load();
+      audioEl.style.display = 'block';
+      if (audioTitle) audioTitle.textContent = 'Prueba musical';
+    } else {
+      audioEl.style.display = 'none';
+      if (audioTitle) audioTitle.textContent = 'No hay muestra musical aún.';
+    }
+
+    // Mostrar comentarios
+    renderComentarios(data.comentarios || []);
+  } catch (err) {
+    console.error('Error al cargar proyecto:', err);
+    document.getElementById('mensajeError')?.textContent = '❌ Error al cargar el proyecto.';
   }
-
-  document.getElementById('datosCliente').innerHTML = `
-    <h2>${data.nombre} (${data.numero_raell})</h2>
-    <p><strong>Email:</strong> ${data.email}</p>
-    <p><strong>Descripción:</strong> ${data.descripcion}</p>
-  `;
-
-  if (data.letra) document.getElementById('letraAdmin').value = data.letra;
-  if (data.audio_url) {
-    document.getElementById('audioStatus').textContent = 'Audio: ' + data.audio_url;
-  }
-
-  renderComentarios(data.comentarios || []);
 }
 
+// Guardar letra
 async function guardarLetra() {
-  const letra = document.getElementById('letraAdmin').value.trim();
-  if (!letra) return;
+  const nuevaLetra = document.getElementById('letraCancion').value.trim();
+  if (!proyectoActual || !nuevaLetra) return;
 
   const { error } = await supabase
     .from('proyectos')
-    .update({ letra })
-    .eq('id', proyectoId);
+    .update({ letra: nuevaLetra })
+    .eq('id', proyectoActual.id);
 
-  if (error) alert('❌ Error al guardar la letra.');
-  else alert('✅ Letra guardada.');
-}
-
-async function subirAudio() {
-  const fileInput = document.getElementById('audioFile');
-  const file = fileInput.files[0];
-  if (!file) {
-    alert('Selecciona un archivo de audio.');
+  if (error) {
+    alert('❌ Error al guardar la letra.');
     return;
   }
 
-  const fileName = `${proyectoId}_${Date.now()}.mp3`;
+  alert('✅ Letra actualizada correctamente.');
+}
 
-  const { error: uploadError } = await supabase
-    .storage
+// Subir y guardar audio
+async function subirYGuardarAudio() {
+  const archivo = document.getElementById('archivoAudio').files[0];
+  if (!archivo || !proyectoActual) return;
+
+  const nombreArchivo = `${proyectoActual.cliente_id}/${Date.now()}_${archivo.name}`;
+  const { data, error } = await supabase.storage
     .from('audios')
-    .upload(fileName, file, { upsert: true });
+    .upload(nombreArchivo, archivo, { upsert: true });
 
-  if (uploadError) {
-    alert('❌ Error al subir: ' + uploadError.message);
+  if (error) {
+    alert('❌ Error al subir el audio.');
     return;
   }
 
-  // ✅ URL manual (confiable)
-  const publicUrl = `https://vgrpcnknpeihzljhnfjp.supabase.co/storage/v1/object/public/audios/${encodeURIComponent(fileName)}`;
+  const url = supabase.storage
+    .from('audios')
+    .getPublicUrl(nombreArchivo).data.publicUrl;
 
   const { error: updateError } = await supabase
     .from('proyectos')
-    .update({ audio_url: publicUrl })
-    .eq('id', proyectoId);
+    .update({ audio_url: url })
+    .eq('id', proyectoActual.id);
 
   if (updateError) {
-    alert('❌ Error al guardar URL: ' + updateError.message);
+    alert('❌ Error al guardar el audio.');
     return;
   }
 
-  alert('✅ Audio enlazado al proyecto.');
-  cargarProyecto();
+  alert('✅ Audio actualizado correctamente.');
+  cargarProyecto(); // Recargar para mostrar el nuevo audio
 }
 
-async function responderComentario() {
-  const respuesta = document.getElementById('respuestaAdmin').value.trim();
-  if (!respuesta) return;
-
-  const { data, error } = await supabase
-    .from('proyectos')
-    .select('comentarios')
-    .eq('id', proyectoId)
-    .single();
-
-  if (error || !data || !data.comentarios?.length) {
-    alert('No hay comentarios.');
-    return;
-  }
-
-  const comentarios = data.comentarios;
-  comentarios[comentarios.length - 1].respuesta = respuesta;
-
-  const { error: updateError } = await supabase
-    .from('proyectos')
-    .update({ comentarios })
-    .eq('id', proyectoId);
-
-  if (updateError) {
-    alert('❌ Error al responder.');
-    return;
-  }
-
-  alert('✅ Respuesta enviada.');
-  document.getElementById('respuestaAdmin').value = '';
-  cargarProyecto();
-}
-
+// Mostrar comentarios del cliente
 function renderComentarios(comentarios) {
   const cont = document.getElementById('comentarios');
   if (!cont) return;
+
   cont.innerHTML = comentarios.length
-    ? comentarios.map(c => `
-        <div style="background:rgba(255,255,255,0.1); padding:10px; margin:10px 0; border-radius:6px;">
+    ? comentarios.map((c, i) => `
+        <div class="comentario-box" style="border:1px solid #ccc; padding:10px; margin:10px 0;">
           <p><strong>Cliente:</strong> ${c.texto}</p>
           <p><em>${new Date(c.fecha).toLocaleString()}</em></p>
-          ${c.respuesta ? `<p><strong>Tú:</strong> ${c.respuesta}</p>` : '<p><em>Esperando tu respuesta...</em></p>'}
+          ${c.respuesta ? `<p><strong>Respuesta enviada:</strong> ${c.respuesta}</p>` : ""}
         </div>
       `).join("")
-    : '<p>No hay comentarios.</p>';
+    : '<p>No hay comentarios aún.</p>';
 }
 
+// Enviar respuesta del admin
+async function responderComentario() {
+  const respuesta = document.getElementById('respuestaAdmin')?.value?.trim();
+  if (!respuesta || !proyectoActual) return;
+
+  const comentarios = proyectoActual.comentarios || [];
+  const sinResponder = comentarios.find(c => !c.respuesta);
+
+  if (!sinResponder) {
+    alert('✅ Todos los comentarios ya tienen respuesta.');
+    return;
+  }
+
+  sinResponder.respuesta = respuesta;
+
+  const { error } = await supabase
+    .from('proyectos')
+    .update({ comentarios })
+    .eq('id', proyectoActual.id);
+
+  if (error) {
+    alert('❌ Error al enviar la respuesta.');
+    return;
+  }
+
+  document.getElementById('respuestaAdmin').value = '';
+  alert('✅ Respuesta enviada correctamente.');
+  proyectoActual.comentarios = comentarios;
+  renderComentarios(comentarios);
+}
+
+// Hacer funciones globales
 window.guardarLetra = guardarLetra;
-window.subirAudio = subirAudio;
+window.subirYGuardarAudio = subirYGuardarAudio;
 window.responderComentario = responderComentario;
 
+// Iniciar
 cargarProyecto();
