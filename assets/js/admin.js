@@ -38,7 +38,7 @@ async function cargarClientes() {
       <button onclick="window.editarCliente('${cliente.id}')" style="margin:5px; padding:6px 12px; background:#00c3ff; color:white; border:none; border-radius:4px; cursor:pointer;">Editar</button>
       <button onclick="window.eliminarCliente('${cliente.id}')" style="margin:5px; padding:6px 12px; background:#ff4d4d; color:white; border:none; border-radius:4px; cursor:pointer;">Eliminar</button>
     </div>
-  `).join("");
+  `).join('');
 }
 
 // Llenar selector
@@ -177,4 +177,14 @@ async function eliminarCliente(id) {
     alert('✅ Cliente eliminado correctamente.');
     cargarClientes();
     llenarSelectorClientes();
- 
+  }
+}
+
+// Hacer funciones globales
+window.editarCliente = editarCliente;
+window.eliminarCliente = eliminarCliente;
+
+// Iniciar
+cargarClientes();
+llenarSelectorClientes();
+cargarComentarios();
