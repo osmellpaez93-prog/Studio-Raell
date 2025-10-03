@@ -13,17 +13,13 @@
   </header>
 
   <section class="formulario-registro">
-    <p>Accede con tu correo y número Raell.</p>
+    <p>Accede con tu correo y número Raell Studio.</p>
     <form id="formLogin">
       <label for="email">Correo electrónico:</label>
-      <input type="email" id="email" placeholder="tu@email.com">
+      <input type="email" id="email" placeholder="tu@email.com" required>
 
       <label for="numeroRaell">Número Raell Studio:</label>
-      <input type="text" id="numeroRaell" placeholder="Ej. R12345L o código maestro" required>
-
-      <div class="ayuda" style="font-size: 0.85em; margin-top: 6px; color: #aaa;">
-        ¿Eres administrador? Usa el código maestro para acceder.
-      </div>
+      <input type="text" id="numeroRaell" placeholder="Ej. R12345L" required>
 
       <button type="submit">Entrar</button>
       <p id="mensaje" style="margin-top: 10px; color: red;"></p>
