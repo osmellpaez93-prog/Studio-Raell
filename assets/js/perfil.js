@@ -20,37 +20,43 @@ async function cargarPerfil() {
 
     if (error || !data) throw error;
 
-    document.getElementById('saludoCliente').textContent = `Hola, ${data.nombre}`;
-    document.getElementById('codigoRaell').textContent = `Número Raell Studio: ${data.numero_raell}`;
-
-    // Letra
+    // ✅ Verificar que los elementos existan antes de usarlos
+    const saludoEl = document.getElementById('saludoCliente');
+    const codigoEl = document.getElementById('codigoRaell');
     const letraEl = document.getElementById('letraCancion');
-    letraEl.textContent = data.letra || 'Aún no se ha enviado ninguna letra.';
-
-    // Audio
     const audioEl = document.getElementById('audioMuestra');
     const sourceEl = document.getElementById('audioSource');
     const audioTitle = document.querySelector('.bloque:nth-child(2) h3');
 
-    if (data.audio_url) {
-      sourceEl.src = data.audio_url;
-      audioEl.load();
-      audioEl.style.display = 'block';
-      audioTitle.textContent = 'Prueba musical';
-    } else {
-      audioEl.style.display = 'none';
-      audioTitle.textContent = 'No hay muestra musical aún.';
+    if (saludoEl) saludoEl.textContent = `Hola, ${data.nombre}`;
+    if (codigoEl) codigoEl.textContent = `Número Raell Studio: ${data.numero_raell}`;
+    if (letraEl) letraEl.textContent = data.letra || 'Aún no se ha enviado ninguna letra.';
+
+    if (audioEl && sourceEl && audioTitle) {
+      if (data.audio_url) {
+        sourceEl.src = data.audio_url;
+        audioEl.load();
+        audioEl.style.display = 'block';
+        audioTitle.textContent = 'Prueba musical';
+      } else {
+        audioEl.style.display = 'none';
+        audioTitle.textContent = 'No hay muestra musical aún.';
+      }
     }
 
     renderComentarios(data.comentarios || []);
   } catch (err) {
-    console.error('Error:', err);
-    document.getElementById('perfil').innerHTML = '<p>❌ Error al cargar tu perfil.</p>';
+    console.error('Error al cargar perfil:', err);
+    const perfilEl = document.getElementById('perfil');
+    if (perfilEl) {
+      perfilEl.innerHTML = '<p>❌ Error al cargar tu perfil. Por favor, inicia sesión de nuevo.</p>';
+    }
   }
 }
 
 async function enviarComentario() {
-  const texto = document.getElementById('comentarioCliente')?.value?.trim();
+  const comentarioEl = document.getElementById('comentarioCliente');
+  const texto = comentarioEl?.value?.trim();
   if (!texto) return;
 
   try {
@@ -76,11 +82,14 @@ async function enviarComentario() {
 
     if (updateError) throw updateError;
 
-    document.getElementById('comentarioCliente').value = '';
-    document.getElementById('mensajeConfirmado').textContent = '✅ Comentario enviado correctamente.';
+    if (comentarioEl) comentarioEl.value = '';
+    const mensajeEl = document.getElementById('mensajeConfirmado');
+    if (mensajeEl) mensajeEl.textContent = '✅ Comentario enviado correctamente.';
+
     cargarPerfil();
   } catch (err) {
-    alert('❌ Error al enviar el comentario.');
+    console.error('Error al enviar comentario:', err);
+    alert('❌ No se pudo enviar el comentario. Intenta de nuevo.');
   }
 }
 
