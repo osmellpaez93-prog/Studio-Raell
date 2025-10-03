@@ -20,8 +20,9 @@
     <button onclick="guardarLetra()">Guardar letra</button>
 
     <h3>Enviar muestra de audio</h3>
-    <input type="url" id="audioUrl" placeholder="URL del archivo MP3 (ej: https://ejemplo.com/cancion.mp3)" style="width:100%; padding:10px; margin:10px 0;">
-    <button onclick="guardarAudio()">Guardar audio</button>
+    <input type="file" id="audioFile" accept="audio/mpeg" style="width:100%; padding:10px; margin:10px 0;">
+    <button onclick="subirAudio()">Subir y guardar audio</button>
+    <p id="audioStatus" style="margin:5px 0; font-size:0.9em; color:#ccc;"></p>
 
     <h3>Comentarios del cliente</h3>
     <div id="comentarios"></div>

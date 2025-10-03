@@ -5,13 +5,11 @@ const supabase = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
 );
 
-// Verificar sesión
 const clienteId = localStorage.getItem('cliente_id');
 if (!clienteId) {
   window.location.href = 'login.html';
 }
 
-// Cargar perfil
 async function cargarPerfil() {
   try {
     const { data, error } = await supabase
@@ -20,45 +18,37 @@ async function cargarPerfil() {
       .eq('id', clienteId)
       .single();
 
-    if (error || !data) {
-      document.getElementById('perfil').innerHTML = '<p>❌ Error al cargar tu perfil.</p>';
-      return;
-    }
+    if (error || !data) throw error;
 
-    // Saludo
     document.getElementById('saludoCliente').textContent = `Hola, ${data.nombre}`;
     document.getElementById('codigoRaell').textContent = `Número Raell Studio: ${data.numero_raell}`;
 
     // Letra
     const letraEl = document.getElementById('letraCancion');
-    if (data.letra) {
-      letraEl.textContent = data.letra;
-    } else {
-      letraEl.textContent = 'Aún no se ha enviado ninguna letra.';
-    }
+    letraEl.textContent = data.letra || 'Aún no se ha enviado ninguna letra.';
 
     // Audio
     const audioEl = document.getElementById('audioMuestra');
     const sourceEl = document.getElementById('audioSource');
+    const audioTitle = document.querySelector('.bloque:nth-child(2) h3');
+
     if (data.audio_url) {
       sourceEl.src = data.audio_url;
       audioEl.load();
       audioEl.style.display = 'block';
+      audioTitle.textContent = 'Prueba musical';
     } else {
       audioEl.style.display = 'none';
-      const audioTitle = document.querySelector('.bloque:nth-child(2) h3');
-      if (audioTitle) audioTitle.textContent = 'No hay muestra musical aún.';
+      audioTitle.textContent = 'No hay muestra musical aún.';
     }
 
-    // Comentarios
     renderComentarios(data.comentarios || []);
   } catch (err) {
-    console.error('Error en cargarPerfil:', err);
-    document.getElementById('perfil').innerHTML = '<p>❌ Error inesperado.</p>';
+    console.error('Error:', err);
+    document.getElementById('perfil').innerHTML = '<p>❌ Error al cargar tu perfil.</p>';
   }
 }
 
-// Enviar comentario
 async function enviarComentario() {
   const texto = document.getElementById('comentarioCliente')?.value?.trim();
   if (!texto) return;
@@ -87,44 +77,34 @@ async function enviarComentario() {
     if (updateError) throw updateError;
 
     document.getElementById('comentarioCliente').value = '';
-    const mensaje = document.getElementById('mensajeConfirmado');
-    if (mensaje) mensaje.textContent = '✅ Comentario enviado correctamente.';
-
+    document.getElementById('mensajeConfirmado').textContent = '✅ Comentario enviado correctamente.';
     cargarPerfil();
   } catch (err) {
-    console.error('Error al enviar comentario:', err);
     alert('❌ Error al enviar el comentario.');
   }
 }
 
-// Renderizar comentarios
 function renderComentarios(comentarios) {
   const cont = document.getElementById('historialComentarios');
   if (!cont) return;
 
-  if (comentarios.length === 0) {
-    cont.innerHTML = '<p>No has enviado comentarios aún.</p>';
-    return;
-  }
-
-  cont.innerHTML = comentarios.map(c => `
-    <div class="comentario-box">
-      <p><strong>Tú:</strong> ${c.texto}</p>
-      <p><em>${new Date(c.fecha).toLocaleString()}</em></p>
-      ${c.respuesta ? `<p><strong>Raell Studio:</strong> ${c.respuesta}</p>` : ""}
-    </div>
-  `).join("");
+  cont.innerHTML = comentarios.length
+    ? comentarios.map(c => `
+        <div class="comentario-box">
+          <p><strong>Tú:</strong> ${c.texto}</p>
+          <p><em>${new Date(c.fecha).toLocaleString()}</em></p>
+          ${c.respuesta ? `<p><strong>Raell Studio:</strong> ${c.respuesta}</p>` : ""}
+        </div>
+      `).join("")
+    : '<p>No has enviado comentarios aún.</p>';
 }
 
-// Cerrar sesión
 function cerrarSesion() {
-  localStorage.removeItem('cliente_id');
-  localStorage.removeItem('cliente_nombre');
-  localStorage.removeItem('cliente_numero');
+  localStorage.clear();
   window.location.href = 'login.html';
 }
 
-// Hacer funciones accesibles globalmente
+// Hacer funciones accesibles desde HTML
 window.enviarComentario = enviarComentario;
 window.cerrarSesion = cerrarSesion;
 

@@ -34,7 +34,9 @@ async function cargarCliente() {
 
   // Mostrar letra y audio si existen
   if (data.letra) document.getElementById('letraAdmin').value = data.letra;
-  if (data.audio_url) document.getElementById('audioUrl').value = data.audio_url;
+  if (data.audio_url) {
+    document.getElementById('audioStatus').textContent = 'Audio actual: ' + data.audio_url;
+  }
 
   // Renderizar comentarios
   renderComentarios(data.comentarios || []);
@@ -54,18 +56,50 @@ async function guardarLetra() {
   else alert('✅ Letra guardada.');
 }
 
-// Guardar audio
-async function guardarAudio() {
-  const url = document.getElementById('audioUrl').value.trim();
-  if (!url) return;
+// Subir y guardar audio
+async function subirAudio() {
+  const fileInput = document.getElementById('audioFile');
+  const file = fileInput.files[0];
+  if (!file) {
+    alert('Por favor, selecciona un archivo de audio.');
+    return;
+  }
 
-  const { error } = await supabase
+  const fileName = `${clienteId}_${Date.now()}.mp3`;
+  const { data, error } = await supabase
+    .storage
+    .from('audios')
+    .upload(fileName, file, {
+      cacheControl: '3600',
+      upsert: true
+    });
+
+  if (error) {
+    alert('❌ Error al subir el audio.');
+    return;
+  }
+
+  // Obtener la URL pública
+  const { data: publicURL } = supabase
+    .storage
+    .from('audios')
+    .getPublicUrl(fileName);
+
+  const audioUrl = publicURL.publicUrl;
+
+  // Guardar la URL en la tabla clientes
+  const { error: updateError } = await supabase
     .from('clientes')
-    .update({ audio_url: url })
+    .update({ audio_url: audioUrl })
     .eq('id', clienteId);
 
-  if (error) alert('❌ Error al guardar el audio.');
-  else alert('✅ Audio guardado.');
+  if (updateError) {
+    alert('❌ Error al guardar la URL del audio.');
+    return;
+  }
+
+  document.getElementById('audioStatus').textContent = '✅ Audio subido y guardado.';
+  alert('✅ Audio subido correctamente.');
 }
 
 // Responder al último comentario
@@ -122,6 +156,11 @@ function renderComentarios(comentarios) {
     </div>
   `).join('');
 }
+
+// Hacer funciones globales
+window.guardarLetra = guardarLetra;
+window.subirAudio = subirAudio;
+window.responderComentario = responderComentario;
 
 // Iniciar
 cargarCliente();
