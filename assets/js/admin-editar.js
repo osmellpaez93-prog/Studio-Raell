@@ -65,6 +65,12 @@ async function subirAudio() {
     return;
   }
 
+  // Verificar tipo de archivo
+  if (!file.type.startsWith('audio/')) {
+    alert('Solo se permiten archivos de audio.');
+    return;
+  }
+
   const fileName = `${clienteId}_${Date.now()}.mp3`;
   const { data, error } = await supabase
     .storage
@@ -75,7 +81,7 @@ async function subirAudio() {
     });
 
   if (error) {
-    alert('❌ Error al subir el audio.');
+    alert('❌ Error al subir el audio: ' + error.message);
     return;
   }
 
@@ -94,7 +100,7 @@ async function subirAudio() {
     .eq('id', clienteId);
 
   if (updateError) {
-    alert('❌ Error al guardar la URL del audio.');
+    alert('❌ Error al guardar la URL del audio: ' + updateError.message);
     return;
   }
 
@@ -132,12 +138,14 @@ async function responderComentario() {
     .update({ comentarios })
     .eq('id', clienteId);
 
-  if (updateError) alert('❌ Error al enviar la respuesta.');
-  else {
-    alert('✅ Respuesta enviada.');
-    document.getElementById('respuestaAdmin').value = '';
-    cargarCliente(); // Recargar para ver la respuesta
+  if (updateError) {
+    alert('❌ Error al enviar la respuesta.');
+    return;
   }
+
+  alert('✅ Respuesta enviada.');
+  document.getElementById('respuestaAdmin').value = '';
+  cargarCliente(); // Recargar para ver la respuesta
 }
 
 // Renderizar comentarios
