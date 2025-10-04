@@ -47,7 +47,7 @@ async function cargarPerfil() {
     if (audioEl && sourceEl) {
       if (data.audio_url) {
         sourceEl.src = data.audio_url;
-        audioEl.load();
+        audioEl.load(); // 🔥 Esencial para recargar el audio
         audioEl.style.display = 'block';
       } else {
         audioEl.style.display = 'none';
@@ -57,7 +57,10 @@ async function cargarPerfil() {
     renderComentarios(normalizarComentarios(data.comentarios));
   } catch (err) {
     console.error('Error al cargar perfil:', err);
-    document.getElementById('perfil').innerHTML = '<p>❌ Error al cargar tu perfil.</p>';
+    const perfilEl = document.getElementById('perfil');
+    if (perfilEl) {
+      perfilEl.innerHTML = '<p>❌ Error al cargar tu perfil.</p>';
+    }
   }
 }
 
@@ -85,16 +88,19 @@ async function enviarComentario() {
     if (updateError) throw updateError;
 
     document.getElementById('comentarioCliente').value = '';
-    document.getElementById('mensajeConfirmado').textContent = '✅ Comentario enviado correctamente.';
+    const msg = document.getElementById('mensajeConfirmado');
+    if (msg) msg.textContent = '✅ Comentario enviado correctamente.';
+
     cargarPerfil();
   } catch (err) {
-    alert('❌ Error al enviar.');
+    alert('❌ Error al enviar el comentario.');
   }
 }
 
 function renderComentarios(comentarios) {
   const cont = document.getElementById('historialComentarios');
   if (!cont) return;
+
   cont.innerHTML = comentarios.length
     ? comentarios.map(c => `
         <div class="comentario-box">
