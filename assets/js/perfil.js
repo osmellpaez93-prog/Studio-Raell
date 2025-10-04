@@ -10,11 +10,9 @@ if (!clienteId) {
   window.location.href = 'login.html';
 }
 
-// ✅ Función para normalizar comentarios (maneja string o array)
+// ✅ Normaliza comentarios: acepta string JSON o array
 function normalizarComentarios(comentarios) {
-  if (Array.isArray(comentarios)) {
-    return comentarios;
-  }
+  if (Array.isArray(comentarios)) return comentarios;
   if (typeof comentarios === 'string') {
     try {
       return JSON.parse(comentarios);
@@ -35,6 +33,7 @@ async function cargarPerfil() {
 
     if (error || !data) throw error;
 
+    // Actualizar elementos del DOM (con verificación)
     const saludoEl = document.getElementById('saludoCliente');
     const codigoEl = document.getElementById('codigoRaell');
     const letraEl = document.getElementById('letraCancion');
@@ -58,12 +57,14 @@ async function cargarPerfil() {
       }
     }
 
-    // ✅ Normalizar comentarios antes de renderizar
-    const comentariosNormalizados = normalizarComentarios(data.comentarios);
-    renderComentarios(comentariosNormalizados);
+    // ✅ Renderizar comentarios normalizados
+    renderComentarios(normalizarComentarios(data.comentarios));
   } catch (err) {
     console.error('Error al cargar perfil:', err);
-    document.getElementById('perfil').innerHTML = '<p>❌ Error al cargar tu perfil.</p>';
+    const perfilEl = document.getElementById('perfil');
+    if (perfilEl) {
+      perfilEl.innerHTML = '<p>❌ Error al cargar tu perfil.</p>';
+    }
   }
 }
 
@@ -80,8 +81,7 @@ async function enviarComentario() {
 
     if (error) throw error;
 
-    // ✅ Normalizar antes de añadir
-    let comentarios = normalizarComentarios(data.comentarios);
+    const comentarios = normalizarComentarios(data.comentarios);
     comentarios.push({
       texto,
       fecha: new Date().toISOString(),
@@ -96,7 +96,9 @@ async function enviarComentario() {
     if (updateError) throw updateError;
 
     document.getElementById('comentarioCliente').value = '';
-    document.getElementById('mensajeConfirmado').textContent = '✅ Comentario enviado correctamente.';
+    const msg = document.getElementById('mensajeConfirmado');
+    if (msg) msg.textContent = '✅ Comentario enviado correctamente.';
+
     cargarPerfil();
   } catch (err) {
     alert('❌ Error al enviar el comentario.');
@@ -123,7 +125,9 @@ function cerrarSesion() {
   window.location.href = 'login.html';
 }
 
+// Hacer funciones accesibles desde HTML
 window.enviarComentario = enviarComentario;
 window.cerrarSesion = cerrarSesion;
 
+// Iniciar
 cargarPerfil();
