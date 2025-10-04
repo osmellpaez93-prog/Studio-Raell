@@ -1,9 +1,10 @@
+<!-- perfil.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Tu espacio creativo - Raell Studio</title>
+  <title>Tu espacio - Raell Studio</title>
   <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
@@ -30,20 +31,18 @@
     </div>
 
     <div class="bloque">
-      <h3>Tu opinión sobre la muestra</h3>
-      <textarea id="comentarioCliente" placeholder="Escribe aquí lo que piensas sobre la letra o la música..."></textarea>
+      <h3>Tu opinión</h3>
+      <textarea id="comentarioCliente" placeholder="Escribe tu opinión..."></textarea>
       <button onclick="enviarComentario()">Enviar comentario</button>
-      <p id="mensajeConfirmado" class="ayuda"></p>
+      <p id="mensajeConfirmado"></p>
     </div>
 
     <div class="bloque">
-      <h3>Historial de comentarios</h3>
+      <h3>Historial</h3>
       <div id="historialComentarios"></div>
     </div>
 
-    <div class="botones-confirmacion" style="margin-top:30px;">
-      <button onclick="cerrarSesion()" class="boton-volver">Cerrar sesión</button>
-    </div>
+    <button onclick="cerrarSesion()" style="margin-top:20px;">Cerrar sesión</button>
   </section>
 
   <script type="module" src="./assets/js/perfil.js"></script>

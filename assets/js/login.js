@@ -1,3 +1,4 @@
+// assets/js/login.js
 import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
 
 const supabase = createClient(
@@ -13,12 +14,11 @@ document.getElementById('formLogin')?.addEventListener('submit', async (e) => {
   const mensaje = document.getElementById('mensaje');
 
   if (!email || !numero) {
-    mensaje.textContent = '❌ Por favor, ingresa ambos campos.';
+    mensaje.textContent = '❌ Ingresa correo y número Raell.';
     return;
   }
 
   try {
-    // Buscar en la tabla "clientes"
     const { data, error } = await supabase
       .from('clientes')
       .select('id, nombre, numero_raell')
@@ -31,12 +31,10 @@ document.getElementById('formLogin')?.addEventListener('submit', async (e) => {
       return;
     }
 
-    // Guardar datos en localStorage
     localStorage.setItem('cliente_id', data.id);
     localStorage.setItem('cliente_nombre', data.nombre);
     localStorage.setItem('cliente_numero', data.numero_raell);
 
-    // Redirigir al perfil
     window.location.href = 'perfil.html';
   } catch (err) {
     console.error('Error:', err);

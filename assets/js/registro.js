@@ -1,6 +1,6 @@
+// assets/js/registro.js
 import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
 
-// Configuración de Supabase (sin espacios)
 const supabase = createClient(
   'https://vgrpcnknpeihzljhnfjp.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
@@ -12,7 +12,6 @@ document.getElementById('formulario')?.addEventListener('submit', async (e) => {
   mensaje.textContent = 'Enviando...';
   mensaje.style.color = '#6a5acd';
 
-  // Generar número Raell único
   const numeroRaell = "R" + Math.floor(10000 + Math.random() * 90000) + "L";
 
   const data = {
@@ -28,6 +27,12 @@ document.getElementById('formulario')?.addEventListener('submit', async (e) => {
   try {
     const { error } = await supabase.from('clientes').insert([data]);
     if (error) throw error;
+
+    // ✅ Guardar en localStorage para confirmacion.html
+    localStorage.setItem('numeroRaellUsuario', numeroRaell);
+    localStorage.setItem('nombreUsuario', data.nombre);
+    localStorage.setItem('emailUsuario', data.email);
+    localStorage.setItem('descripcionUsuario', data.descripcion);
 
     mensaje.textContent = '✅ ¡Registro exitoso!';
     mensaje.style.color = 'green';

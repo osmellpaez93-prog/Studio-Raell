@@ -1,3 +1,4 @@
+// assets/js/perfil.js
 import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
 
 const supabase = createClient(
@@ -5,53 +6,38 @@ const supabase = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
 );
 
-const proyectoId = localStorage.getItem('proyecto_id');
-if (!proyectoId) {
+const clienteId = localStorage.getItem('cliente_id');
+if (!clienteId) {
   window.location.href = 'login.html';
 }
 
-async function cargarProyecto() {
+async function cargarPerfil() {
   try {
-    const { data: proyecto, error } = await supabase
-      .from('proyectos')
-      .select('*')
-      .eq('id', proyectoId)
-      .single();
-
-    if (error || !proyecto) throw error;
-
-    const { data: cliente, error: errorCliente } = await supabase
+    const { data, error } = await supabase
       .from('clientes')
-      .select('nombre, numero_raell')
-      .eq('id', proyecto.cliente_id)
+      .select('*')
+      .eq('id', clienteId)
       .single();
 
-    if (!errorCliente && cliente) {
-      document.getElementById('saludoCliente').textContent = `Hola, ${cliente.nombre}`;
-      document.getElementById('codigoRaell').textContent = `Número Raell Studio: ${cliente.numero_raell}`;
-    }
+    if (error || !data) throw error;
 
-    const letraEl = document.getElementById('letraCancion');
-    letraEl.textContent = proyecto.letra || 'Aún no se ha enviado ninguna letra.';
+    document.getElementById('saludoCliente').textContent = `Hola, ${data.nombre}`;
+    document.getElementById('codigoRaell').textContent = `Número Raell: ${data.numero_raell}`;
+    document.getElementById('letraCancion').textContent = data.letra || 'Aún no hay letra.';
 
     const audioEl = document.getElementById('audioMuestra');
     const sourceEl = document.getElementById('audioSource');
-    const audioTitle = document.querySelector('.bloque:nth-child(2) h3');
-
-    if (proyecto.audio_url) {
-      sourceEl.src = proyecto.audio_url;
+    if (data.audio_url) {
+      sourceEl.src = data.audio_url;
       audioEl.load();
       audioEl.style.display = 'block';
-      if (audioTitle) audioTitle.textContent = 'Prueba musical';
     } else {
       audioEl.style.display = 'none';
-      if (audioTitle) audioTitle.textContent = 'No hay muestra musical aún.';
     }
 
-    renderComentarios(proyecto.comentarios || []);
+    renderComentarios(data.comentarios || []);
   } catch (err) {
-    console.error('Error:', err);
-    document.getElementById('perfil').innerHTML = '<p>❌ Error al cargar tu proyecto.</p>';
+    document.getElementById('perfil').innerHTML = '<p>❌ Error al cargar tu perfil.</p>';
   }
 }
 
@@ -61,34 +47,24 @@ async function enviarComentario() {
 
   try {
     const { data, error } = await supabase
-      .from('proyectos')
+      .from('clientes')
       .select('comentarios')
-      .eq('id', proyectoId)
+      .eq('id', clienteId)
       .single();
 
-    if (error) throw error;
-
     const comentarios = data.comentarios || [];
-    comentarios.push({
-      texto,
-      fecha: new Date().toISOString(),
-      respuesta: null
-    });
+    comentarios.push({ texto, fecha: new Date().toISOString(), respuesta: null });
 
-    const { error: updateError } = await supabase
-      .from('proyectos')
+    await supabase
+      .from('clientes')
       .update({ comentarios })
-      .eq('id', proyectoId);
-
-    if (updateError) throw updateError;
+      .eq('id', clienteId);
 
     document.getElementById('comentarioCliente').value = '';
-    const msg = document.getElementById('mensajeConfirmado');
-    if (msg) msg.textContent = '✅ Comentario enviado.';
-
-    cargarProyecto();
+    document.getElementById('mensajeConfirmado').textContent = '✅ Enviado.';
+    cargarPerfil();
   } catch (err) {
-    alert('❌ Error al enviar el comentario.');
+    alert('❌ Error al enviar.');
   }
 }
 
@@ -97,13 +73,13 @@ function renderComentarios(comentarios) {
   if (!cont) return;
   cont.innerHTML = comentarios.length
     ? comentarios.map(c => `
-        <div class="comentario-box">
+        <div style="background:#222; padding:10px; margin:8px 0; border-radius:6px;">
           <p><strong>Tú:</strong> ${c.texto}</p>
           <p><em>${new Date(c.fecha).toLocaleString()}</em></p>
-          ${c.respuesta ? `<p><strong>Raell Studio:</strong> ${c.respuesta}</p>` : ""}
+          ${c.respuesta ? `<p><strong>Raell:</strong> ${c.respuesta}</p>` : ''}
         </div>
       `).join("")
-    : '<p>No has enviado comentarios aún.</p>';
+    : '<p>No hay comentarios.</p>';
 }
 
 function cerrarSesion() {
@@ -114,4 +90,4 @@ function cerrarSesion() {
 window.enviarComentario = enviarComentario;
 window.cerrarSesion = cerrarSesion;
 
-cargarProyecto();
+cargarPerfil();
