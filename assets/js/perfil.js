@@ -90,8 +90,11 @@ function renderComentarios(comentarios) {
   const cont = document.getElementById('historialComentarios');
   if (!cont) return;
 
-  cont.innerHTML = comentarios.length
-    ? comentarios.map(c => `
+  // ✅ Asegurar que comentarios sea un array
+  const list = Array.isArray(comentarios) ? comentarios : [];
+
+  cont.innerHTML = list.length
+    ? list.map(c => `
         <div class="comentario-box">
           <p><strong>Tú:</strong> ${c.texto}</p>
           <p><em>${new Date(c.fecha).toLocaleString()}</em></p>
