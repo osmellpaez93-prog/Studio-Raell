@@ -1,4 +1,3 @@
-// assets/js/perfil.js
 import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
 
 const supabase = createClient(
@@ -21,22 +20,30 @@ async function cargarPerfil() {
 
     if (error || !data) throw error;
 
-    document.getElementById('saludoCliente').textContent = `Hola, ${data.nombre}`;
-    document.getElementById('codigoRaell').textContent = `Número Raell: ${data.numero_raell}`;
-    document.getElementById('letraCancion').textContent = data.letra || 'Aún no hay letra.';
-
+    // Verificar que los elementos existan antes de usarlos
+    const saludoEl = document.getElementById('saludoCliente');
+    const codigoEl = document.getElementById('codigoRaell');
+    const letraEl = document.getElementById('letraCancion');
     const audioEl = document.getElementById('audioMuestra');
     const sourceEl = document.getElementById('audioSource');
-    if (data.audio_url) {
-      sourceEl.src = data.audio_url;
-      audioEl.load();
-      audioEl.style.display = 'block';
-    } else {
-      audioEl.style.display = 'none';
+
+    if (saludoEl) saludoEl.textContent = `Hola, ${data.nombre}`;
+    if (codigoEl) codigoEl.textContent = `Número Raell: ${data.numero_raell}`;
+    if (letraEl) letraEl.textContent = data.letra || 'Aún no hay letra.';
+
+    if (audioEl && sourceEl) {
+      if (data.audio_url) {
+        sourceEl.src = data.audio_url;
+        audioEl.load();
+        audioEl.style.display = 'block';
+      } else {
+        audioEl.style.display = 'none';
+      }
     }
 
     renderComentarios(data.comentarios || []);
   } catch (err) {
+    console.error('Error al cargar perfil:', err);
     document.getElementById('perfil').innerHTML = '<p>❌ Error al cargar tu perfil.</p>';
   }
 }
