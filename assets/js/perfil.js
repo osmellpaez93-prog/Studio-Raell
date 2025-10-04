@@ -10,6 +10,21 @@ if (!clienteId) {
   window.location.href = 'login.html';
 }
 
+// ✅ Función para normalizar comentarios (maneja string o array)
+function normalizarComentarios(comentarios) {
+  if (Array.isArray(comentarios)) {
+    return comentarios;
+  }
+  if (typeof comentarios === 'string') {
+    try {
+      return JSON.parse(comentarios);
+    } catch (e) {
+      return [];
+    }
+  }
+  return [];
+}
+
 async function cargarPerfil() {
   try {
     const { data, error } = await supabase
@@ -20,7 +35,6 @@ async function cargarPerfil() {
 
     if (error || !data) throw error;
 
-    // Verificar que los elementos existan antes de usarlos
     const saludoEl = document.getElementById('saludoCliente');
     const codigoEl = document.getElementById('codigoRaell');
     const letraEl = document.getElementById('letraCancion');
@@ -44,7 +58,9 @@ async function cargarPerfil() {
       }
     }
 
-    renderComentarios(data.comentarios || []);
+    // ✅ Normalizar comentarios antes de renderizar
+    const comentariosNormalizados = normalizarComentarios(data.comentarios);
+    renderComentarios(comentariosNormalizados);
   } catch (err) {
     console.error('Error al cargar perfil:', err);
     document.getElementById('perfil').innerHTML = '<p>❌ Error al cargar tu perfil.</p>';
@@ -64,7 +80,8 @@ async function enviarComentario() {
 
     if (error) throw error;
 
-    const comentarios = data.comentarios || [];
+    // ✅ Normalizar antes de añadir
+    let comentarios = normalizarComentarios(data.comentarios);
     comentarios.push({
       texto,
       fecha: new Date().toISOString(),
@@ -90,11 +107,8 @@ function renderComentarios(comentarios) {
   const cont = document.getElementById('historialComentarios');
   if (!cont) return;
 
-  // ✅ Asegurar que comentarios sea un array
-  const list = Array.isArray(comentarios) ? comentarios : [];
-
-  cont.innerHTML = list.length
-    ? list.map(c => `
+  cont.innerHTML = comentarios.length
+    ? comentarios.map(c => `
         <div class="comentario-box">
           <p><strong>Tú:</strong> ${c.texto}</p>
           <p><em>${new Date(c.fecha).toLocaleString()}</em></p>
