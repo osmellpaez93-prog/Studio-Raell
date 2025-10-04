@@ -1,4 +1,3 @@
-// assets/js/perfil.js
 import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
 
 const supabase = createClient(
@@ -22,21 +21,34 @@ async function cargarPerfil() {
     if (error || !data) throw error;
 
     document.getElementById('saludoCliente').textContent = `Hola, ${data.nombre}`;
-    document.getElementById('codigoRaell').textContent = `Número Raell: ${data.numero_raell}`;
-    document.getElementById('letraCancion').textContent = data.letra || 'Aún no hay letra.';
+    document.getElementById('codigoRaell').textContent = `Número Raell Studio: ${data.numero_raell}`;
 
+    // Letra
+    const letraEl = document.getElementById('letraCancion');
+    if (data.letra) {
+      letraEl.textContent = data.letra;
+    } else {
+      letraEl.textContent = 'Aún no se ha enviado ninguna letra.';
+    }
+
+    // Audio
     const audioEl = document.getElementById('audioMuestra');
     const sourceEl = document.getElementById('audioSource');
+    const audioTitle = document.querySelector('.bloque:nth-child(2) h3');
+
     if (data.audio_url) {
       sourceEl.src = data.audio_url;
       audioEl.load();
       audioEl.style.display = 'block';
+      audioTitle.textContent = 'Prueba musical';
     } else {
       audioEl.style.display = 'none';
+      audioTitle.textContent = 'No hay muestra musical aún.';
     }
 
     renderComentarios(data.comentarios || []);
   } catch (err) {
+    console.error('Error al cargar perfil:', err);
     document.getElementById('perfil').innerHTML = '<p>❌ Error al cargar tu perfil.</p>';
   }
 }
@@ -52,34 +64,43 @@ async function enviarComentario() {
       .eq('id', clienteId)
       .single();
 
-    const comentarios = data.comentarios || [];
-    comentarios.push({ texto, fecha: new Date().toISOString(), respuesta: null });
+    if (error) throw error;
 
-    await supabase
+    const comentarios = data.comentarios || [];
+    comentarios.push({
+      texto,
+      fecha: new Date().toISOString(),
+      respuesta: null
+    });
+
+    const { error: updateError } = await supabase
       .from('clientes')
       .update({ comentarios })
       .eq('id', clienteId);
 
+    if (updateError) throw updateError;
+
     document.getElementById('comentarioCliente').value = '';
-    document.getElementById('mensajeConfirmado').textContent = '✅ Enviado.';
+    document.getElementById('mensajeConfirmado').textContent = '✅ Comentario enviado correctamente.';
     cargarPerfil();
   } catch (err) {
-    alert('❌ Error al enviar.');
+    alert('❌ Error al enviar el comentario.');
   }
 }
 
 function renderComentarios(comentarios) {
   const cont = document.getElementById('historialComentarios');
   if (!cont) return;
+
   cont.innerHTML = comentarios.length
     ? comentarios.map(c => `
-        <div style="background:#222; padding:10px; margin:8px 0; border-radius:6px;">
+        <div class="comentario-box">
           <p><strong>Tú:</strong> ${c.texto}</p>
           <p><em>${new Date(c.fecha).toLocaleString()}</em></p>
-          ${c.respuesta ? `<p><strong>Raell:</strong> ${c.respuesta}</p>` : ''}
+          ${c.respuesta ? `<p><strong>Raell Studio:</strong> ${c.respuesta}</p>` : ""}
         </div>
       `).join("")
-    : '<p>No hay comentarios.</p>';
+    : '<p>No has enviado comentarios aún.</p>';
 }
 
 function cerrarSesion() {
