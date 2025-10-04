@@ -20,30 +20,28 @@ async function cargarPerfil() {
 
     if (error || !data) throw error;
 
-    document.getElementById('saludoCliente').textContent = `Hola, ${data.nombre}`;
-    document.getElementById('codigoRaell').textContent = `Número Raell Studio: ${data.numero_raell}`;
-
-    // Letra
+    // Verificar que los elementos existan antes de usarlos
+    const saludoEl = document.getElementById('saludoCliente');
+    const codigoEl = document.getElementById('codigoRaell');
     const letraEl = document.getElementById('letraCancion');
-    if (data.letra) {
-      letraEl.textContent = data.letra;
-    } else {
-      letraEl.textContent = 'Aún no se ha enviado ninguna letra.';
-    }
-
-    // Audio
     const audioEl = document.getElementById('audioMuestra');
     const sourceEl = document.getElementById('audioSource');
     const audioTitle = document.querySelector('.bloque:nth-child(2) h3');
 
-    if (data.audio_url) {
-      sourceEl.src = data.audio_url;
-      audioEl.load();
-      audioEl.style.display = 'block';
-      audioTitle.textContent = 'Prueba musical';
-    } else {
-      audioEl.style.display = 'none';
-      audioTitle.textContent = 'No hay muestra musical aún.';
+    if (saludoEl) saludoEl.textContent = `Hola, ${data.nombre}`;
+    if (codigoEl) codigoEl.textContent = `Número Raell Studio: ${data.numero_raell}`;
+    if (letraEl) letraEl.textContent = data.letra || 'Aún no se ha enviado ninguna letra.';
+
+    if (audioEl && sourceEl && audioTitle) {
+      if (data.audio_url) {
+        sourceEl.src = data.audio_url;
+        audioEl.load();
+        audioEl.style.display = 'block';
+        audioTitle.textContent = 'Prueba musical';
+      } else {
+        audioEl.style.display = 'none';
+        audioTitle.textContent = 'No hay muestra musical aún.';
+      }
     }
 
     renderComentarios(data.comentarios || []);
