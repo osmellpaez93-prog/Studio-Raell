@@ -13,7 +13,6 @@ if (!clienteId) {
   window.location.href = 'admin.html';
 }
 
-// Cargar datos del cliente
 async function cargarCliente() {
   const { data, error } = await supabase
     .from('clientes')
@@ -32,6 +31,9 @@ async function cargarCliente() {
     <p><strong>Descripción:</strong> ${data.descripcion}</p>
   `;
 
+  if (data.estado) {
+    document.getElementById('estadoProyecto').value = data.estado;
+  }
   if (data.letra) document.getElementById('letraAdmin').value = data.letra;
   if (data.audio_url) {
     document.getElementById('audioStatus').textContent = 'Audio actual: ' + data.audio_url;
@@ -40,7 +42,20 @@ async function cargarCliente() {
   renderComentarios(data.comentarios || []);
 }
 
-// Guardar letra
+async function guardarEstado() {
+  const estado = document.getElementById('estadoProyecto').value;
+  const { error } = await supabase
+    .from('clientes')
+    .update({ estado })
+    .eq('id', clienteId);
+
+  if (error) {
+    alert('❌ Error al guardar el estado.');
+  } else {
+    alert('✅ Estado actualizado.');
+  }
+}
+
 async function guardarLetra() {
   const letra = document.getElementById('letraAdmin').value.trim();
   if (!letra) return;
@@ -54,17 +69,11 @@ async function guardarLetra() {
   else alert('✅ Letra guardada.');
 }
 
-// Subir y guardar audio
 async function subirAudio() {
   const fileInput = document.getElementById('audioFile');
   const file = fileInput.files[0];
   if (!file) {
     alert('Por favor, selecciona un archivo de audio.');
-    return;
-  }
-
-  if (!file.type.startsWith('audio/')) {
-    alert('Solo se permiten archivos de audio (MP3, WAV, etc.).');
     return;
   }
 
@@ -96,7 +105,6 @@ async function subirAudio() {
   alert('✅ Audio listo. El cliente ya puede escucharlo.');
 }
 
-// Responder al último comentario
 async function responderComentario() {
   const respuesta = document.getElementById('respuestaAdmin').value.trim();
   if (!respuesta) return;
@@ -135,7 +143,6 @@ async function responderComentario() {
   cargarCliente();
 }
 
-// Renderizar comentarios
 function renderComentarios(comentarios) {
   const cont = document.getElementById('comentarios');
   if (!cont) return;
@@ -151,7 +158,6 @@ function renderComentarios(comentarios) {
     : '<p>No hay comentarios aún.</p>';
 }
 
-// Eliminar perfil completo
 async function eliminarCliente() {
   if (!confirm('⚠️ ¿Eliminar TODO el perfil del cliente? Esta acción es irreversible.')) return;
 
@@ -169,11 +175,10 @@ async function eliminarCliente() {
   }
 }
 
-// Hacer funciones accesibles desde HTML
+window.guardarEstado = guardarEstado;
 window.guardarLetra = guardarLetra;
 window.subirAudio = subirAudio;
 window.responderComentario = responderComentario;
 window.eliminarCliente = eliminarCliente;
 
-// Iniciar
 cargarCliente();
