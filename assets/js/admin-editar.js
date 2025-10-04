@@ -34,13 +34,13 @@ async function cargarCliente() {
 
   if (data.letra) document.getElementById('letraAdmin').value = data.letra;
   if (data.audio_url) {
-    document.getElementById('audioStatus').textContent = 'Audio: ' + data.audio_url;
+    document.getElementById('audioStatus').textContent = 'Audio actual: ' + data.audio_url;
   }
 
   renderComentarios(data.comentarios || []);
 }
 
-// Guardar letra en la tabla clientes
+// Guardar letra
 async function guardarLetra() {
   const letra = document.getElementById('letraAdmin').value.trim();
   if (!letra) return;
@@ -54,12 +54,17 @@ async function guardarLetra() {
   else alert('✅ Letra guardada.');
 }
 
-// Subir audio y guardar URL
+// Subir y guardar audio
 async function subirAudio() {
   const fileInput = document.getElementById('audioFile');
   const file = fileInput.files[0];
   if (!file) {
-    alert('Selecciona un archivo de audio.');
+    alert('Por favor, selecciona un archivo de audio.');
+    return;
+  }
+
+  if (!file.type.startsWith('audio/')) {
+    alert('Solo se permiten archivos de audio (MP3, WAV, etc.).');
     return;
   }
 
@@ -71,7 +76,7 @@ async function subirAudio() {
     .upload(fileName, file, { upsert: true });
 
   if (uploadError) {
-    alert('❌ Error al subir: ' + uploadError.message);
+    alert('❌ Error al subir el archivo: ' + uploadError.message);
     return;
   }
 
@@ -83,12 +88,12 @@ async function subirAudio() {
     .eq('id', clienteId);
 
   if (updateError) {
-    alert('❌ Error al guardar URL: ' + updateError.message);
+    alert('❌ Error al guardar la URL: ' + updateError.message);
     return;
   }
 
-  alert('✅ Audio subido y enlazado.');
-  cargarCliente();
+  document.getElementById('audioStatus').textContent = '✅ Audio subido y enlazado.';
+  alert('✅ Audio listo. El cliente ya puede escucharlo.');
 }
 
 // Responder al último comentario
@@ -102,12 +107,17 @@ async function responderComentario() {
     .eq('id', clienteId)
     .single();
 
-  if (error || !data || !data.comentarios?.length) {
-    alert('No hay comentarios.');
+  if (error || !data) {
+    alert('❌ Error al cargar comentarios.');
     return;
   }
 
-  const comentarios = data.comentarios;
+  const comentarios = data.comentarios || [];
+  if (comentarios.length === 0) {
+    alert('No hay comentarios para responder.');
+    return;
+  }
+
   comentarios[comentarios.length - 1].respuesta = respuesta;
 
   const { error: updateError } = await supabase
@@ -116,7 +126,7 @@ async function responderComentario() {
     .eq('id', clienteId);
 
   if (updateError) {
-    alert('❌ Error al responder.');
+    alert('❌ Error al enviar respuesta: ' + updateError.message);
     return;
   }
 
@@ -125,24 +135,23 @@ async function responderComentario() {
   cargarCliente();
 }
 
-// Eliminar proyecto (solo limpia letra y audio)
-async function eliminarProyecto() {
-  if (!confirm('¿Eliminar el proyecto (letra y audio)?')) return;
+// Renderizar comentarios
+function renderComentarios(comentarios) {
+  const cont = document.getElementById('comentarios');
+  if (!cont) return;
 
-  const { error } = await supabase
-    .from('clientes')
-    .update({ letra: null, audio_url: null, comentarios: '[]' })
-    .eq('id', clienteId);
-
-  if (error) {
-    document.getElementById('mensajeEliminacion').textContent = '❌ Error al eliminar proyecto.';
-  } else {
-    document.getElementById('mensajeEliminacion').textContent = '✅ Proyecto eliminado.';
-    cargarCliente();
-  }
+  cont.innerHTML = comentarios.length
+    ? comentarios.map(c => `
+        <div style="background:rgba(255,255,255,0.1); padding:10px; margin:10px 0; border-radius:6px;">
+          <p><strong>Cliente:</strong> ${c.texto}</p>
+          <p><em>${new Date(c.fecha).toLocaleString()}</em></p>
+          ${c.respuesta ? `<p><strong>Tú:</strong> ${c.respuesta}</p>` : '<p><em>Esperando tu respuesta...</em></p>'}
+        </div>
+      `).join("")
+    : '<p>No hay comentarios aún.</p>';
 }
 
-// Eliminar perfil completo (cliente)
+// Eliminar perfil completo
 async function eliminarCliente() {
   if (!confirm('⚠️ ¿Eliminar TODO el perfil del cliente? Esta acción es irreversible.')) return;
 
@@ -153,32 +162,17 @@ async function eliminarCliente() {
 
   if (error) {
     document.getElementById('mensajeEliminacion').textContent = '❌ Error al eliminar cliente.';
+    console.error('Error:', error);
   } else {
     alert('✅ Cliente eliminado permanentemente.');
     window.location.href = 'admin.html';
   }
 }
 
-// Renderizar comentarios
-function renderComentarios(comentarios) {
-  const cont = document.getElementById('comentarios');
-  if (!cont) return;
-  cont.innerHTML = comentarios.length
-    ? comentarios.map(c => `
-        <div style="background:rgba(255,255,255,0.1); padding:10px; margin:10px 0; border-radius:6px;">
-          <p><strong>Cliente:</strong> ${c.texto}</p>
-          <p><em>${new Date(c.fecha).toLocaleString()}</em></p>
-          ${c.respuesta ? `<p><strong>Tú:</strong> ${c.respuesta}</p>` : '<p><em>Esperando tu respuesta...</em></p>'}
-        </div>
-      `).join("")
-    : '<p>No hay comentarios.</p>';
-}
-
 // Hacer funciones accesibles desde HTML
 window.guardarLetra = guardarLetra;
 window.subirAudio = subirAudio;
 window.responderComentario = responderComentario;
-window.eliminarProyecto = eliminarProyecto;
 window.eliminarCliente = eliminarCliente;
 
 // Iniciar
