@@ -6,6 +6,9 @@ const supabase = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
 );
 
+// 🔑 Código maestro para acceso de administrador
+const CODIGO_MAESTRO = "Raell-Master-1234";
+
 document.getElementById('formLogin')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   
@@ -13,6 +16,14 @@ document.getElementById('formLogin')?.addEventListener('submit', async (e) => {
   const numero = document.getElementById('numeroRaell').value.trim();
   const mensaje = document.getElementById('mensaje');
 
+  // ✅ Acceso de administrador
+  if (numero === CODIGO_MAESTRO) {
+    localStorage.setItem('admin', 'true');
+    window.location.href = 'admin.html';
+    return;
+  }
+
+  // ✅ Validación para cliente
   if (!email || !numero) {
     mensaje.textContent = '❌ Ingresa correo y número Raell.';
     return;

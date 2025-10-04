@@ -3,40 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Panel Administrador - Raell Studio</title>
+  <title>Panel de Administrador - Raell Studio</title>
   <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
   <header>
-    <h1>Panel de Administración</h1>
+    <h1>Panel de Administrador</h1>
     <a href="./index.html">← Volver al inicio</a>
   </header>
 
-  <section>
+  <section class="formulario-registro">
     <h2>Clientes registrados</h2>
-    <div id="listaClientes"></div>
+    <div id="listaClientes">
+      <p>Cargando...</p>
+    </div>
   </section>
 
-  <section class="asignar-contenido">
-    <h2>Asignar contenido a cliente</h2>
-
-    <label for="clienteSeleccionado">Cliente:</label>
-    <select id="clienteSeleccionado"></select>
-
-    <label for="letraCancion">Letra personalizada:</label>
-    <textarea id="letraCancion" rows="5"></textarea>
-
-    <label for="archivoAudio">Subir archivo de audio:</label>
-    <input type="file" id="archivoAudio" accept="audio/*">
-
-    <button onclick="guardarContenido()">Guardar contenido</button>
-    <p id="mensajeGuardado" style="color: green;"></p>
-  </section>
-
-  <section class="panel-respuesta">
-    <h2>Responder comentarios</h2>
-    <div id="comentariosPendientes"></div>
-  </section>
+  <!-- Protección: solo acceso si se usó el código maestro -->
+  <script>
+    if (localStorage.getItem('admin') !== 'true') {
+      alert('Acceso denegado. Usa el código maestro en login.');
+      window.location.href = 'login.html';
+    }
+  </script>
 
   <script type="module" src="./assets/js/admin.js"></script>
 </body>
