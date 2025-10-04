@@ -10,6 +10,21 @@ if (!clienteId) {
   window.location.href = 'login.html';
 }
 
+// ✅ Función para normalizar comentarios (maneja string o array)
+function normalizarComentarios(comentarios) {
+  if (Array.isArray(comentarios)) {
+    return comentarios;
+  }
+  if (typeof comentarios === 'string') {
+    try {
+      return JSON.parse(comentarios);
+    } catch (e) {
+      return [];
+    }
+  }
+  return [];
+}
+
 async function cargarPerfil() {
   try {
     const { data, error } = await supabase
@@ -20,7 +35,7 @@ async function cargarPerfil() {
 
     if (error || !data) throw error;
 
-    // Verificar que los elementos existan antes de usarlos
+    // Verificar elementos del DOM
     const saludoEl = document.getElementById('saludoCliente');
     const codigoEl = document.getElementById('codigoRaell');
     const letraEl = document.getElementById('letraCancion');
@@ -28,8 +43,8 @@ async function cargarPerfil() {
     const sourceEl = document.getElementById('audioSource');
 
     if (saludoEl) saludoEl.textContent = `Hola, ${data.nombre}`;
-    if (codigoEl) codigoEl.textContent = `Número Raell: ${data.numero_raell}`;
-    if (letraEl) letraEl.textContent = data.letra || 'Aún no hay letra.';
+    if (codigoEl) codigoEl.textContent = `Número Raell Studio: ${data.numero_raell}`;
+    if (letraEl) letraEl.textContent = data.letra || 'Aún no se ha enviado ninguna letra.';
 
     if (audioEl && sourceEl) {
       if (data.audio_url) {
@@ -41,7 +56,9 @@ async function cargarPerfil() {
       }
     }
 
-    renderComentarios(data.comentarios || []);
+    // ✅ Normalizar y renderizar comentarios
+    const comentariosNormalizados = normalizarComentarios(data.comentarios);
+    renderComentarios(comentariosNormalizados);
   } catch (err) {
     console.error('Error al cargar perfil:', err);
     document.getElementById('perfil').innerHTML = '<p>❌ Error al cargar tu perfil.</p>';
@@ -59,34 +76,44 @@ async function enviarComentario() {
       .eq('id', clienteId)
       .single();
 
-    const comentarios = data.comentarios || [];
-    comentarios.push({ texto, fecha: new Date().toISOString(), respuesta: null });
+    if (error) throw error;
 
-    await supabase
+    // ✅ Normalizar antes de añadir
+    let comentarios = normalizarComentarios(data.comentarios);
+    comentarios.push({
+      texto,
+      fecha: new Date().toISOString(),
+      respuesta: null
+    });
+
+    const { error: updateError } = await supabase
       .from('clientes')
       .update({ comentarios })
       .eq('id', clienteId);
 
+    if (updateError) throw updateError;
+
     document.getElementById('comentarioCliente').value = '';
-    document.getElementById('mensajeConfirmado').textContent = '✅ Enviado.';
+    document.getElementById('mensajeConfirmado').textContent = '✅ Comentario enviado correctamente.';
     cargarPerfil();
   } catch (err) {
-    alert('❌ Error al enviar.');
+    alert('❌ Error al enviar el comentario.');
   }
 }
 
 function renderComentarios(comentarios) {
   const cont = document.getElementById('historialComentarios');
   if (!cont) return;
+
   cont.innerHTML = comentarios.length
     ? comentarios.map(c => `
-        <div style="background:#222; padding:10px; margin:8px 0; border-radius:6px;">
+        <div class="comentario-box">
           <p><strong>Tú:</strong> ${c.texto}</p>
           <p><em>${new Date(c.fecha).toLocaleString()}</em></p>
-          ${c.respuesta ? `<p><strong>Raell:</strong> ${c.respuesta}</p>` : ''}
+          ${c.respuesta ? `<p><strong>Raell Studio:</strong> ${c.respuesta}</p>` : ""}
         </div>
       `).join("")
-    : '<p>No hay comentarios.</p>';
+    : '<p>No has enviado comentarios aún.</p>';
 }
 
 function cerrarSesion() {
