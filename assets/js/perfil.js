@@ -1,3 +1,4 @@
+// assets/js/perfil.js
 import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
 
 const supabase = createClient(
@@ -10,19 +11,6 @@ if (!clienteId) {
   window.location.href = 'login.html';
 }
 
-// ✅ Normaliza comentarios: acepta string JSON o array
-function normalizarComentarios(comentarios) {
-  if (Array.isArray(comentarios)) return comentarios;
-  if (typeof comentarios === 'string') {
-    try {
-      return JSON.parse(comentarios);
-    } catch (e) {
-      return [];
-    }
-  }
-  return [];
-}
-
 async function cargarPerfil() {
   try {
     const { data, error } = await supabase
@@ -33,38 +21,23 @@ async function cargarPerfil() {
 
     if (error || !data) throw error;
 
-    // Actualizar elementos del DOM (con verificación)
-    const saludoEl = document.getElementById('saludoCliente');
-    const codigoEl = document.getElementById('codigoRaell');
-    const letraEl = document.getElementById('letraCancion');
+    document.getElementById('saludoCliente').textContent = `Hola, ${data.nombre}`;
+    document.getElementById('codigoRaell').textContent = `Número Raell: ${data.numero_raell}`;
+    document.getElementById('letraCancion').textContent = data.letra || 'Aún no hay letra.';
+
     const audioEl = document.getElementById('audioMuestra');
     const sourceEl = document.getElementById('audioSource');
-    const audioTitle = document.querySelector('.bloque:nth-child(2) h3');
-
-    if (saludoEl) saludoEl.textContent = `Hola, ${data.nombre}`;
-    if (codigoEl) codigoEl.textContent = `Número Raell Studio: ${data.numero_raell}`;
-    if (letraEl) letraEl.textContent = data.letra || 'Aún no se ha enviado ninguna letra.';
-
-    if (audioEl && sourceEl && audioTitle) {
-      if (data.audio_url) {
-        sourceEl.src = data.audio_url;
-        audioEl.load();
-        audioEl.style.display = 'block';
-        audioTitle.textContent = 'Prueba musical';
-      } else {
-        audioEl.style.display = 'none';
-        audioTitle.textContent = 'No hay muestra musical aún.';
-      }
+    if (data.audio_url) {
+      sourceEl.src = data.audio_url;
+      audioEl.load();
+      audioEl.style.display = 'block';
+    } else {
+      audioEl.style.display = 'none';
     }
 
-    // ✅ Renderizar comentarios normalizados
-    renderComentarios(normalizarComentarios(data.comentarios));
+    renderComentarios(data.comentarios || []);
   } catch (err) {
-    console.error('Error al cargar perfil:', err);
-    const perfilEl = document.getElementById('perfil');
-    if (perfilEl) {
-      perfilEl.innerHTML = '<p>❌ Error al cargar tu perfil.</p>';
-    }
+    document.getElementById('perfil').innerHTML = '<p>❌ Error al cargar tu perfil.</p>';
   }
 }
 
@@ -79,45 +52,34 @@ async function enviarComentario() {
       .eq('id', clienteId)
       .single();
 
-    if (error) throw error;
+    const comentarios = data.comentarios || [];
+    comentarios.push({ texto, fecha: new Date().toISOString(), respuesta: null });
 
-    const comentarios = normalizarComentarios(data.comentarios);
-    comentarios.push({
-      texto,
-      fecha: new Date().toISOString(),
-      respuesta: null
-    });
-
-    const { error: updateError } = await supabase
+    await supabase
       .from('clientes')
       .update({ comentarios })
       .eq('id', clienteId);
 
-    if (updateError) throw updateError;
-
     document.getElementById('comentarioCliente').value = '';
-    const msg = document.getElementById('mensajeConfirmado');
-    if (msg) msg.textContent = '✅ Comentario enviado correctamente.';
-
+    document.getElementById('mensajeConfirmado').textContent = '✅ Enviado.';
     cargarPerfil();
   } catch (err) {
-    alert('❌ Error al enviar el comentario.');
+    alert('❌ Error al enviar.');
   }
 }
 
 function renderComentarios(comentarios) {
   const cont = document.getElementById('historialComentarios');
   if (!cont) return;
-
   cont.innerHTML = comentarios.length
     ? comentarios.map(c => `
-        <div class="comentario-box">
+        <div style="background:#222; padding:10px; margin:8px 0; border-radius:6px;">
           <p><strong>Tú:</strong> ${c.texto}</p>
           <p><em>${new Date(c.fecha).toLocaleString()}</em></p>
-          ${c.respuesta ? `<p><strong>Raell Studio:</strong> ${c.respuesta}</p>` : ""}
+          ${c.respuesta ? `<p><strong>Raell:</strong> ${c.respuesta}</p>` : ''}
         </div>
       `).join("")
-    : '<p>No has enviado comentarios aún.</p>';
+    : '<p>No hay comentarios.</p>';
 }
 
 function cerrarSesion() {
@@ -125,9 +87,7 @@ function cerrarSesion() {
   window.location.href = 'login.html';
 }
 
-// Hacer funciones accesibles desde HTML
 window.enviarComentario = enviarComentario;
 window.cerrarSesion = cerrarSesion;
 
-// Iniciar
 cargarPerfil();
