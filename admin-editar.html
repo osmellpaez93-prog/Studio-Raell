@@ -3,31 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Editar Cliente - Raell Studio</title>
+  <title>Editar Proyecto - Raell Studio</title>
   <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
   <header>
-    <h1>Editar Cliente</h1>
+    <h1>Editar Proyecto</h1>
     <a href="./admin.html">← Volver al panel</a>
   </header>
 
   <section class="formulario-registro">
-    <p id="mensajeError" style="color: red;"></p>
+    <div id="datosCliente"></div>
 
     <h3>Enviar letra</h3>
-    <textarea id="letraCancion" rows="6" placeholder="Escribe la letra aquí..."></textarea>
+    <textarea id="letraAdmin" rows="6" placeholder="Escribe la letra aquí..."></textarea>
     <button onclick="guardarLetra()">Guardar letra</button>
 
-    <h3>Enviar muestra de audio</h3>
-    <input type="file" id="archivoAudio" accept="audio/mpeg" style="width:100%; padding:10px; margin:10px 0;">
-    <button onclick="subirYGuardarAudio()">Subir y guardar audio</button>
+    <h3>Subir muestra de audio</h3>
+    <input type="file" id="audioFile" accept="audio/*" style="width:100%; padding:10px; margin:10px 0;">
+    <button onclick="subirAudio()">Subir y guardar audio</button>
+    <p id="audioStatus" style="font-size:0.9em; color:#ccc;"></p>
 
-    <h3>Audio actual</h3>
-    <audio id="audioMuestra" controls style="display:none;">
-      <source id="audioSource" src="" type="audio/mpeg">
-      Tu navegador no soporta audio.
-    </audio>
+    <h3>Comentarios del cliente</h3>
+    <div id="comentarios"></div>
+
+    <h3>Responder al cliente</h3>
+    <textarea id="respuestaAdmin" rows="3" placeholder="Escribe tu respuesta..."></textarea>
+    <button onclick="responderComentario()">Enviar respuesta</button>
+
+    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #444;">
+      <h3 style="color: #ff6b6b;">Acciones de eliminación</h3>
+      
+      <button onclick="eliminarProyecto()" style="background:#ff6b6b; margin-right:10px;">
+        🗑️ Eliminar proyecto
+      </button>
+      
+      <button onclick="eliminarCliente()" style="background:#ff0000;">
+        ❌ Eliminar perfil completo
+      </button>
+      
+      <p id="mensajeEliminacion" style="margin-top:10px; color:#ff6b6b;"></p>
+    </div>
   </section>
 
   <script type="module" src="./assets/js/admin-editar.js"></script>
