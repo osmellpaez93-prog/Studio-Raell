@@ -11,22 +11,22 @@ const supabase = createClient(
 const servicios = [
   {
     img: './assets/img/piano.jpg',
-    title: 'Transformaci車n',
+    title: 'Transformacion',
     desc: 'Llevamos tus ideas y recuerdos a la m迆sica, creando composiciones 迆nicas...'
   },
   {
     img: './assets/img/partituras.jpg',
-    title: 'Composici車n',
+    title: 'Composicion',
     desc: 'Nuestros compositores acoger芍n tus ideas y las convertir芍n en melod赤as...'
   },
   {
     img: './assets/img/studio.jpg',
-    title: 'Producci車n',
+    title: 'Produccion',
     desc: 'Mezclamos y masterizamos con tecnolog赤a de punta...'
   },
   {
     img: './assets/img/plataformas.jpg',
-    title: 'Exportaci車n',
+    title: 'Exportacion',
     desc: 'Exportamos tu proyecto terminado a Spotify, Apple Music, YouTube y m芍s.'
   }
 ];
