@@ -7,13 +7,25 @@
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #2c1a4d, #6a5acd);
   color: white;
   line-height: 1.6;
   min-height: 100vh;
-  background-attachment: fixed;
+  background: url('./assets/img/fondo-personalizado.jpg') no-repeat center center fixed;
   background-size: cover;
-  background-position: center;
+  background-attachment: fixed;
+  position: relative;
+}
+
+/* Si quieres una capa de opacidad sobre la imagen */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(44, 26, 77, 0.85);
+  z-index: -1;
 }
 
 /* Cabecera */

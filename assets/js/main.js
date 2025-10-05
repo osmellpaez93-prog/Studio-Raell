@@ -12,22 +12,26 @@ const servicios = [
   {
     img: './assets/img/piano.jpg',
     title: 'Transformacion',
-    desc: 'Llevamos tus ideas y recuerdos a la m¨²sica, creando composiciones ¨²nicas...'
+    desc: 'Llevamos tus ideas y recuerdos a la musica. Tu decides que incluir en cada parte de la cancion: desde una frase que te marco, hasta el sonido de una risa, una nota de voz, o el ritmo de tu historia. Podemos transformar una carta, un poema, una conversacion o incluso un silencio en melodia. Cada cancion es un reflejo de ti, y tu eres el compositor emocional.
+'
   },
   {
     img: './assets/img/partituras.jpg',
     title: 'Composicion',
-    desc: 'Nuestros compositores acoger¨¢n tus ideas y las convertir¨¢n en melod¨ªas...'
+    desc: 'Nuestros compositores acogeran tus ideas y las llevaran a la musica respetando cada detalle y haciendolo sonar profesional. Puedes compartirnos palabras, emociones, momentos, sonidos o incluso objetos que tengan significado para ti. Nosotros los transformamos en armonia, ritmo y letra, cuidando cada matiz para que tu cancion no solo suene bien, sino que te represente con autenticidad.
+'
   },
   {
     img: './assets/img/studio.jpg',
     title: 'Produccion',
-    desc: 'Mezclamos y masterizamos con tecnolog¨ªa de punta...'
+    desc: 'Mezclamos y masterizamos con tecnologia de punta para lograr calidad profesional. Utilizamos herramientas avanzadas de edicion, ecualizacion y espacializacion para que cada elemento de tu cancion, voz, instrumentos y efectos suene claro, equilibrado y envolvente. Nos aseguramos de que tu musica este lista para cualquier plataforma: desde auriculares personales hasta escenarios en vivo. Tu cancion no solo se escucha bien, se siente bien.
+'
   },
   {
     img: './assets/img/plataformas.jpg',
     title: 'Exportacion',
-    desc: 'Exportamos tu proyecto terminado a Spotify, Apple Music, YouTube y m¨¢s.'
+    desc: 'Exportamos tu proyecto terminado a todas las plataformas digitales, con los datos que tu elijas: nombre artistico, titulo, genero, portada y mas. Tu eres el autor y propietario de la cancion, con todos los derechos. Te entregamos los archivos listos para publicar en Spotify, Apple Music, YouTube, y cualquier otra plataforma que prefieras o elegir si lo hacemos nosotros. Tu musica, tu firma, tu historia.
+'
   }
 ];
 
