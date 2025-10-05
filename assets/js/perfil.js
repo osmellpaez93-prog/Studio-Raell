@@ -10,8 +10,11 @@ if (!clienteId) {
   window.location.href = 'login.html';
 }
 
+// ✅ Función para normalizar comentarios (maneja string o array)
 function normalizarComentarios(comentarios) {
-  if (Array.isArray(comentarios)) return comentarios;
+  if (Array.isArray(comentarios)) {
+    return comentarios;
+  }
   if (typeof comentarios === 'string') {
     try {
       return JSON.parse(comentarios);
@@ -32,35 +35,33 @@ async function cargarPerfil() {
 
     if (error || !data) throw error;
 
+    // Verificar elementos del DOM
     const saludoEl = document.getElementById('saludoCliente');
     const codigoEl = document.getElementById('codigoRaell');
-    const estadoEl = document.getElementById('estadoProyecto');
     const letraEl = document.getElementById('letraCancion');
     const audioEl = document.getElementById('audioMuestra');
     const sourceEl = document.getElementById('audioSource');
 
     if (saludoEl) saludoEl.textContent = `Hola, ${data.nombre}`;
     if (codigoEl) codigoEl.textContent = `Número Raell Studio: ${data.numero_raell}`;
-    if (estadoEl) estadoEl.textContent = data.estado || 'Sin estado';
     if (letraEl) letraEl.textContent = data.letra || 'Aún no se ha enviado ninguna letra.';
 
     if (audioEl && sourceEl) {
       if (data.audio_url) {
         sourceEl.src = data.audio_url;
-        audioEl.load(); // 🔥 Esencial para recargar el audio
+        audioEl.load();
         audioEl.style.display = 'block';
       } else {
         audioEl.style.display = 'none';
       }
     }
 
-    renderComentarios(normalizarComentarios(data.comentarios));
+    // ✅ Normalizar y renderizar comentarios
+    const comentariosNormalizados = normalizarComentarios(data.comentarios);
+    renderComentarios(comentariosNormalizados);
   } catch (err) {
     console.error('Error al cargar perfil:', err);
-    const perfilEl = document.getElementById('perfil');
-    if (perfilEl) {
-      perfilEl.innerHTML = '<p>❌ Error al cargar tu perfil.</p>';
-    }
+    document.getElementById('perfil').innerHTML = '<p>❌ Error al cargar tu perfil.</p>';
   }
 }
 
@@ -77,8 +78,13 @@ async function enviarComentario() {
 
     if (error) throw error;
 
+    // ✅ Normalizar antes de añadir
     let comentarios = normalizarComentarios(data.comentarios);
-    comentarios.push({ texto, fecha: new Date().toISOString(), respuesta: null });
+    comentarios.push({
+      texto,
+      fecha: new Date().toISOString(),
+      respuesta: null
+    });
 
     const { error: updateError } = await supabase
       .from('clientes')
@@ -88,9 +94,7 @@ async function enviarComentario() {
     if (updateError) throw updateError;
 
     document.getElementById('comentarioCliente').value = '';
-    const msg = document.getElementById('mensajeConfirmado');
-    if (msg) msg.textContent = '✅ Comentario enviado correctamente.';
-
+    document.getElementById('mensajeConfirmado').textContent = '✅ Comentario enviado correctamente.';
     cargarPerfil();
   } catch (err) {
     alert('❌ Error al enviar el comentario.');
