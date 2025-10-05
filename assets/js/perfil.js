@@ -1,7 +1,7 @@
-import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
+import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0  ';
 
 const supabase = createClient(
-  'https://vgrpcnknpeihzljhnfjp.supabase.co',
+  'https://vgrpcnknpeihzljhnfjp.supabase.co  ',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
 );
 
@@ -38,15 +38,15 @@ async function cargarPerfil() {
     // Verificar elementos del DOM
     const saludoEl = document.getElementById('saludoCliente');
     const codigoEl = document.getElementById('codigoRaell');
-    const estadoEl = document.getElementById('estadoProyecto'); // ✅ Nuevo
     const letraEl = document.getElementById('letraCancion');
     const audioEl = document.getElementById('audioMuestra');
     const sourceEl = document.getElementById('audioSource');
+    const estadoEl = document.getElementById('estadoProyecto'); // ✅ Solo esto se añadió
 
     if (saludoEl) saludoEl.textContent = `Hola, ${data.nombre}`;
     if (codigoEl) codigoEl.textContent = `Número Raell Studio: ${data.numero_raell}`;
-    if (estadoEl) estadoEl.textContent = data.estado || 'Sin estado'; // ✅ Nuevo
     if (letraEl) letraEl.textContent = data.letra || 'Aún no se ha enviado ninguna letra.';
+    if (estadoEl) estadoEl.textContent = data.estado || 'Sin estado'; // ✅ Solo esto se añadió
 
     if (audioEl && sourceEl) {
       if (data.audio_url) {
