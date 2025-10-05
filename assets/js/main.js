@@ -30,7 +30,7 @@ const servicios = [
   {
     img: './assets/img/plataformas.jpg',
     title: 'Exportacion',
-    desc: 'Exportamos tu proyecto terminado a todas las plataformas digitales, con los datos que tu elijas: nombre artistico, titulo, genero, portada y mas. Tu eres el autor y propietario de la cancion, con todos los derechos. Te entregamos los archivos listos para publicar en Spotify, Apple Music, YouTube, y cualquier otra plataforma que prefieras o elegir si lo hacemos nosotros. Tu musica, tu firma, tu historia.
+    desc: 'Exportamos tu proyecto terminado a todas las plataformas digitales, con los datos que tu elijas: nombre artistico, titulo, genero, portada y mas. Tu eres el autor y propietario de la cancion, con todos los derechos. Te entregamos los archivos listos para publicar en Spotify, Apple Music, YouTube, y cualquier otra plataforma que prefieras o elegir si lo hacemos nosotros. Tu musica, tu firma, tu historia.</p>
 '
   }
 ];
