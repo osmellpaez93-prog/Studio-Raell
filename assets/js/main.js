@@ -1,7 +1,7 @@
 // assets/js/main.js
 import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
 
-// ? URLs corregidas: sin espacios al final
+// ?? CORREGIDO: URLs sin espacios al final
 const supabase = createClient(
   'https://vgrpcnknpeihzljhnfjp.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
@@ -11,23 +11,23 @@ const supabase = createClient(
 const servicios = [
   {
     img: './assets/img/piano.jpg',
-    title: 'Transformacion',
-    desc: 'Llevamos tus ideas y recuerdos a la musica, creando composiciones unicas...'
+    title: 'Transformaci車n',
+    desc: 'Llevamos tus ideas y recuerdos a la m迆sica, creando composiciones 迆nicas...'
   },
   {
     img: './assets/img/partituras.jpg',
-    title: 'Composicion',
-    desc: 'Nuestros compositores acogeran tus ideas y las convertiran en melodias...'
+    title: 'Composici車n',
+    desc: 'Nuestros compositores acoger芍n tus ideas y las convertir芍n en melod赤as...'
   },
   {
     img: './assets/img/studio.jpg',
-    title: 'Produccion',
-    desc: 'Mezclamos y masterizamos con tecnologia de punta...'
+    title: 'Producci車n',
+    desc: 'Mezclamos y masterizamos con tecnolog赤a de punta...'
   },
   {
     img: './assets/img/plataformas.jpg',
-    title: 'Exportacion',
-    desc: 'Exportamos tu proyecto terminado a Spotify, Apple Music, YouTube y mas.'
+    title: 'Exportaci車n',
+    desc: 'Exportamos tu proyecto terminado a Spotify, Apple Music, YouTube y m芍s.'
   }
 ];
 
@@ -55,7 +55,7 @@ if (carrusel && navegacion) {
   });
 }
 
-// Logica del carrusel
+// L車gica del carrusel
 let index = 0;
 const items = document.querySelectorAll('.item');
 const fondo = document.getElementById('fondo-imagen');
@@ -64,12 +64,9 @@ function activarItem(i) {
   if (items[index]) items[index].classList.remove('activo');
   index = i;
   if (items[index]) items[index].classList.add('activo');
-  if (fondo && servicios[i]) {
-    fondo.style.backgroundImage = `url(${servicios[i].img})`;
-  }
+  if (fondo) fondo.style.backgroundImage = `url(${servicios[i].img})`;
 }
 
-// Inicializar primer fondo
 if (fondo && servicios[0]) {
   fondo.style.backgroundImage = `url(${servicios[0].img})`;
 }
@@ -98,6 +95,7 @@ document.getElementById('formulario')?.addEventListener('submit', async (e) => {
   };
 
   try {
+    // ?? Verificamos que todas las columnas existan en Supabase
     const { error } = await supabase
       .from('clientes')
       .insert([nuevoCliente]);
@@ -105,7 +103,7 @@ document.getElementById('formulario')?.addEventListener('submit', async (e) => {
     if (error) throw error;
 
     if (mensaje) {
-      mensaje.textContent = '? Registro exitoso! Redirigiendo...';
+      mensaje.textContent = '? ?Registro exitoso! Redirigiendo...';
       mensaje.style.color = 'green';
     }
     
@@ -127,7 +125,7 @@ document.getElementById('formulario')?.addEventListener('submit', async (e) => {
   }
 });
 
-// Menu de acceso
+// Men迆 de acceso
 window.toggleMenu = function() {
   const menu = document.getElementById("menuOpciones");
   if (menu) {
@@ -137,8 +135,7 @@ window.toggleMenu = function() {
 
 window.addEventListener("click", function (e) {
   const menu = document.getElementById("menuOpciones");
-  const menuAcceso = e.target.closest(".menu-acceso");
-  if (menu && !menuAcceso) {
+  if (menu && !e.target.closest(".menu-acceso")) {
     menu.style.display = "none";
   }
 });
