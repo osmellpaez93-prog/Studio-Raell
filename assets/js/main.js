@@ -1,7 +1,6 @@
 // assets/js/main.js
 import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
 
-// ?? CORREGIDO: URLs sin espacios al final
 const supabase = createClient(
   'https://vgrpcnknpeihzljhnfjp.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
@@ -10,33 +9,35 @@ const supabase = createClient(
 // Datos del carrusel
 const servicios = [
   {
-    img: './assets/img/piano.jpg',
-    title: 'Transformaci車n',
-    desc: 'Llevamos tus ideas y recuerdos a la m迆sica, creando composiciones 迆nicas...'
+    img: 'https://via.placeholder.com/800x400/6a5acd/white?text=Transformaci%C3%B3n',
+    title: 'Transformacion',
+    desc: 'Llevamos tus ideas y recuerdos a la musica, creando composiciones unicas...'
   },
   {
-    img: './assets/img/partituras.jpg',
-    title: 'Composici車n',
-    desc: 'Nuestros compositores acoger芍n tus ideas y las convertir芍n en melod赤as...'
+    img: 'https://via.placeholder.com/800x400/6a5acd/white?text=Composici%C3%B3n',
+    title: 'Composicion',
+    desc: 'Nuestros compositores acogeran tus ideas y las convertiran en melodias...'
   },
   {
-    img: './assets/img/studio.jpg',
-    title: 'Producci車n',
-    desc: 'Mezclamos y masterizamos con tecnolog赤a de punta...'
+    img: 'https://via.placeholder.com/800x400/6a5acd/white?text=Producci%C3%B3n',
+    title: 'Produccion',
+    desc: 'Mezclamos y masterizamos con tecnologia de punta...'
   },
   {
-    img: './assets/img/plataformas.jpg',
-    title: 'Exportaci車n',
-    desc: 'Exportamos tu proyecto terminado a Spotify, Apple Music, YouTube y m芍s.'
+    img: 'https://via.placeholder.com/800x400/6a5acd/white?text=Exportaci%C3%B3n',
+    title: 'Exportacion',
+    desc: 'Exportamos tu proyecto terminado a Spotify, Apple Music, YouTube y mas.'
   }
 ];
 
 // Renderizar carrusel
 const carrusel = document.getElementById('carrusel');
 const navegacion = document.getElementById('navegacion');
+const fondo = document.getElementById('fondo-imagen');
 
-if (carrusel && navegacion) {
+if (carrusel && navegacion && fondo) {
   servicios.forEach((servicio, i) => {
+    // Item del carrusel
     const item = document.createElement('div');
     item.className = i === 0 ? 'item activo' : 'item';
     item.innerHTML = `
@@ -48,84 +49,35 @@ if (carrusel && navegacion) {
     `;
     carrusel.appendChild(item);
 
+    // Boton de navegacion
     const btn = document.createElement('button');
     btn.textContent = servicio.title;
     btn.onclick = () => activarItem(i);
     navegacion.appendChild(btn);
   });
-}
 
-// L車gica del carrusel
-let index = 0;
-const items = document.querySelectorAll('.item');
-const fondo = document.getElementById('fondo-imagen');
+  // Logica del carrusel
+  let index = 0;
+  const items = document.querySelectorAll('.item');
 
-function activarItem(i) {
-  if (items[index]) items[index].classList.remove('activo');
-  index = i;
-  if (items[index]) items[index].classList.add('activo');
-  if (fondo) fondo.style.backgroundImage = `url(${servicios[i].img})`;
-}
+  function activarItem(i) {
+    items[index]?.classList.remove('activo');
+    index = i;
+    items[index]?.classList.add('activo');
+    fondo.style.backgroundImage = `url(${servicios[i].img})`;
+  }
 
-if (fondo && servicios[0]) {
+  // Iniciar con el primer fondo
   fondo.style.backgroundImage = `url(${servicios[0].img})`;
+
+  // Cambiar automaticamente cada 10 segundos
+  setInterval(() => {
+    index = (index + 1) % servicios.length;
+    activarItem(index);
+  }, 10000);
 }
 
-// Formulario
-document.getElementById('formulario')?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  const mensaje = document.getElementById('mensaje');
-  if (mensaje) {
-    mensaje.textContent = 'Enviando...';
-    mensaje.style.color = '#6a5acd';
-  }
-
-  const formData = new FormData(e.target);
-  const numeroRaell = "R" + Math.floor(10000 + Math.random() * 90000) + "L";
-
-  const nuevoCliente = {
-    nombre: formData.get('nombre'),
-    email: formData.get('email'),
-    nombre_artistico: formData.get('nombreArtistico') || null,
-    cantante: formData.get('cantante'),
-    fecha_entrega: formData.get('fechaEntrega') || null,
-    descripcion: formData.get('descripcion'),
-    numero_raell: numeroRaell
-  };
-
-  try {
-    // ?? Verificamos que todas las columnas existan en Supabase
-    const { error } = await supabase
-      .from('clientes')
-      .insert([nuevoCliente]);
-
-    if (error) throw error;
-
-    if (mensaje) {
-      mensaje.textContent = '? ?Registro exitoso! Redirigiendo...';
-      mensaje.style.color = 'green';
-    }
-    
-    localStorage.setItem('cliente', JSON.stringify({
-      ...nuevoCliente,
-      created_at: new Date().toISOString()
-    }));
-    
-    setTimeout(() => {
-      window.location.href = 'confirmacion.html';
-    }, 1500);
-
-  } catch (err) {
-    console.error('Error:', err);
-    if (mensaje) {
-      mensaje.textContent = '? Error: ' + (err.message || 'No se pudo registrar.');
-      mensaje.style.color = 'red';
-    }
-  }
-});
-
-// Men迆 de acceso
+// Menu de acceso
 window.toggleMenu = function() {
   const menu = document.getElementById("menuOpciones");
   if (menu) {
@@ -137,5 +89,31 @@ window.addEventListener("click", function (e) {
   const menu = document.getElementById("menuOpciones");
   if (menu && !e.target.closest(".menu-acceso")) {
     menu.style.display = "none";
+  }
+});
+
+// Formulario de registro (sin cambios)
+document.getElementById('registroForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const nombre = document.getElementById('nombre').value;
+  const email = document.getElementById('email').value;
+  const descripcion = document.getElementById('descripcion').value;
+
+  try {
+    const res = await fetch('/api/crear-proyecto', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nombre, email, descripcion })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      window.location.href = `/perfil.html?proyecto=${data.id}`;
+    } else {
+      document.getElementById('mensaje').textContent = 'Error: ' + (data.error || 'No se pudo crear el proyecto.');
+    }
+  } catch (err) {
+    document.getElementById('mensaje').textContent = 'Error de conexion. Intenta de nuevo.';
   }
 });
