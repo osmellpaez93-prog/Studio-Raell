@@ -15,6 +15,15 @@
   <section class="formulario-registro">
     <div id="datosCliente"></div>
 
+    <h3>Estado del proyecto</h3>
+    <select id="estadoProyecto" style="width:100%; padding:10px; margin:10px 0; border-radius:4px;">
+      <option value="En revisión">En revisión</option>
+      <option value="En composición">En composición</option>
+      <option value="Listo">Listo</option>
+      <option value="Entregado">Entregado</option>
+    </select>
+    <button onclick="guardarEstado()">Guardar estado</button>
+
     <h3>Enviar letra</h3>
     <textarea id="letraAdmin" rows="6" placeholder="Escribe la letra aquí..."></textarea>
     <button onclick="guardarLetra()">Guardar letra</button>
@@ -31,7 +40,6 @@
     <textarea id="respuestaAdmin" rows="3" placeholder="Escribe tu respuesta..."></textarea>
     <button onclick="responderComentario()">Enviar respuesta</button>
 
-    <!-- Botón para eliminar perfil -->
     <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #444;">
       <h3 style="color: #ff4d4d;">Eliminar perfil</h3>
       <button onclick="eliminarCliente()" style="background:#ff0000; color:white; padding:8px 16px; border:none; border-radius:4px; cursor:pointer;">

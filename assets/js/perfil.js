@@ -10,11 +10,8 @@ if (!clienteId) {
   window.location.href = 'login.html';
 }
 
-// ✅ Función para normalizar comentarios (maneja string o array)
 function normalizarComentarios(comentarios) {
-  if (Array.isArray(comentarios)) {
-    return comentarios;
-  }
+  if (Array.isArray(comentarios)) return comentarios;
   if (typeof comentarios === 'string') {
     try {
       return JSON.parse(comentarios);
@@ -35,15 +32,16 @@ async function cargarPerfil() {
 
     if (error || !data) throw error;
 
-    // Verificar elementos del DOM
     const saludoEl = document.getElementById('saludoCliente');
     const codigoEl = document.getElementById('codigoRaell');
+    const estadoEl = document.getElementById('estadoProyecto');
     const letraEl = document.getElementById('letraCancion');
     const audioEl = document.getElementById('audioMuestra');
     const sourceEl = document.getElementById('audioSource');
 
     if (saludoEl) saludoEl.textContent = `Hola, ${data.nombre}`;
     if (codigoEl) codigoEl.textContent = `Número Raell Studio: ${data.numero_raell}`;
+    if (estadoEl) estadoEl.textContent = data.estado || 'Sin estado';
     if (letraEl) letraEl.textContent = data.letra || 'Aún no se ha enviado ninguna letra.';
 
     if (audioEl && sourceEl) {
@@ -56,9 +54,7 @@ async function cargarPerfil() {
       }
     }
 
-    // ✅ Normalizar y renderizar comentarios
-    const comentariosNormalizados = normalizarComentarios(data.comentarios);
-    renderComentarios(comentariosNormalizados);
+    renderComentarios(normalizarComentarios(data.comentarios));
   } catch (err) {
     console.error('Error al cargar perfil:', err);
     document.getElementById('perfil').innerHTML = '<p>❌ Error al cargar tu perfil.</p>';
@@ -78,13 +74,8 @@ async function enviarComentario() {
 
     if (error) throw error;
 
-    // ✅ Normalizar antes de añadir
     let comentarios = normalizarComentarios(data.comentarios);
-    comentarios.push({
-      texto,
-      fecha: new Date().toISOString(),
-      respuesta: null
-    });
+    comentarios.push({ texto, fecha: new Date().toISOString(), respuesta: null });
 
     const { error: updateError } = await supabase
       .from('clientes')
@@ -97,14 +88,13 @@ async function enviarComentario() {
     document.getElementById('mensajeConfirmado').textContent = '✅ Comentario enviado correctamente.';
     cargarPerfil();
   } catch (err) {
-    alert('❌ Error al enviar el comentario.');
+    alert('❌ Error al enviar.');
   }
 }
 
 function renderComentarios(comentarios) {
   const cont = document.getElementById('historialComentarios');
   if (!cont) return;
-
   cont.innerHTML = comentarios.length
     ? comentarios.map(c => `
         <div class="comentario-box">
