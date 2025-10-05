@@ -47,7 +47,7 @@ async function cargarPerfil() {
     if (audioEl && sourceEl) {
       if (data.audio_url) {
         sourceEl.src = data.audio_url;
-        audioEl.load();
+        audioEl.load(); // 🔥 Esencial
         audioEl.style.display = 'block';
       } else {
         audioEl.style.display = 'none';
