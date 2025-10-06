@@ -2,34 +2,103 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Iniciar sesión - Raell Studio</title>
-  <link rel="stylesheet" href="./assets/css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./assets/css/style.css" />
 </head>
 <body>
   <header>
-    <h1>Iniciar sesión</h1>
-    <a href="./index.html">← Volver al inicio</a>
+    <div class="barra-superior aparece">
+      <h1 class="titulo-animado">Iniciar sesión</h1>
+      <div class="acciones-header">
+        <a href="index.html" class="icono-header" aria-label="Inicio">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+            <path d="M280.37 148.26L96 300.11V464a16 16 0 0016 16l112-.3a16 16 0 0016-15.7V368a16 16 0 0116-16h64a16 16 0 0116 16v96a16 16 0 0016 16l112 .3a16 16 0 0016-16V300L295.67 148.26a12.19 12.19 0 00-15.3 0zM571.6 251.47L488 182.6V44a12 12 0 00-12-12h-56a12 12 0 00-12 12v72.61L318.47 43.16c-35.2-29.2-86.7-29.2-121.9 0L4.34 251.47a12 12 0 00-1.6 16.9l25.5 31.4a12 12 0 0016.9 1.6L64 270.69V464a48 48 0 0048 48h112a48 48 0 0048-48V368h64v96a48 48 0 0048 48h112a48 48 0 0048-48V270.69l18.9 15.68a12 12 0 0016.9-1.6l25.5-31.4a12 12 0 00-1.6-16.9z"/>
+          </svg>
+        </a>
+        <a href="javascript:history.back()" class="icono-header" aria-label="Volver atrás">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path d="M64 256l192-192v112h192v160H256v112L64 256z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
   </header>
 
-  <section class="formulario-registro">
-    <p>Accede con tu correo y número Raell Studio.</p>
-    <form id="formLogin">
-      <label for="email">Correo electrónico:</label>
-      <input type="email" id="email" placeholder="tu@email.com" required>
+  <main id="inicio">
+    <div class="formulario-registro aparece">
+      <h2>Accede con tu correo y número Raell Studio</h2>
+      <form id="formulario-login">
+        <label for="email">Correo electrónico:</label>
+        <input type="email" id="email" name="email" required />
 
-      <label for="numeroRaell">Número Raell Studio:</label>
-      <input type="text" id="numeroRaell" placeholder="Ej. R12345L" required>
+        <label for="numeroRaell">Número Raell Studio:</label>
+        <input type="text" id="numeroRaell" name="numeroRaell" required />
 
-      <button type="submit">Entrar</button>
-      <p id="mensaje" style="margin-top: 10px; color: red;"></p>
-    </form>
+        <button type="submit">Entrar</button>
+        <p id="mensaje" style="margin-top: 1rem;"></p>
+      </form>
+      <p style="text-align: center; margin-top: 1rem;">
+        ¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a>
+      </p>
+    </div>
+  </main>
 
-    <p style="margin-top: 20px;">
-      ¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a>
-    </p>
-  </section>
+  <script>
+    document.getElementById('formulario-login')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-  <script type="module" src="./assets/js/login.js"></script>
+      const mensaje = document.getElementById('mensaje');
+      if (mensaje) {
+        mensaje.textContent = 'Verificando...';
+        mensaje.style.color = '#6a5acd';
+      }
+
+      const email = document.getElementById('email').value.trim();
+      const numeroRaell = document.getElementById('numeroRaell').value.trim();
+
+      try {
+        const { data, error } = await fetch('https://vgrpcnknpeihzljhnfjp.supabase.co/rest/v1/clientes', {
+          method: 'GET',
+          headers: {
+            apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E',
+            Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E',
+            'Content-Type': 'application/json',
+            Prefer: 'return=minimal'
+          }
+        }).then(res => res.json());
+
+        const cliente = data.find(c => c.email === email && c.numero_raell === numeroRaell);
+
+        if (cliente) {
+          mensaje.textContent = '✅ Acceso concedido. Redirigiendo...';
+          mensaje.style.color = 'green';
+          localStorage.setItem('cliente', JSON.stringify(cliente));
+          setTimeout(() => {
+            window.location.href = 'dashboard.html';
+          }, 1500);
+        } else {
+          mensaje.textContent = '❌ Datos incorrectos. Intenta de nuevo.';
+          mensaje.style.color = 'red';
+        }
+
+      } catch (err) {
+        console.error(err);
+        mensaje.textContent = '❌ Error de conexión.';
+        mensaje.style.color = 'red';
+      }
+    });
+
+    const observador = new IntersectionObserver((entradas) => {
+      entradas.forEach((entrada) => {
+        if (entrada.isIntersecting) {
+          entrada.target.classList.add('visible');
+        }
+      });
+    });
+
+    document.querySelectorAll('.aparece').forEach((el) => observador.observe(el));
+  </script>
 </body>
 </html>
