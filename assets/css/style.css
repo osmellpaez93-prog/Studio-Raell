@@ -1,3 +1,43 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Fondo general del sitio */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: url('../img/fondo.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Encabezado */
+header {
+  background: rgba(44, 26, 77, 0.8);
+  color: white;
+  padding: 1rem;
+  position: relative;
+  backdrop-filter: blur(10px);
+}
+
+.barra-superior {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.titulo-animado {
+  font-size: 1.8rem;
+  animation: fadeIn 1s ease;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
 /* Hero emocional debajo del título */
 .hero-frase {
   text-align: center;
@@ -9,6 +49,53 @@
   text-shadow: 0 1px 3px rgba(0,0,0,0.3);
   font-family: 'Playfair Display', serif;
   animation: fadeIn 1.2s ease-out;
+}
+
+/* Menú de acceso */
+.menu-acceso {
+  position: relative;
+}
+
+.boton-registro {
+  background: #ffffff;
+  color: #2c1a4d;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.boton-registro:hover {
+  background: #f0f0f0;
+  transform: scale(1.05);
+}
+
+.menu-opciones {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  color: #2c1a4d;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  z-index: 10;
+  min-width: 150px;
+}
+
+.menu-opciones a {
+  display: block;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: #2c1a4d;
+  transition: all 0.2s ease;
+}
+
+.menu-opciones a:hover {
+  background: #f0f0f0;
+  color: #6a5acd;
 }
 
 /* Animaciones de entrada por scroll */
@@ -23,31 +110,93 @@
   transform: translateY(0);
 }
 
-/* Carrusel moderno */
+/* Sección principal */
+#inicio {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.zona-visual {
+  position: relative;
+  height: 400px;
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.fondo-imagen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.3;
+  z-index: 1;
+  transition: background-image 1s ease-in-out, opacity 0.5s ease;
+}
+
+.carrusel {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  z-index: 2;
+}
+
+.item {
+  display: none;
+  text-align: center;
+  color: white;
+  z-index: 2;
+}
+
 .item.activo {
   display: block;
   animation: slideIn 0.8s ease-out;
 }
 
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95) translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+.item img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  border: 3px solid white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
-/* Imagen del carrusel con efecto hover */
 .item img:hover {
   transform: scale(1.08);
   transition: transform 0.3s ease;
 }
 
-/* Botones de navegación con efecto pulsante */
+.navegacion {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
 .navegacion button {
+  padding: 0.5rem 1rem;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255,255,255,0.3);
   position: relative;
   overflow: hidden;
 }
@@ -66,10 +215,16 @@
   opacity: 1;
 }
 
-/* Fondo del carrusel con transición suave */
-.fondo-imagen {
-  transition: background-image 1s ease-in-out, opacity 0.5s ease;
-}.pie-pagina {
+.subtitulo {
+  text-align: center;
+  margin-top: 1rem;
+  font-style: italic;
+  font-size: 1.1rem;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Footer */
+.pie-pagina {
   background: rgba(44, 26, 77, 0.85);
   color: white;
   padding: 2rem 1rem;
@@ -112,4 +267,37 @@
 .copyright {
   font-size: 0.9rem;
   color: #ccc;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: scale(0.95) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .barra-superior {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .navegacion {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .zona-visual {
+    height: 300px;
+  }
+
+  .formulario-registro {
+    padding: 1.5rem;
+  }
 }

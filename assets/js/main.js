@@ -56,6 +56,7 @@ if (carrusel && navegacion) {
   });
 
   items = document.querySelectorAll('.item');
+
   if (fondo && servicios[0]) {
     fondo.style.backgroundImage = `url(${servicios[0].img})`;
   }
