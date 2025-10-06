@@ -269,4 +269,11 @@ header {
   .formulario-registro {
     padding: 1.5rem;
   }
+}.hero-frase {
+  text-align: center;
+  font-size: 1.5rem;
+  font-style: italic;
+  color: #e0e0ff;
+  margin-top: 1rem;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }

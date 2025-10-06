@@ -139,3 +139,12 @@ window.addEventListener("click", function (e) {
     menu.style.display = "none";
   }
 });
+const observador = new IntersectionObserver((entradas) => {
+  entradas.forEach((entrada) => {
+    if (entrada.isIntersecting) {
+      entrada.target.classList.add('visible');
+    }
+  });
+});
+
+document.querySelectorAll('.aparece').forEach((el) => observador.observe(el));
