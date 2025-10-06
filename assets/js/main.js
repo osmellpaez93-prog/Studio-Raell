@@ -39,7 +39,7 @@ let items = [];
 if (carrusel && navegacion) {
   servicios.forEach((servicio, i) => {
     const item = document.createElement('div');
-    item.className = i === 0 ? 'item activo' : 'item';
+    item.className = 'item';
     item.innerHTML = `
       <img src="${servicio.img}" alt="${servicio.title}" />
       <div class="info">
@@ -56,15 +56,12 @@ if (carrusel && navegacion) {
   });
 
   items = document.querySelectorAll('.item');
-
-  if (fondo && servicios[0]) {
-    fondo.style.backgroundImage = `url(${servicios[0].img})`;
-  }
+  activarItem(0); // Activar el primero al cargar
 
   function activarItem(i) {
-    if (items[index]) items[index].classList.remove('activo');
+    items.forEach(item => item.classList.remove('activo'));
     index = i;
-    if (items[index]) items[index].classList.add('activo');
+    items[index].classList.add('activo');
     if (fondo) fondo.style.backgroundImage = `url(${servicios[i].img})`;
   }
 
