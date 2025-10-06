@@ -269,11 +269,23 @@ header {
   .formulario-registro {
     padding: 1.5rem;
   }
-}.hero-frase {
+.hero-frase {
   text-align: center;
   font-size: 1.5rem;
   font-style: italic;
   color: #e0e0ff;
   margin-top: 1rem;
   text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  font-family: 'Playfair Display', serif;
+}
+
+.aparece {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease-out;
+}
+
+.visible {
+  opacity: 1;
+  transform: translateY(0);
 }

@@ -2,43 +2,52 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Raell Studio</title>
-  <link rel="stylesheet" href="./assets/css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./assets/css/style.css" />
 </head>
 <body>
   <header>
-    <div class="barra-superior">
+    <div class="barra-superior aparece">
       <h1 class="titulo-animado">Bienvenidos a Raell Studio</h1>
-	  <div class="hero-frase">
-  <p>“Tu historia merece ser escuchada. Nosotros la convertimos en música.”</p>
-</div>
       <div class="menu-acceso">
         <button class="boton-registro" onclick="toggleMenu()">☰</button>
         <div id="menuOpciones" class="menu-opciones">
-          <a href="login.html">Iniciar sesión</a>
           <a href="registro.html">Registrarse</a>
+          <a href="#">Iniciar sesión</a>
+          <a href="#">Contacto</a>
         </div>
       </div>
     </div>
-    <div class="subtitulo">
-      <p class="eslogan">Lugar donde podrás transformar momentos especiales en música</p>
+    <div class="hero-frase aparece">
+      <p>“Tu historia merece ser escuchada. Nosotros la convertimos en música.”</p>
     </div>
   </header>
 
-  <section id="inicio">
-    <div class="zona-visual">
+  <main id="inicio">
+    <div class="zona-visual aparece">
       <div class="fondo-imagen" id="fondo-imagen"></div>
-      <div class="carrusel" id="carrusel">
-        <!-- Los items se generan con JavaScript -->
-      </div>
+      <div id="carrusel" class="carrusel"></div>
     </div>
+    <div id="navegacion" class="navegacion aparece"></div>
 
-    <div class="navegacion" id="navegacion">
-      <!-- Botones del carrusel -->
+    <div class="subtitulo aparece">
+      <p>Lugar donde podrás transformar momentos especiales en música</p>
     </div>
-  </section>
+  </main>
 
   <script type="module" src="./assets/js/main.js"></script>
+  <script>
+    const observador = new IntersectionObserver((entradas) => {
+      entradas.forEach((entrada) => {
+        if (entrada.isIntersecting) {
+          entrada.target.classList.add('visible');
+        }
+      });
+    });
+
+    document.querySelectorAll('.aparece').forEach((el) => observador.observe(el));
+  </script>
 </body>
 </html>
