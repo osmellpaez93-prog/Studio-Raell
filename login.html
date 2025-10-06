@@ -5,100 +5,231 @@
   <title>Iniciar sesión - Raell Studio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./assets/css/style.css" />
+  <style>
+    /* Reset y fondo */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    header {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3rem;
+    }
+
+    .titulo-animado {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      background: linear-gradient(to right, #ff6b6b, #8a2be2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .acciones-header {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .icono-header {
+      color: white;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.1);
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .icono-header:hover {
+      background: rgba(138, 43, 226, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .formulario-registro {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+      width: 100%;
+      color: #333;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .formulario-registro h2 {
+      margin-bottom: 1.5rem;
+      color: #2c1a4d;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.6rem;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .formulario-registro label {
+      display: block;
+      margin: 1.2rem 0 0.5rem;
+      font-weight: 600;
+      color: #2c1a4d;
+    }
+
+    .formulario-registro input {
+      width: 100%;
+      padding: 0.85rem;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .formulario-registro input:focus {
+      border-color: #8a2be2;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
+    }
+
+    .formulario-registro button {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #8a2be2, #ff6b6b);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
+    }
+
+    .formulario-registro button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(138, 43, 226, 0.4);
+    }
+
+    #mensaje {
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: 600;
+      min-height: 1.5rem;
+    }
+
+    .registro-link {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    .registro-link a {
+      color: #8a2be2;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .registro-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <div class="barra-superior aparece">
-      <h1 class="titulo-animado">Iniciar sesión</h1>
-      <div class="acciones-header">
-        <a href="index.html" class="icono-header" aria-label="Inicio">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
-            <path d="M280.37 148.26L96 300.11V464a16 16 0 0016 16l112-.3a16 16 0 0016-15.7V368a16 16 0 0116-16h64a16 16 0 0116 16v96a16 16 0 0016 16l112 .3a16 16 0 0016-16V300L295.67 148.26a12.19 12.19 0 00-15.3 0zM571.6 251.47L488 182.6V44a12 12 0 00-12-12h-56a12 12 0 00-12 12v72.61L318.47 43.16c-35.2-29.2-86.7-29.2-121.9 0L4.34 251.47a12 12 0 00-1.6 16.9l25.5 31.4a12 12 0 0016.9 1.6L64 270.69V464a48 48 0 0048 48h112a48 48 0 0048-48V368h64v96a48 48 0 0048 48h112a48 48 0 0048-48V270.69l18.9 15.68a12 12 0 0016.9-1.6l25.5-31.4a12 12 0 00-1.6-16.9z"/>
-          </svg>
-        </a>
-        <a href="javascript:history.back()" class="icono-header" aria-label="Volver atrás">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-            <path d="M64 256l192-192v112h192v160H256v112L64 256z"/>
-          </svg>
-        </a>
-      </div>
+    <h1 class="titulo-animado">Iniciar sesión</h1>
+    <div class="acciones-header">
+      <a href="index.html" class="icono-header" aria-label="Inicio">🏠</a>
+      <a href="javascript:history.back()" class="icono-header" aria-label="Volver atrás">←</a>
     </div>
   </header>
 
   <main id="inicio">
-    <div class="formulario-registro aparece">
-      <h2>Accede con tu correo y número Raell Studio</h2>
+    <div class="formulario-registro">
+      <h2>Accede con tu cuenta</h2>
       <form id="formulario-login">
         <label for="email">Correo electrónico:</label>
         <input type="email" id="email" name="email" required />
 
-        <label for="numeroRaell">Número Raell Studio:</label>
-        <input type="text" id="numeroRaell" name="numeroRaell" required />
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" name="password" required />
 
         <button type="submit">Entrar</button>
-        <p id="mensaje" style="margin-top: 1rem;"></p>
+        <p id="mensaje"></p>
+        
+        <div class="registro-link">
+          <p>¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a></p>
+        </div>
       </form>
-      <p style="text-align: center; margin-top: 1rem;">
-        ¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a>
-      </p>
     </div>
   </main>
 
-  <script>
+  <script type="module">
+    import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
+
+    const supabase = createClient(
+      'https://vgrpcnknpeihzljhnfjp.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
+    );
+
     document.getElementById('formulario-login')?.addEventListener('submit', async (e) => {
       e.preventDefault();
-
       const mensaje = document.getElementById('mensaje');
-      if (mensaje) {
-        mensaje.textContent = 'Verificando...';
-        mensaje.style.color = '#6a5acd';
-      }
+      mensaje.textContent = 'Iniciando sesión...';
+      mensaje.style.color = '#8a2be2';
 
       const email = document.getElementById('email').value.trim();
-      const numeroRaell = document.getElementById('numeroRaell').value.trim();
+      const password = document.getElementById('password').value;
 
       try {
-        const { data, error } = await fetch('https://vgrpcnknpeihzljhnfjp.supabase.co/rest/v1/clientes', {
-          method: 'GET',
-          headers: {
-            apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E',
-            Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E',
-            'Content-Type': 'application/json',
-            Prefer: 'return=minimal'
-          }
-        }).then(res => res.json());
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
 
-        const cliente = data.find(c => c.email === email && c.numero_raell === numeroRaell);
+        if (error) throw error;
 
-        if (cliente) {
-          mensaje.textContent = '✅ Acceso concedido. Redirigiendo...';
+        // Obtener datos del cliente desde la tabla
+        const { data: clienteData } = await supabase
+          .from('clientes')
+          .select('*')
+          .eq('email', email)
+          .single();
+
+        if (clienteData) {
+          localStorage.setItem('cliente', JSON.stringify(clienteData));
+          mensaje.textContent = '✅ ¡Bienvenido! Redirigiendo...';
           mensaje.style.color = 'green';
-          localStorage.setItem('cliente', JSON.stringify(cliente));
           setTimeout(() => {
-            window.location.href = 'dashboard.html';
+            window.location.href = 'perfil.html';
           }, 1500);
         } else {
-          mensaje.textContent = '❌ Datos incorrectos. Intenta de nuevo.';
-          mensaje.style.color = 'red';
+          throw new Error('Usuario no encontrado en la base de datos');
         }
 
       } catch (err) {
-        console.error(err);
-        mensaje.textContent = '❌ Error de conexión.';
+        console.error('Error:', err);
+        mensaje.textContent = '❌ ' + (err.message || 'Credenciales incorrectas.');
         mensaje.style.color = 'red';
       }
     });
-
-    const observador = new IntersectionObserver((entradas) => {
-      entradas.forEach((entrada) => {
-        if (entrada.isIntersecting) {
-          entrada.target.classList.add('visible');
-        }
-      });
-    });
-
-    document.querySelectorAll('.aparece').forEach((el) => observador.observe(el));
   </script>
 </body>
 </html>

@@ -1,21 +1,179 @@
-<!-- perfil.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tu espacio - Raell Studio</title>
-  <link rel="stylesheet" href="./assets/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: white;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      background: linear-gradient(to right, #ff6b6b, #8a2be2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .acciones-header a {
+      color: white;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .acciones-header a:hover {
+      background: rgba(138, 43, 226, 0.3);
+      transform: translateY(-2px);
+    }
+
+    #perfil {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      max-width: 800px;
+      margin: 0 auto;
+      color: #333;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .info-label {
+      font-weight: 600;
+      color: #2c1a4d;
+    }
+
+    .bloque {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .bloque:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .bloque h3 {
+      color: #2c1a4d;
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+    }
+
+    #letraCancion {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 10px;
+      min-height: 60px;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 0.85rem;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 1rem;
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    button {
+      background: linear-gradient(135deg, #8a2be2, #ff6b6b);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.8rem 1.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(138, 43, 226, 0.4);
+    }
+
+    #mensajeConfirmado {
+      margin-top: 0.5rem;
+      font-weight: 600;
+    }
+
+    #historialComentarios {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .comentario {
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .comentario:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+  </style>
 </head>
 <body>
   <header>
     <h1>Tu espacio creativo</h1>
-    <a href="./index.html">← Volver al inicio</a>
+    <div class="acciones-header">
+      <a href="./index.html">🏠 Inicio</a>
+    </div>
   </header>
 
-  <section id="perfil" class="formulario-registro">
-    <p id="saludoCliente">Cargando...</p>
-    <p id="codigoRaell">Número Raell Studio: ...</p>
+  <section id="perfil">
+    <div class="info-item">
+      <span class="info-label">Nombre:</span>
+      <span id="saludoCliente"></span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Número Raell:</span>
+      <span id="codigoRaell"></span>
+    </div>
 
     <div class="bloque">
       <h3>Letra de tu canción</h3>
@@ -42,9 +200,59 @@
       <div id="historialComentarios"></div>
     </div>
 
-    <button onclick="cerrarSesion()" style="margin-top:20px;">Cerrar sesión</button>
+    <button onclick="cerrarSesion()" style="margin-top:20px; width:100%;">Cerrar sesión</button>
   </section>
 
-  <script type="module" src="./assets/js/perfil.js"></script>
+  <script type="module">
+    import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
+
+    const supabase = createClient(
+      'https://vgrpcnknpeihzljhnfjp.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
+    );
+
+    // Cargar datos del cliente
+    async function cargarPerfil() {
+      const cliente = JSON.parse(localStorage.getItem('cliente'));
+      if (!cliente) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      document.getElementById('saludoCliente').textContent = cliente.nombre;
+      document.getElementById('codigoRaell').textContent = cliente.numero_raell;
+      
+      // Aquí cargarías la letra, audio, etc. desde Supabase
+      // Por ahora usamos datos simulados
+      document.getElementById('letraCancion').textContent = cliente.descripcion || 'Tu idea musical...';
+    }
+
+    function enviarComentario() {
+      const comentario = document.getElementById('comentarioCliente').value;
+      if (!comentario.trim()) return;
+      
+      // Aquí guardarías el comentario en Supabase
+      document.getElementById('mensajeConfirmado').textContent = '✅ Comentario enviado';
+      document.getElementById('mensajeConfirmado').style.color = 'green';
+      document.getElementById('comentarioCliente').value = '';
+      
+      // Simular historial
+      const historial = document.getElementById('historialComentarios');
+      const div = document.createElement('div');
+      div.className = 'comentario';
+      div.innerHTML = `<strong>Tú:</strong> ${comentario} <br><small>${new Date().toLocaleString()}</small>`;
+      historial.appendChild(div);
+      historial.scrollTop = historial.scrollHeight;
+    }
+
+    async function cerrarSesion() {
+      await supabase.auth.signOut();
+      localStorage.removeItem('cliente');
+      window.location.href = 'index.html';
+    }
+
+    // Inicializar
+    cargarPerfil();
+  </script>
 </body>
 </html>
