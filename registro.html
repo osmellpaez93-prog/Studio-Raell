@@ -4,12 +4,202 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Registro - Raell Studio</title>
-  <link rel="stylesheet" href="./assets/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    /* Reset básico */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Fondo general del sitio */
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: url('./assets/img/fondo.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Encabezado */
+    header {
+      background: rgba(44, 26, 77, 0.8);
+      color: white;
+      padding: 1.5rem 5%;
+      position: relative;
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      background: linear-gradient(to right, #ff6b6b, #8a2be2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    header a {
+      color: white;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.2);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    header a:hover {
+      background: rgba(138, 43, 226, 0.3);
+      transform: translateY(-3px) scale(1.1);
+      box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
+    }
+
+    /* Formulario */
+    .formulario-registro {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      max-width: 700px;
+      margin: 3rem auto;
+      color: #333;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .formulario-registro h2 {
+      margin-bottom: 1rem;
+      color: #2c1a4d;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.8rem;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .formulario-registro p {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #6c757d;
+      font-size: 1.1rem;
+    }
+
+    .formulario-registro label {
+      display: block;
+      margin: 1.2rem 0 0.5rem;
+      font-weight: 600;
+      color: #2c1a4d;
+      font-size: 1.1rem;
+    }
+
+    .formulario-registro input,
+    .formulario-registro select,
+    .formulario-registro textarea {
+      width: 100%;
+      padding: 0.85rem;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    .formulario-registro input:focus,
+    .formulario-registro select:focus,
+    .formulario-registro textarea:focus {
+      border-color: #8a2be2;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
+    }
+
+    .formulario-registro textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-top: 0.5rem;
+    }
+
+    .checkbox-group input {
+      width: auto;
+      margin: 0;
+    }
+
+    .formulario-registro button {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #8a2be2, #ff6b6b);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
+    }
+
+    .formulario-registro button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(138, 43, 226, 0.4);
+    }
+
+    .formulario-registro button:active {
+      transform: translateY(0);
+    }
+
+    #mensaje {
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: 600;
+      min-height: 1.5rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      header {
+        padding: 1rem 5%;
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+      
+      .formulario-registro {
+        padding: 1.5rem;
+        margin: 2rem 1rem;
+      }
+      
+      .formulario-registro h2 {
+        font-size: 1.5rem;
+      }
+      
+      .formulario-registro p {
+        font-size: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
     <h1>Raell Studio</h1>
-    <a href="./index.html">← Volver al inicio</a>
+    <a href="./index.html" title="Volver al inicio">🏠</a>
   </header>
 
   <section class="formulario-registro">
@@ -34,10 +224,56 @@
         <option value="Raell Studio">Raell Studio</option>
       </select>
 
+      <label for="genero">¿Qué género musical te representa?</label>
+      <select id="genero" required>
+        <option value="">Selecciona</option>
+        <option value="pop">Pop</option>
+        <option value="balada">Balada</option>
+        <option value="rock">Rock</option>
+        <option value="electronica">Electrónica</option>
+        <option value="clasica">Clásica</option>
+        <option value="urbana">Urbana (Reggaetón, Trap)</option>
+        <option value="folklore">Folklore/Regional</option>
+        <option value="otros">Otros</option>
+      </select>
+
+      <label for="ocasion">¿Para qué ocasión es esta canción?</label>
+      <select id="ocasion">
+        <option value="">Selecciona</option>
+        <option value="boda">Boda</option>
+        <option value="aniversario">Aniversario</option>
+        <option value="nacimiento">Nacimiento</option>
+        <option value="duelo">Homenaje / Duelo</option>
+        <option value="lanzamiento">Lanzamiento artístico</option>
+        <option value="regalo">Regalo</option>
+        <option value="otros">Otros</option>
+      </select>
+
+      <label for="idioma">¿En qué idioma quieres la canción?</label>
+      <select id="idioma" required>
+        <option value="">Selecciona</option>
+        <option value="espanol">Español</option>
+        <option value="ingles">Inglés</option>
+        <option value="portugues">Portugués</option>
+        <option value="frances">Francés</option>
+        <option value="italiano">Italiano</option>
+        <option value="otros">Otros</option>
+      </select>
+
+      <label for="referencias">¿Tienes referencias musicales? (ej: "Como 'A Thousand Years' de Christina Perri")</label>
+      <textarea id="referencias" rows="3"></textarea>
+
+      <label>
+        <div class="checkbox-group">
+          <input type="checkbox" id="demo">
+          <span>Sí, quiero escuchar un demo antes de la versión final</span>
+        </div>
+      </label>
+
       <label for="fechaEntrega">Fecha de entrega (opcional):</label>
       <input type="date" id="fechaEntrega">
 
-      <label for="descripcion">Describe tu idea:</label>
+      <label for="descripcion">Describe tu idea o historia:</label>
       <textarea id="descripcion" rows="5" required></textarea>
 
       <button type="submit">Enviar registro</button>
@@ -45,6 +281,56 @@
     </form>
   </section>
 
-  <script type="module" src="./assets/js/registro.js"></script>
+  <script type="module">
+    import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
+
+    const supabase = createClient(
+      'https://vgrpcnknpeihzljhnfjp.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
+    );
+
+    document.getElementById('formulario')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const mensaje = document.getElementById('mensaje');
+      mensaje.textContent = 'Enviando...';
+      mensaje.style.color = '#8a2be2';
+
+      const numeroRaell = "R" + Math.floor(10000 + Math.random() * 90000) + "L";
+
+      const data = {
+        nombre: document.getElementById('nombre').value.trim(),
+        email: document.getElementById('email').value.trim().toLowerCase(),
+        nombre_artistico: document.getElementById('nombreArtistico').value.trim() || null,
+        cantante: document.getElementById('cantante').value,
+        genero: document.getElementById('genero').value,
+        ocasion: document.getElementById('ocasion').value || null,
+        idioma: document.getElementById('idioma').value,
+        referencias: document.getElementById('referencias').value.trim() || null,
+        demo: document.getElementById('demo').checked,
+        fecha_entrega: document.getElementById('fechaEntrega').value || null,
+        descripcion: document.getElementById('descripcion').value.trim(),
+        numero_raell: numeroRaell
+      };
+
+      try {
+        const { error } = await supabase.from('clientes').insert([data]);
+        if (error) throw error;
+
+        // Guardar en localStorage para confirmacion.html
+        localStorage.setItem('numeroRaellUsuario', numeroRaell);
+        localStorage.setItem('nombreUsuario', data.nombre);
+        localStorage.setItem('emailUsuario', data.email);
+        localStorage.setItem('descripcionUsuario', data.descripcion);
+
+        mensaje.textContent = '✅ ¡Registro exitoso!';
+        mensaje.style.color = 'green';
+        setTimeout(() => window.location.href = 'confirmacion.html', 1500);
+      } catch (err) {
+        console.error('Error:', err);
+        mensaje.textContent = '❌ Error: ' + (err.message || 'No se pudo registrar.');
+        mensaje.style.color = 'red';
+      }
+    });
+  </script>
 </body>
 </html>
