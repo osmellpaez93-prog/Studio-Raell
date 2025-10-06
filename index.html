@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Raell Studio</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
@@ -11,25 +11,29 @@
     <div class="barra-superior">
       <h1 class="titulo-animado">Bienvenidos a Raell Studio</h1>
       <div class="menu-acceso">
-        <button class="boton-registro" onclick="toggleMenu()">Acceso</button>
+        <button onclick="toggleMenu()" class="boton-registro">Acceder</button>
         <div id="menuOpciones" class="menu-opciones">
+          <a href="login.html">Iniciar sesión</a>
           <a href="registro.html">Registrarse</a>
-          <a href="#">Iniciar sesión</a>
-          <a href="#">Contacto</a>
         </div>
       </div>
     </div>
     <div class="subtitulo">
-      <p>Lugar donde podrás transformar momentos especiales en música</p>
+      <p class="eslogan">Lugar donde podrás transformar momentos especiales en música</p>
     </div>
   </header>
 
   <section id="inicio">
     <div class="zona-visual">
       <div class="fondo-imagen" id="fondo-imagen"></div>
-      <div id="carrusel" class="carrusel"></div>
+      <div class="carrusel" id="carrusel">
+        <!-- Los items se generan con JavaScript -->
+      </div>
     </div>
-    <div id="navegacion" class="navegacion"></div>
+
+    <div class="navegacion" id="navegacion">
+      <!-- Botones del carrusel -->
+    </div>
   </section>
 
   <script type="module" src="./assets/js/main.js"></script>
