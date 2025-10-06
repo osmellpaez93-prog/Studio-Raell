@@ -5,14 +5,391 @@
   <title>Raell Studio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./assets/css/style.css" />
+  <style>
+    /* Reset and Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #8a2be2;
+      --primary-dark: #6a1cb0;
+      --secondary: #ff6b6b;
+      --dark: #1a1a2e;
+      --light: #f8f9fa;
+      --gray: #6c757d;
+      --transition: all 0.3s ease;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: var(--light);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Header Styles */
+    header {
+      padding: 1.5rem 5%;
+      position: relative;
+      z-index: 10;
+    }
+
+    .barra-superior {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .titulo-animado {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(to right, #ff6b6b, #8a2be2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: titleGlow 3s infinite alternate;
+    }
+
+    @keyframes titleGlow {
+      0% { text-shadow: 0 0 5px rgba(138, 43, 226, 0.3); }
+      100% { text-shadow: 0 0 20px rgba(138, 43, 226, 0.8); }
+    }
+
+    .menu-acceso {
+      position: relative;
+    }
+
+    .boton-registro {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--light);
+      padding: 0.5rem 1rem;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .boton-registro:hover {
+      background: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+    }
+
+    .menu-opciones {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: rgba(26, 26, 46, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      min-width: 180px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: var(--transition);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(138, 43, 226, 0.3);
+    }
+
+    .menu-opciones.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .menu-opciones a {
+      color: var(--light);
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: var(--transition);
+      text-align: center;
+    }
+
+    .menu-opciones a:hover {
+      background: rgba(138, 43, 226, 0.2);
+      transform: translateX(5px);
+    }
+
+    .hero-frase {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .hero-frase p {
+      font-size: 1.8rem;
+      font-style: italic;
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .hero-frase p::before,
+    .hero-frase p::after {
+      content: """;
+      font-size: 3rem;
+      color: var(--secondary);
+      opacity: 0.7;
+      position: absolute;
+    }
+
+    .hero-frase p::before {
+      top: -1.5rem;
+      left: -2rem;
+    }
+
+    .hero-frase p::after {
+      bottom: -2rem;
+      right: -2rem;
+    }
+
+    /* Main Content */
+    main {
+      padding: 3rem 5%;
+      min-height: 70vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .zona-visual {
+      width: 100%;
+      max-width: 1000px;
+      height: 400px;
+      position: relative;
+      margin-bottom: 3rem;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .fondo-imagen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(rgba(26, 26, 46, 0.7), rgba(26, 26, 46, 0.9)), 
+                  url('https://placehold.co/1000x400/302b63/8a2be2?text=Raell+Studio') center/cover no-repeat;
+    }
+
+    .carrusel {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+    }
+
+    .carrusel-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .carrusel-dot.active {
+      background: var(--secondary);
+      transform: scale(1.2);
+    }
+
+    .navegacion {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .nav-item {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 1.5rem;
+      width: 220px;
+      text-align: center;
+      transition: var(--transition);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-item:hover {
+      transform: translateY(-10px);
+      background: rgba(138, 43, 226, 0.2);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--secondary);
+    }
+
+    .nav-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    .subtitulo {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .subtitulo p {
+      font-size: 1.5rem;
+      font-weight: 600;
+      background: linear-gradient(to right, #ff6b6b, #8a2be2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* Footer */
+    footer {
+      padding: 3rem 5%;
+      background: rgba(10, 10, 20, 0.8);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(138, 43, 226, 0.3);
+    }
+
+    .contenido-footer {
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .frase-footer {
+      font-size: 1.4rem;
+      font-style: italic;
+      margin-bottom: 2rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .redes-sociales {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .redes-sociales a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      transition: var(--transition);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .redes-sociales a:hover {
+      transform: translateY(-5px);
+      background: var(--primary);
+      box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+    }
+
+    .redes-sociales img {
+      width: 24px;
+      height: 24px;
+      filter: brightness(0) invert(1);
+    }
+
+    .copyright {
+      opacity: 0.7;
+      font-size: 0.9rem;
+    }
+
+    /* Animations */
+    .aparece {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .aparece.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .titulo-animado {
+        font-size: 1.8rem;
+      }
+      
+      .hero-frase p {
+        font-size: 1.4rem;
+      }
+      
+      .hero-frase p::before,
+      .hero-frase p::after {
+        font-size: 2rem;
+      }
+      
+      .zona-visual {
+        height: 300px;
+      }
+      
+      .nav-item {
+        width: 100%;
+        max-width: 300px;
+      }
+      
+      .subtitulo p {
+        font-size: 1.3rem;
+      }
+      
+      .frase-footer {
+        font-size: 1.2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .barra-superior {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .hero-frase {
+        margin-top: 1.5rem;
+      }
+      
+      .hero-frase p {
+        font-size: 1.2rem;
+      }
+      
+      .zona-visual {
+        height: 250px;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
     <div class="barra-superior aparece">
       <h1 class="titulo-animado">Bienvenidos a Raell Studio</h1>
       <div class="menu-acceso">
-        <button class="boton-registro" onclick="toggleMenu()">☰</button>
+        <button class="boton-registro" id="menuToggle">☰</button>
         <div id="menuOpciones" class="menu-opciones">
           <a href="registro.html">Registrarse</a>
           <a href="login.html">Iniciar sesión</a>
@@ -30,7 +407,24 @@
       <div class="fondo-imagen" id="fondo-imagen"></div>
       <div id="carrusel" class="carrusel"></div>
     </div>
-    <div id="navegacion" class="navegacion aparece"></div>
+    
+    <div id="navegacion" class="navegacion aparece">
+      <div class="nav-item">
+        <div class="nav-icon">🎵</div>
+        <h3 class="nav-title">Producción Musical</h3>
+        <p>Transformamos tus ideas en experiencias sonoras únicas</p>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon">🎧</div>
+        <h3 class="nav-title">Masterización</h3>
+        <p>Perfeccionamos tu sonido para cualquier plataforma</p>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon">🎤</div>
+        <h3 class="nav-title">Grabación</h3>
+        <p>Sesiones profesionales en nuestro estudio equipado</p>
+      </div>
+    </div>
 
     <div class="subtitulo aparece">
       <p>Tu historia merece ser escuchada y nosotros la convertimos en música</p>
@@ -42,27 +436,53 @@
       <p class="frase-footer">“Cada nota cuenta una historia. La tuya merece ser escuchada.”</p>
       <div class="redes-sociales">
         <a href="https://instagram.com" target="_blank" aria-label="Instagram">
-          <img src="./assets/img/instagram.svg" alt="Instagram" />
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z'/%3E%3C/svg%3E" alt="Instagram" />
         </a>
         <a href="https://youtube.com" target="_blank" aria-label="YouTube">
-          <img src="./assets/img/youtube.svg" alt="YouTube" />
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z'/%3E%3C/svg%3E" alt="YouTube" />
         </a>
         <a href="https://spotify.com" target="_blank" aria-label="Spotify">
-          <img src="./assets/img/spotify.svg" alt="Spotify" />
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.521 17.134c-.276.438-.787.582-1.225.306a8.04 8.04 0 0 1-4.231-3.035c-.316-.316-.316-.827 0-1.143.316-.316.827-.316 1.143 0a6.02 6.02 0 0 0 3.171 2.273c.438.276.582.787.306 1.225zm1.549-3.757a.621.621 0 0 1-.858.213 9.986 9.986 0 0 0-5.033-2.518c-.41-.137-.615-.651-.478-1.061a.621.621 0 0 1 .858-.213 11.984 11.984 0 0 1 6.04 3.022c.137.41-.068.924-.479 1.061zm.307-3.387a.621.621 0 0 1-.858.213 13.98 13.98 0 0 0-6.53-1.743c-.41-.137-.615-.651-.478-1.061a.621.621 0 0 1 .858-.213c2.399.799 5.033 1.442 7.008 1.794.41.137.615.651.478 1.061z'/%3E%3C/svg%3E" alt="Spotify" />
         </a>
       </div>
       <p class="copyright">© 2025 Raell Studio. Todos los derechos reservados.</p>
     </div>
   </footer>
 
-  <script type="module" src="./assets/js/main.js"></script>
   <script>
+    // Toggle menu functionality
+    const menuToggle = document.getElementById('menuToggle');
+    const menuOpciones = document.getElementById('menuOpciones');
+    
+    menuToggle.addEventListener('click', () => {
+      menuOpciones.classList.toggle('visible');
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!menuToggle.contains(e.target) && !menuOpciones.contains(e.target)) {
+        menuOpciones.classList.remove('visible');
+      }
+    });
+    
+    // Create carousel dots
+    const carrusel = document.getElementById('carrusel');
+    for (let i = 0; i < 5; i++) {
+      const dot = document.createElement('div');
+      dot.classList.add('carrusel-dot');
+      if (i === 0) dot.classList.add('active');
+      carrusel.appendChild(dot);
+    }
+    
+    // Intersection Observer for animations
     const observador = new IntersectionObserver((entradas) => {
       entradas.forEach((entrada) => {
         if (entrada.isIntersecting) {
           entrada.target.classList.add('visible');
         }
       });
+    }, {
+      threshold: 0.1
     });
 
     document.querySelectorAll('.aparece').forEach((el) => observador.observe(el));
