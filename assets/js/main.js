@@ -34,13 +34,15 @@ const servicios = [
 // Renderizar carrusel
 const carrusel = document.getElementById('carrusel');
 const navegacion = document.getElementById('navegacion');
+let index = 0;
+let items = [];
 
 if (carrusel && navegacion) {
   servicios.forEach((servicio, i) => {
     const item = document.createElement('div');
     item.className = i === 0 ? 'item activo' : 'item';
     item.innerHTML = `
-      <img src="${servicio.img}" alt="${servicio.title}">
+      <img src="${servicio.img}" alt="${servicio.title}" />
       <div class="info">
         <h3>${servicio.title}</h3>
         <p>${servicio.desc}</p>
@@ -53,6 +55,29 @@ if (carrusel && navegacion) {
     btn.onclick = () => activarItem(i);
     navegacion.appendChild(btn);
   });
+
+  // Actualizar lista de items despues de renderizar
+  items = document.querySelectorAll('.item');
+
+  // Fondo inicial
+  const fondo = document.getElementById('fondo-imagen');
+  if (fondo && servicios[0]) {
+    fondo.style.backgroundImage = `url(${servicios[0].img})`;
+  }
+
+  // Funcion para activar item
+  function activarItem(i) {
+    if (items[index]) items[index].classList.remove('activo');
+    index = i;
+    if (items[index]) items[index].classList.add('activo');
+    if (fondo) fondo.style.backgroundImage = `url(${servicios[i].img})`;
+  }
+
+  // Carrusel automatico cada 10 segundos
+  setInterval(() => {
+    index = (index + 1) % servicios.length;
+    activarItem(index);
+  }, 10000);
 }
 
 // L¨®gica del carrusel
