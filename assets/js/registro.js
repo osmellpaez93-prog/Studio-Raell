@@ -9,34 +9,62 @@ const supabase = createClient(
 document.getElementById('formulario')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const mensaje = document.getElementById('mensaje');
-  mensaje.textContent = 'Enviando...';
-  mensaje.style.color = '#6a5acd';
+  mensaje.textContent = 'Registrando...';
+  mensaje.style.color = '#8a2be2';
 
+  const email = document.getElementById('email').value.trim().toLowerCase();
+  const nombre = document.getElementById('nombre').value.trim();
   const numeroRaell = "R" + Math.floor(10000 + Math.random() * 90000) + "L";
 
-  const data = {
-    nombre: document.getElementById('nombre').value.trim(),
-    email: document.getElementById('email').value.trim().toLowerCase(),
-    nombre_artistico: document.getElementById('nombreArtistico').value.trim() || null,
-    cantante: document.getElementById('cantante').value,
-    fecha_entrega: document.getElementById('fechaEntrega').value || null,
-    descripcion: document.getElementById('descripcion').value.trim(),
-    numero_raell: numeroRaell
-  };
-
   try {
-    const { error } = await supabase.from('clientes').insert([data]);
-    if (error) throw error;
+    // 1. Crear usuario en Supabase Auth (envía correo de confirmación)
+    const { data, error: authError } = await supabase.auth.signUp({
+      email: email,
+      password: Math.random().toString(36).slice(-8) + "Raell!", // Contraseña temporal segura
+      options: {
+        data: {
+          nombre_completo: nombre,
+          numero_raell: numeroRaell
+        },
+        emailRedirectTo: 'https://tudominio.com/confirmacion.html' // Cambia por tu dominio
+      }
+    });
 
-    // ✅ Guardar en localStorage para confirmacion.html
+    if (authError) throw authError;
+
+    // 2. Guardar datos adicionales en tabla 'clientes'
+    const clienteData = {
+      user_id: data.user?.id,
+      nombre: nombre,
+      email: email,
+      nombre_artistico: document.getElementById('nombreArtistico').value.trim() || null,
+      cantante: document.getElementById('cantante').value,
+      genero: document.getElementById('genero').value,
+      ocasion: document.getElementById('ocasion').value || null,
+      idioma: document.getElementById('idioma').value,
+      referencias: document.getElementById('referencias').value.trim() || null,
+      demo: document.getElementById('demo').checked,
+      fecha_entrega: document.getElementById('fechaEntrega').value || null,
+      descripcion: document.getElementById('descripcion').value.trim(),
+      numero_raell: numeroRaell
+    };
+
+    const { error: dbError } = await supabase.from('clientes').insert([clienteData]);
+    if (dbError) throw dbError;
+
+    // 3. Guardar en localStorage para mostrar en confirmacion.html
     localStorage.setItem('numeroRaellUsuario', numeroRaell);
-    localStorage.setItem('nombreUsuario', data.nombre);
-    localStorage.setItem('emailUsuario', data.email);
-    localStorage.setItem('descripcionUsuario', data.descripcion);
+    localStorage.setItem('nombreUsuario', nombre);
+    localStorage.setItem('emailUsuario', email);
 
-    mensaje.textContent = '✅ ¡Registro exitoso!';
+    mensaje.textContent = '✅ ¡Registro exitoso! Revisa tu correo para confirmar.';
     mensaje.style.color = 'green';
-    setTimeout(() => window.location.href = 'confirmacion.html', 1500);
+    
+    // Redirigir después de 3 segundos
+    setTimeout(() => {
+      window.location.href = 'confirmacion.html';
+    }, 3000);
+
   } catch (err) {
     console.error('Error:', err);
     mensaje.textContent = '❌ Error: ' + (err.message || 'No se pudo registrar.');
