@@ -301,4 +301,100 @@ header {
     flex-direction: column;
     gap: 1rem;
     text-align: center;
- 
+ /* Restaurar sección de inicio */
+.inicio-hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 1rem;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+  border-radius: 12px;
+  max-width: 1000px;
+  margin: 2rem auto;
+}
+
+.inicio-hero h1 {
+  font-size: 2.2rem;
+  font-family: 'Playfair Display', serif;
+  color: #fff;
+  margin-bottom: 1rem;
+  animation: fadeIn 1s ease-out;
+}
+
+.inicio-hero p {
+  font-size: 1.3rem;
+  font-style: italic;
+  color: #e0e0ff;
+  margin-bottom: 2rem;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+/* Botón de reproducción */
+.boton-play {
+  background: rgba(255,255,255,0.1);
+  border: 2px solid white;
+  border-radius: 50%;
+  padding: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.boton-play:hover {
+  transform: scale(1.1);
+  background: rgba(255,255,255,0.2);
+}
+
+.boton-play svg {
+  width: 60px;
+  height: 60px;
+  fill: white;
+}
+
+/* Botones de navegación */
+.botones-servicio {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.botones-servicio button {
+  padding: 0.75rem 1.2rem;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.botones-servicio button:hover {
+  background: rgba(255,255,255,0.25);
+  transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .inicio-hero h1 {
+    font-size: 1.6rem;
+  }
+
+  .inicio-hero p {
+    font-size: 1.1rem;
+  }
+
+  .boton-play svg {
+    width: 48px;
+    height: 48px;
+  }
+
+  .botones-servicio {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
