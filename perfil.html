@@ -47,6 +47,9 @@
       border-radius: 30px;
       transition: all 0.3s ease;
       border: 1px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .acciones-header a:hover {
@@ -95,35 +98,59 @@
       color: #2c1a4d;
       margin-bottom: 1rem;
       font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .bloque h3::before {
+      content: "🎵";
     }
 
     #letraCancion {
       background: #f8f9fa;
-      padding: 1rem;
-      border-radius: 10px;
-      min-height: 60px;
+      padding: 1.5rem;
+      border-radius: 15px;
+      min-height: 80px;
+      line-height: 1.6;
+      font-style: italic;
+      color: #495057;
+    }
+
+    .audio-container {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 15px;
+      text-align: center;
+    }
+
+    audio {
+      width: 100%;
+      max-width: 500px;
     }
 
     textarea {
       width: 100%;
-      padding: 0.85rem;
+      padding: 1rem;
       border: 1px solid #ddd;
-      border-radius: 10px;
+      border-radius: 12px;
       font-size: 1rem;
       resize: vertical;
-      min-height: 100px;
+      min-height: 120px;
+      font-family: 'Inter', sans-serif;
     }
 
     button {
       background: linear-gradient(135deg, #8a2be2, #ff6b6b);
       color: white;
       border: none;
-      border-radius: 10px;
-      padding: 0.8rem 1.5rem;
+      border-radius: 12px;
+      padding: 0.9rem 1.8rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
       box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
+      font-size: 1.1rem;
     }
 
     button:hover {
@@ -132,28 +159,62 @@
     }
 
     #mensajeConfirmado {
-      margin-top: 0.5rem;
+      margin-top: 1rem;
       font-weight: 600;
+      min-height: 1.5rem;
     }
 
     #historialComentarios {
       background: #f8f9fa;
-      padding: 1rem;
-      border-radius: 10px;
-      max-height: 200px;
+      padding: 1.5rem;
+      border-radius: 15px;
+      max-height: 300px;
       overflow-y: auto;
     }
 
-    .comentario {
+    .comentario-box {
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
       margin-bottom: 1rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid #eee;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
 
-    .comentario:last-child {
-      border-bottom: none;
+    .comentario-box:last-child {
       margin-bottom: 0;
-      padding-bottom: 0;
+    }
+
+    .comentario-box strong {
+      color: #8a2be2;
+    }
+
+    .comentario-box em {
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #6c757d;
+    }
+
+    .error {
+      text-align: center;
+      padding: 2rem;
+      color: #dc3545;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+      
+      #perfil {
+        padding: 1.5rem;
+      }
     }
   </style>
 </head>
@@ -168,36 +229,39 @@
   <section id="perfil">
     <div class="info-item">
       <span class="info-label">Nombre:</span>
-      <span id="saludoCliente"></span>
+      <span id="saludoCliente">Cargando...</span>
     </div>
     <div class="info-item">
       <span class="info-label">Número Raell:</span>
-      <span id="codigoRaell"></span>
+      <span id="codigoRaell">Cargando...</span>
     </div>
 
     <div class="bloque">
       <h3>Letra de tu canción</h3>
-      <p id="letraCancion">Aún no se ha enviado ninguna letra.</p>
+      <p id="letraCancion" class="loading">Cargando letra...</p>
     </div>
 
     <div class="bloque">
       <h3>Prueba musical</h3>
-      <audio id="audioMuestra" controls style="display:none; width:100%;">
-        <source id="audioSource" src="" type="audio/mpeg">
-        Tu navegador no soporta audio.
-      </audio>
+      <div class="audio-container">
+        <audio id="audioMuestra" controls style="display:none;">
+          <source id="audioSource" src="" type="audio/mpeg">
+          Tu navegador no soporta audio.
+        </audio>
+        <p id="audioPlaceholder" style="display: block;">Aún no hay prueba musical disponible.</p>
+      </div>
     </div>
 
     <div class="bloque">
       <h3>Tu opinión</h3>
-      <textarea id="comentarioCliente" placeholder="Escribe tu opinión..."></textarea>
+      <textarea id="comentarioCliente" placeholder="Escribe tu opinión o sugerencias para mejorar tu canción..."></textarea>
       <button onclick="enviarComentario()">Enviar comentario</button>
       <p id="mensajeConfirmado"></p>
     </div>
 
     <div class="bloque">
-      <h3>Historial</h3>
-      <div id="historialComentarios"></div>
+      <h3>Historial de conversación</h3>
+      <div id="historialComentarios" class="loading">Cargando historial...</div>
     </div>
 
     <button onclick="cerrarSesion()" style="margin-top:20px; width:100%;">Cerrar sesión</button>
@@ -211,45 +275,171 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
     );
 
-    // Cargar datos del cliente
-    async function cargarPerfil() {
-      const cliente = JSON.parse(localStorage.getItem('cliente'));
-      if (!cliente) {
+    // Obtener el ID del cliente desde localStorage
+    const clienteData = JSON.parse(localStorage.getItem('cliente'));
+    const clienteId = clienteData?.id;
+    
+    if (!clienteId) {
+      document.getElementById('perfil').innerHTML = '<div class="error">❌ Sesión no válida. Por favor, inicia sesión nuevamente.</div>';
+      setTimeout(() => {
         window.location.href = 'login.html';
+      }, 3000);
+      return;
+    }
+
+    // Función para normalizar comentarios
+    function normalizarComentarios(comentarios) {
+      if (Array.isArray(comentarios)) {
+        return comentarios;
+      }
+      if (typeof comentarios === 'string') {
+        try {
+          return JSON.parse(comentarios);
+        } catch (e) {
+          return [];
+        }
+      }
+      return [];
+    }
+
+    // Cargar datos del perfil
+    async function cargarPerfil() {
+      try {
+        const { data, error } = await supabase
+          .from('clientes')
+          .select('*')
+          .eq('id', clienteId)
+          .single();
+
+        if (error || !data) throw error;
+
+        // Actualizar información del cliente
+        document.getElementById('saludoCliente').textContent = data.nombre;
+        document.getElementById('codigoRaell').textContent = data.numero_raell;
+        
+        // Letra de la canción
+        const letraEl = document.getElementById('letraCancion');
+        letraEl.textContent = data.letra || 'Tu letra aún no ha sido creada. Nuestro equipo está trabajando en ella.';
+        letraEl.classList.remove('loading');
+
+        // Audio
+        const audioEl = document.getElementById('audioMuestra');
+        const sourceEl = document.getElementById('audioSource');
+        const placeholderEl = document.getElementById('audioPlaceholder');
+        
+        if (data.audio_url) {
+          sourceEl.src = data.audio_url;
+          audioEl.load();
+          audioEl.style.display = 'block';
+          placeholderEl.style.display = 'none';
+        } else {
+          audioEl.style.display = 'none';
+          placeholderEl.style.display = 'block';
+          placeholderEl.textContent = 'Prueba musical en progreso. Recibirás una notificación cuando esté lista.';
+        }
+
+        // Comentarios
+        const comentariosNormalizados = normalizarComentarios(data.comentarios);
+        renderComentarios(comentariosNormalizados);
+
+      } catch (err) {
+        console.error('Error al cargar perfil:', err);
+        document.getElementById('perfil').innerHTML = '<div class="error">❌ Error al cargar tu perfil. Por favor, intenta nuevamente.</div>';
+      }
+    }
+
+    // Enviar comentario
+    async function enviarComentario() {
+      const texto = document.getElementById('comentarioCliente')?.value?.trim();
+      if (!texto) {
+        document.getElementById('mensajeConfirmado').textContent = '⚠️ Por favor, escribe un comentario.';
+        document.getElementById('mensajeConfirmado').style.color = '#ffc107';
         return;
       }
 
-      document.getElementById('saludoCliente').textContent = cliente.nombre;
-      document.getElementById('codigoRaell').textContent = cliente.numero_raell;
-      
-      // Aquí cargarías la letra, audio, etc. desde Supabase
-      // Por ahora usamos datos simulados
-      document.getElementById('letraCancion').textContent = cliente.descripcion || 'Tu idea musical...';
+      try {
+        document.getElementById('mensajeConfirmado').textContent = 'Enviando...';
+        document.getElementById('mensajeConfirmado').style.color = '#8a2be2';
+
+        const { data, error } = await supabase
+          .from('clientes')
+          .select('comentarios')
+          .eq('id', clienteId)
+          .single();
+
+        if (error) throw error;
+
+        let comentarios = normalizarComentarios(data.comentarios);
+        comentarios.push({
+          texto,
+          fecha: new Date().toISOString(),
+          respuesta: null
+        });
+
+        const { error: updateError } = await supabase
+          .from('clientes')
+          .update({ comentarios })
+          .eq('id', clienteId);
+
+        if (updateError) throw updateError;
+
+        document.getElementById('comentarioCliente').value = '';
+        document.getElementById('mensajeConfirmado').textContent = '✅ ¡Comentario enviado! Nuestro equipo lo revisará pronto.';
+        document.getElementById('mensajeConfirmado').style.color = 'green';
+        
+        // Recargar comentarios
+        const { data: updatedData } = await supabase
+          .from('clientes')
+          .select('comentarios')
+          .eq('id', clienteId)
+          .single();
+        const comentariosActualizados = normalizarComentarios(updatedData.comentarios);
+        renderComentarios(comentariosActualizados);
+
+      } catch (err) {
+        console.error('Error al enviar comentario:', err);
+        document.getElementById('mensajeConfirmado').textContent = '❌ Error al enviar el comentario. Intenta nuevamente.';
+        document.getElementById('mensajeConfirmado').style.color = 'red';
+      }
     }
 
-    function enviarComentario() {
-      const comentario = document.getElementById('comentarioCliente').value;
-      if (!comentario.trim()) return;
-      
-      // Aquí guardarías el comentario en Supabase
-      document.getElementById('mensajeConfirmado').textContent = '✅ Comentario enviado';
-      document.getElementById('mensajeConfirmado').style.color = 'green';
-      document.getElementById('comentarioCliente').value = '';
-      
-      // Simular historial
-      const historial = document.getElementById('historialComentarios');
-      const div = document.createElement('div');
-      div.className = 'comentario';
-      div.innerHTML = `<strong>Tú:</strong> ${comentario} <br><small>${new Date().toLocaleString()}</small>`;
-      historial.appendChild(div);
-      historial.scrollTop = historial.scrollHeight;
+    // Renderizar comentarios
+    function renderComentarios(comentarios) {
+      const cont = document.getElementById('historialComentarios');
+      if (!cont) return;
+
+      if (comentarios.length === 0) {
+        cont.innerHTML = '<p>Aún no hay comentarios. ¡Sé el primero en compartir tu opinión!</p>';
+        cont.classList.remove('loading');
+        return;
+      }
+
+      cont.innerHTML = comentarios.map(c => `
+        <div class="comentario-box">
+          <p><strong>Tú:</strong> ${c.texto}</p>
+          <p><em>${new Date(c.fecha).toLocaleString('es-ES')}</em></p>
+          ${c.respuesta ? `<p><strong>Raell Studio:</strong> ${c.respuesta}</p>` : ""}
+        </div>
+      `).join("");
+      cont.classList.remove('loading');
     }
 
+    // Cerrar sesión
     async function cerrarSesion() {
-      await supabase.auth.signOut();
-      localStorage.removeItem('cliente');
-      window.location.href = 'index.html';
+      try {
+        await supabase.auth.signOut();
+        localStorage.removeItem('cliente');
+        window.location.href = 'index.html';
+      } catch (err) {
+        console.error('Error al cerrar sesión:', err);
+        localStorage.removeItem('cliente');
+        window.location.href = 'index.html';
+      }
     }
+
+    // Asignar funciones globales
+    window.enviarComentario = enviarComentario;
+    window.cerrarSesion = cerrarSesion;
 
     // Inicializar
     cargarPerfil();
