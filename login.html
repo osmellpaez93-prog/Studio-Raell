@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <style>
+    /* Reset y fondo */
     * {
       margin: 0;
       padding: 0;
@@ -191,6 +192,7 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
     );
 
+    // Recuperar contraseña
     document.getElementById('recuperarPass').addEventListener('click', async (e) => {
       e.preventDefault();
       const email = prompt('Ingresa tu correo electrónico:');
@@ -219,8 +221,56 @@
       const email = document.getElementById('email').value.trim().toLowerCase();
       const password = document.getElementById('password').value;
 
+      // Verificar si es el administrador
       if (email === 'admin@raell.com' && password === 'RAELL-ADMIN-2025') {
         localStorage.setItem('admin', 'true');
         mensaje.textContent = '✅ ¡Bienvenido administrador! Redirigiendo...';
         mensaje.style.color = 'green';
-        setTimeout
+        setTimeout(() => {
+          window.location.href = 'admin.html';
+        }, 1500);
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (error) throw error;
+
+        // Depuración: ver qué email se está buscando
+        console.log('Buscando email en tabla clientes:', email);
+
+        // Obtener datos del cliente desde la tabla (insensible a mayúsculas)
+        // Buscar con ilike para evitar problemas de formato
+const { data: clienteData, error: clienteError } = await supabase
+  .from('clientes')
+  .select('*')
+  .ilike('email', email)  // ← Cambia eq por ilike
+  .single();
+
+if (clienteError) throw clienteError;
+
+if (clienteData) {
+  localStorage.setItem('cliente', JSON.stringify(clienteData));
+  mensaje.textContent = '✅ ¡Bienvenido! Redirigiendo...';
+  mensaje.style.color = 'green';
+  setTimeout(() => {
+    window.location.href = 'perfil.html';
+  }, 1500);
+} else {
+  throw new Error('Usuario no encontrado en la base de datos');
+}
+        }
+
+      } catch (err) {
+        console.error('Error:', err);
+        mensaje.textContent = '❌ ' + (err.message || 'Credenciales incorrectas.');
+        mensaje.style.color = 'red';
+      }
+    });
+  </script>
+</body>
+</html>
