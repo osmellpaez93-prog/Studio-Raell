@@ -94,6 +94,11 @@
       color: #2c1a4d;
     }
 
+    .password-container {
+      position: relative;
+      width: 100%;
+    }
+
     .formulario-registro input {
       width: 100%;
       padding: 0.85rem;
@@ -107,6 +112,18 @@
       border-color: #8a2be2;
       outline: none;
       box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #6c757d;
+      cursor: pointer;
+      font-size: 1.2rem;
     }
 
     .formulario-registro button {
@@ -169,7 +186,10 @@
         <input type="email" id="email" name="email" required />
 
         <label for="password">Contraseña:</label>
-        <input type="password" id="password" name="password" required />
+        <div class="password-container">
+          <input type="password" id="password" name="password" required />
+          <button type="button" class="toggle-password" id="togglePassword">👁️</button>
+        </div>
 
         <button type="submit">Entrar</button>
         <p id="mensaje"></p>
@@ -189,6 +209,14 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
     );
 
+    // Toggle de contraseña
+    document.getElementById('togglePassword').addEventListener('click', function() {
+      const passwordInput = document.getElementById('password');
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      this.textContent = type === 'password' ? '👁️' : '🔒';
+    });
+
     document.getElementById('formulario-login')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const mensaje = document.getElementById('mensaje');
@@ -197,6 +225,17 @@
 
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
+
+      // Verificar si es el administrador
+      if (email === 'admin@raell.com' && password === 'RAELL-ADMIN-2025') {
+        localStorage.setItem('admin', 'true');
+        mensaje.textContent = '✅ ¡Bienvenido administrador! Redirigiendo...';
+        mensaje.style.color = 'green';
+        setTimeout(() => {
+          window.location.href = 'admin.html';
+        }, 1500);
+        return;
+      }
 
       try {
         const { data, error } = await supabase.auth.signInWithPassword({
