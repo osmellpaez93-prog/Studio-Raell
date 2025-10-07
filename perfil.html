@@ -2,7 +2,6 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tu espacio - Raell Studio</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <style>
@@ -243,7 +242,7 @@
       <span id="saludoCliente">Cargando...</span>
     </div>
     <div class="info-item">
-      <span class="info-label">N迆mero Raell:</span>
+      <span class="info-label">Numero Raell:</span>
       <span id="codigoRaell">Cargando...</span>
     </div>
     <div class="info-item">
@@ -252,7 +251,7 @@
     </div>
 
     <div class="bloque">
-      <h3>Letra de tu canci車n</h3>
+      <h3>Letra de tu cancion</h3>
       <p id="letraCancion" class="loading">Cargando letra...</p>
     </div>
 
@@ -263,23 +262,23 @@
           <source id="audioSource" src="" type="audio/mpeg">
           Tu navegador no soporta audio.
         </audio>
-        <p id="audioPlaceholder" style="display: block;">A迆n no hay prueba musical disponible.</p>
+        <p id="audioPlaceholder" style="display: block;">Aun no hay prueba musical disponible.</p>
       </div>
     </div>
 
     <div class="bloque">
-      <h3>Tu opini車n</h3>
-      <textarea id="comentarioCliente" placeholder="Escribe tu opini車n o sugerencias para mejorar tu canci車n..."></textarea>
+      <h3>Tu opinion</h3>
+      <textarea id="comentarioCliente" placeholder="Escribe tu opinion o sugerencias para mejorar tu cancion..."></textarea>
       <button onclick="enviarComentario()">Enviar comentario</button>
       <p id="mensajeConfirmado"></p>
     </div>
 
     <div class="bloque">
-      <h3>Historial de conversaci車n</h3>
+      <h3>Historial de conversacion</h3>
       <div id="historialComentarios" class="loading">Cargando historial...</div>
     </div>
 
-    <button onclick="cerrarSesion()" style="margin-top:20px; width:100%;">Cerrar sesi車n</button>
+    <button onclick="cerrarSesion()" style="margin-top:20px; width:100%;">Cerrar sesion</button>
   </section>
 
   <script type="module">
@@ -313,7 +312,7 @@
         document.getElementById('codigoRaell').textContent = data.numero_raell;
         document.getElementById('letraCancion').textContent = data.descripcion || 'Tu idea musical...';
 
-        // Mostrar estado con clase din芍mica
+        // Mostrar estado con clase dinamica
         const estadoEl = document.getElementById('estadoProyecto');
         const estado = data.estado || 'pendiente';
         estadoEl.textContent = estado.charAt(0).toUpperCase() + estado.slice(1);
@@ -336,7 +335,7 @@
       const historial = document.getElementById('historialComentarios');
       const div = document.createElement('div');
       div.className = 'comentario';
-      div.innerHTML = `<strong>T迆:</strong> ${comentario} <br><small>${new Date().toLocaleString()}</small>`;
+      div.innerHTML = `<strong>Tu:</strong> ${comentario} <br><small>${new Date().toLocaleString()}</small>`;
       historial.appendChild(div);
       historial.scrollTop = historial.scrollHeight;
     }
