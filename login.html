@@ -101,7 +101,7 @@
 
     .formulario-registro input {
       width: 100%;
-      padding: 0.85rem;
+      padding: 0.85rem 35px 0.85rem 0.85rem; /* Espacio para el botón */
       border: 1px solid #ddd;
       border-radius: 10px;
       font-size: 1rem;
@@ -123,7 +123,20 @@
       border: none;
       color: #6c757d;
       cursor: pointer;
-      font-size: 1.2rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .toggle-password:hover {
+      color: #8a2be2;
+      background: rgba(138, 43, 226, 0.1);
+    }
+
+    .toggle-password svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
     }
 
     .formulario-registro button {
@@ -188,7 +201,11 @@
         <label for="password">Contraseña:</label>
         <div class="password-container">
           <input type="password" id="password" name="password" required autocomplete="current-password" />
-          <button type="button" class="toggle-password" id="togglePassword">👁️</button>
+          <button type="button" class="toggle-password" id="togglePassword">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M16 8s-8 8-8 8-8-8-8-8 8-8 8 8 8 8 8-8zM1.5 8a6.97 6.97 0 0 1 1.64-4.2L1.5 8l1.64 4.2A6.97 6.97 0 0 1 1.5 8zM8 8c0 2.21-.74 4.21-2.08 5.82C4.8 12.21 4 10.21 4 8s.8-4.21 1.92-5.82C7.26 3.79 8 5.79 8 8zm7.36-4.2L13.72 8l1.64 4.2A6.97 6.97 0 0 1 13.72 8 6.97 6.97 0 0 1 15.36 3.8z"/>
+            </svg>
+          </button>
         </div>
 
         <button type="submit">Entrar</button>
@@ -214,7 +231,9 @@
       const passwordInput = document.getElementById('password');
       const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
       passwordInput.setAttribute('type', type);
-      this.textContent = type === 'password' ? '👁️' : '🔒';
+      this.querySelector('svg').innerHTML = type === 'password' 
+        ? '<path d="M16 8s-8 8-8 8-8-8-8-8 8-8 8 8 8 8 8-8zM1.5 8a6.97 6.97 0 0 1 1.64-4.2L1.5 8l1.64 4.2A6.97 6.97 0 0 1 1.5 8zM8 8c0 2.21-.74 4.21-2.08 5.82C4.8 12.21 4 10.21 4 8s.8-4.21 1.92-5.82C7.26 3.79 8 5.79 8 8zm7.36-4.2L13.72 8l1.64 4.2A6.97 6.97 0 0 1 13.72 8 6.97 6.97 0 0 1 15.36 3.8z"/>'
+        : '<path d="M13.359 11.233c-.729-.382-1.55-.56-2.35-.56-2.21 0-4 1.79-4 4 0 .59.15 1.14.4 1.63l1.78-1.78c-.18-.39-.3-.82-.3-1.27 0-1.11.9-2 2-2 .45 0 .88.12 1.27.3l1.78-1.78c-.49-.25-1.04-.4-1.63-.4zm-3.21 5.36c-.28.12-.56.2-1.14.2-1.11 0-2-.89-2-2 0-.58.08-.86.2-1.14l2.14 2.14zm3.21-5.36c-.59 0-1.14.15-1.63.4l-1.78 1.78c.39.18.82.3 1.27.3 1.11 0 2-.9 2-2 0-.45-.12-.88-.3-1.27l1.78-1.78c.25.49.4 1.04.4 1.63 0 2.21-1.79 4-4 4-.59 0-1.14-.08-1.63-.2l2.14-2.14z"/><path d="M8 16s8-8 8-8-8-8-8-8-8 8-8 8 8 8 8-8z"/>';
     });
 
     document.getElementById('formulario-login')?.addEventListener('submit', async (e) => {
