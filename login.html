@@ -240,14 +240,11 @@
 
         if (error) throw error;
 
-        // Depuración: ver qué email se está buscando
-        console.log('Buscando email en tabla clientes:', email);
-
-        // Obtener datos del cliente desde la tabla (insensible a mayúsculas)
+        // Buscar en la tabla con eq (requiere que el email esté en minúsculas)
         const {  clienteData } = await supabase
           .from('clientes')
           .select('*')
-          .ilike('email', email)  // ← Corrección clave
+          .eq('email', email)  // ← CORRECCIÓN DEFINITIVA
           .single();
 
         if (clienteData) {
