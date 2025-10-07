@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -114,7 +114,7 @@
     }
 
     .bloque h3::before {
-      content: "??";
+      content: "🎵";
     }
 
     #letraCancion {
@@ -232,7 +232,7 @@
   <header>
     <h1>Tu espacio creativo</h1>
     <div class="acciones-header">
-      <a href="./index.html">?? Inicio</a>
+      <a href="./index.html">🏠 Inicio</a>
     </div>
   </header>
 
@@ -242,7 +242,7 @@
       <span id="saludoCliente">Cargando...</span>
     </div>
     <div class="info-item">
-      <span class="info-label">Numero Raell:</span>
+      <span class="info-label">Número Raell:</span>
       <span id="codigoRaell">Cargando...</span>
     </div>
     <div class="info-item">
@@ -251,7 +251,7 @@
     </div>
 
     <div class="bloque">
-      <h3>Letra de tu cancion</h3>
+      <h3>Letra de tu canción</h3>
       <p id="letraCancion" class="loading">Cargando letra...</p>
     </div>
 
@@ -262,23 +262,23 @@
           <source id="audioSource" src="" type="audio/mpeg">
           Tu navegador no soporta audio.
         </audio>
-        <p id="audioPlaceholder" style="display: block;">Aun no hay prueba musical disponible.</p>
+        <p id="audioPlaceholder" style="display: block;">Aún no hay prueba musical disponible.</p>
       </div>
     </div>
 
     <div class="bloque">
-      <h3>Tu opinion</h3>
-      <textarea id="comentarioCliente" placeholder="Escribe tu opinion o sugerencias para mejorar tu cancion..."></textarea>
+      <h3>Tu opinión</h3>
+      <textarea id="comentarioCliente" placeholder="Escribe tu opinión o sugerencias para mejorar tu canción..."></textarea>
       <button onclick="enviarComentario()">Enviar comentario</button>
       <p id="mensajeConfirmado"></p>
     </div>
 
     <div class="bloque">
-      <h3>Historial de conversacion</h3>
+      <h3>Historial de conversación</h3>
       <div id="historialComentarios" class="loading">Cargando historial...</div>
     </div>
 
-    <button onclick="cerrarSesion()" style="margin-top:20px; width:100%;">Cerrar sesion</button>
+    <button onclick="cerrarSesion()" style="margin-top:20px; width:100%;">Cerrar sesión</button>
   </section>
 
   <script type="module">
@@ -312,14 +312,14 @@
         document.getElementById('codigoRaell').textContent = data.numero_raell;
         document.getElementById('letraCancion').textContent = data.descripcion || 'Tu idea musical...';
 
-        // Mostrar estado con clase dinamica
+        // Mostrar estado con clase dinámica
         const estadoEl = document.getElementById('estadoProyecto');
         const estado = data.estado || 'pendiente';
         estadoEl.textContent = estado.charAt(0).toUpperCase() + estado.slice(1);
         estadoEl.className = `estado estado-${estado}`;
       } catch (err) {
         console.error('Error al cargar perfil:', err);
-        document.getElementById('perfil').innerHTML = '<div class="error">? Error al cargar tu perfil.</div>';
+        document.getElementById('perfil').innerHTML = '<div class="error">❌ Error al cargar tu perfil.</div>';
       }
     }
 
@@ -327,7 +327,7 @@
       const comentario = document.getElementById('comentarioCliente').value;
       if (!comentario.trim()) return;
       
-      document.getElementById('mensajeConfirmado').textContent = '? Comentario enviado';
+      document.getElementById('mensajeConfirmado').textContent = '✅ Comentario enviado';
       document.getElementById('mensajeConfirmado').style.color = 'green';
       document.getElementById('comentarioCliente').value = '';
       
@@ -335,7 +335,7 @@
       const historial = document.getElementById('historialComentarios');
       const div = document.createElement('div');
       div.className = 'comentario';
-      div.innerHTML = `<strong>Tu:</strong> ${comentario} <br><small>${new Date().toLocaleString()}</small>`;
+      div.innerHTML = `<strong>Tú:</strong> ${comentario} <br><small>${new Date().toLocaleString()}</small>`;
       historial.appendChild(div);
       historial.scrollTop = historial.scrollHeight;
     }
