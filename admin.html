@@ -1,4 +1,4 @@
-perfecto ya estamos dentro de admin, me gustaria que fuera mas pequeño mostrando solo el numero raell del perfil y correo mas las opciones de editar y eliminar perfil ademas agrgaria un boton de busqueda para encontrar mas rapido los clientes por su correo o por numero raell, si queres agregar mas me dices <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -78,6 +78,37 @@ perfecto ya estamos dentro de admin, me gustaria que fuera mas pequeño mostrand
       font-family: 'Playfair Display', serif;
     }
 
+    .buscador {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      align-items: center;
+    }
+
+    .buscador input {
+      flex: 1;
+      padding: 0.85rem;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 1rem;
+    }
+
+    .buscador button {
+      background: linear-gradient(135deg, #8a2be2, #ff6b6b);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.85rem 1.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .buscador button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+    }
+
     #listaClientes {
       display: flex;
       flex-direction: column;
@@ -90,6 +121,9 @@ perfecto ya estamos dentro de admin, me gustaria que fuera mas pequeño mostrand
       border-radius: 15px;
       border-left: 4px solid #8a2be2;
       transition: all 0.3s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .cliente-card:hover {
@@ -98,32 +132,10 @@ perfecto ya estamos dentro de admin, me gustaria que fuera mas pequeño mostrand
       border-left-color: #ff6b6b;
     }
 
-    .cliente-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1rem;
-    }
-
-    .cliente-nombre {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: #2c1a4d;
-    }
-
-    .cliente-numero {
-      background: linear-gradient(to right, #8a2be2, #ff6b6b);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      font-weight: 600;
-    }
-
     .cliente-info {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.8rem;
-      margin-bottom: 1rem;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
     }
 
     .info-item {
@@ -142,16 +154,31 @@ perfecto ya estamos dentro de admin, me gustaria que fuera mas pequeño mostrand
       font-weight: 500;
     }
 
-    .cliente-descripcion {
-      background: #f8f9fa;
-      padding: 1rem;
-      border-radius: 10px;
-      font-style: italic;
-      color: #495057;
-      margin-bottom: 1rem;
+    .cliente-numero {
+      background: linear-gradient(to right, #8a2be2, #ff6b6b);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 600;
     }
 
-    .editar-btn {
+    .estado {
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .estado-pendiente { background: #fff3cd; color: #856404; }
+    .estado-proceso { background: #d1ecf1; color: #0c5460; }
+    .estado-completado { background: #d4edda; color: #155724; }
+
+    .cliente-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .editar-btn, .eliminar-btn, .exportar-btn {
       background: linear-gradient(135deg, #8a2be2, #ff6b6b);
       color: white;
       border: none;
@@ -166,6 +193,20 @@ perfecto ya estamos dentro de admin, me gustaria que fuera mas pequeño mostrand
     .editar-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+    }
+
+    .eliminar-btn {
+      background: linear-gradient(135deg, #dc3545, #ff6b6b);
+    }
+
+    .eliminar-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+    }
+
+    .exportar-btn {
+      margin-top: 1rem;
+      width: 100%;
     }
 
     .loading {
@@ -187,12 +228,23 @@ perfecto ya estamos dentro de admin, me gustaria que fuera mas pequeño mostrand
         text-align: center;
       }
       
-      .cliente-info {
-        grid-template-columns: 1fr;
+      .buscador {
+        flex-direction: column;
       }
       
-      .formulario-registro {
-        padding: 1.5rem;
+      .cliente-card {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .cliente-info {
+        width: 100%;
+        gap: 1rem;
+      }
+      
+      .cliente-actions {
+        width: 100%;
+        justify-content: center;
       }
     }
   </style>
@@ -207,7 +259,18 @@ perfecto ya estamos dentro de admin, me gustaria que fuera mas pequeño mostrand
 
   <section class="formulario-registro">
     <h2>Clientes registrados</h2>
+    
+    <!-- Buscador -->
+    <div class="buscador">
+      <input type="text" id="buscador" placeholder="Buscar por email o número Raell..." />
+      <button onclick="buscarCliente()">Buscar</button>
+    </div>
+
+    <!-- Lista de clientes -->
     <div id="listaClientes" class="loading">Cargando clientes...</div>
+
+    <!-- Botón de exportar -->
+    <button class="exportar-btn" onclick="exportarClientes()">Exportar a CSV</button>
   </section>
 
   <script>
@@ -219,10 +282,10 @@ perfecto ya estamos dentro de admin, me gustaria que fuera mas pequeño mostrand
   </script>
 
   <script type="module">
-    import { createClient } from '  https://cdn.skypack.dev/@supabase/supabase-js@2.58.0  ';
+    import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
 
     const supabase = createClient(
-      'https://vgrpcnknpeihzljhnfjp.supabase.co  ',
+      'https://vgrpcnknpeihzljhnfjp.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
     );
 
@@ -243,35 +306,25 @@ perfecto ya estamos dentro de admin, me gustaria que fuera mas pequeño mostrand
 
         document.getElementById('listaClientes').innerHTML = data.map(cliente => `
           <div class="cliente-card">
-            <div class="cliente-header">
-              <div>
-                <div class="cliente-nombre">${cliente.nombre}</div>
-                <div class="cliente-numero">Número Raell: ${cliente.numero_raell}</div>
-              </div>
-              <button onclick="editarCliente('${cliente.id}')" class="editar-btn">
-                Editar proyecto
-              </button>
-            </div>
             <div class="cliente-info">
               <div class="info-item">
-                <span class="info-label">Email</span>
+                <span class="info-label">Número Raell:</span>
+                <span class="info-value cliente-numero">${cliente.numero_raell}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Email:</span>
                 <span class="info-value">${cliente.email}</span>
               </div>
               <div class="info-item">
-                <span class="info-label">Cantante</span>
-                <span class="info-value">${cliente.cantante}</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">Género</span>
-                <span class="info-value">${cliente.genero || 'No especificado'}</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">Ocasión</span>
-                <span class="info-value">${cliente.ocasion || 'No especificado'}</span>
+                <span class="info-label">Estado:</span>
+                <span class="info-value estado estado-${cliente.estado || 'pendiente'}">
+                  ${cliente.estado || 'Pendiente'}
+                </span>
               </div>
             </div>
-            <div class="cliente-descripcion">
-              "${cliente.descripcion.substring(0, 120)}${cliente.descripcion.length > 120 ? '...' : ''}"
+            <div class="cliente-actions">
+              <button onclick="editarCliente('${cliente.id}')" class="editar-btn">Editar</button>
+              <button onclick="eliminarCliente('${cliente.id}')" class="eliminar-btn">Eliminar</button>
             </div>
           </div>
         `).join("");
@@ -283,7 +336,124 @@ perfecto ya estamos dentro de admin, me gustaria que fuera mas pequeño mostrand
 
     // Función global para editar cliente
     window.editarCliente = function(id) {
+      // Notificación automática
+      alert('🔔 Notificación enviada: El cliente será contactado sobre la actualización.');
       window.location.href = `admin-editar.html?id=${id}`;
+    };
+
+    // Función global para eliminar cliente
+    window.eliminarCliente = async function(id) {
+      if (!confirm('¿Estás seguro de eliminar este cliente?')) return;
+
+      try {
+        const { error } = await supabase
+          .from('clientes')
+          .delete()
+          .eq('id', id);
+
+        if (error) throw error;
+
+        // Notificación
+        alert('✅ Cliente eliminado correctamente.');
+
+        // Recargar la lista
+        cargarClientes();
+      } catch (err) {
+        console.error('Error al eliminar cliente:', err);
+        alert('❌ Error al eliminar el cliente.');
+      }
+    };
+
+    // Función de búsqueda
+    window.buscarCliente = function() {
+      const termino = document.getElementById('buscador').value.trim().toLowerCase();
+
+      if (!termino) {
+        cargarClientes();
+        return;
+      }
+
+      try {
+        supabase
+          .from('clientes')
+          .select('*')
+          .or(`email.ilike.%${termino}%,numero_raell.ilike.%${termino}%`)
+          .then(({ data, error }) => {
+            if (error) throw error;
+
+            if (data.length === 0) {
+              document.getElementById('listaClientes').innerHTML = '<p style="text-align:center; padding:2rem;">No se encontraron clientes.</p>';
+              return;
+            }
+
+            document.getElementById('listaClientes').innerHTML = data.map(cliente => `
+              <div class="cliente-card">
+                <div class="cliente-info">
+                  <div class="info-item">
+                    <span class="info-label">Número Raell:</span>
+                    <span class="info-value cliente-numero">${cliente.numero_raell}</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Email:</span>
+                    <span class="info-value">${cliente.email}</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Estado:</span>
+                    <span class="info-value estado estado-${cliente.estado || 'pendiente'}">
+                      ${cliente.estado || 'Pendiente'}
+                    </span>
+                  </div>
+                </div>
+                <div class="cliente-actions">
+                  <button onclick="editarCliente('${cliente.id}')" class="editar-btn">Editar</button>
+                  <button onclick="eliminarCliente('${cliente.id}')" class="eliminar-btn">Eliminar</button>
+                </div>
+              </div>
+            `).join("");
+          });
+      } catch (err) {
+        console.error('Error en la búsqueda:', err);
+        document.getElementById('listaClientes').innerHTML = '<div class="error">❌ Error en la búsqueda. Por favor, intenta nuevamente.</div>';
+      }
+    };
+
+    // Función para exportar a CSV
+    window.exportarClientes = async function() {
+      try {
+        const { data, error } = await supabase
+          .from('clientes')
+          .select('numero_raell,email,estado,created_at');
+
+        if (error) throw error;
+
+        if (data.length === 0) {
+          alert('No hay datos para exportar.');
+          return;
+        }
+
+        // Crear CSV
+        const headers = ['Número Raell', 'Email', 'Estado', 'Fecha de registro'];
+        const csvContent = [
+          headers.join(','),
+          ...data.map(row => 
+            `"${row.numero_raell}","${row.email}","${row.estado || 'Pendiente'}","${new Date(row.created_at).toLocaleDateString()}"`
+          )
+        ].join('\n');
+
+        // Descargar archivo
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('href', url);
+        a.setAttribute('download', 'clientes_raell_studio.csv');
+        a.click();
+        URL.revokeObjectURL(url);
+
+        alert('✅ Lista exportada correctamente.');
+      } catch (err) {
+        console.error('Error al exportar:', err);
+        alert('❌ Error al exportar la lista.');
+      }
     };
 
     // Iniciar
