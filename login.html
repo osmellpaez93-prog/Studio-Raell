@@ -241,7 +241,7 @@
         if (error) throw error;
 
         // ✅ CORRECCIÓN DEFINITIVA: usar ilike en lugar de eq
-        const {  clienteData, error: clienteError } = await supabase
+        const {  data: clienteData, error: clienteError } = await supabase
           .from('clientes')
           .select('*')
           .ilike('email', email)  // ← Aquí está la clave
