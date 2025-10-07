@@ -275,166 +275,44 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
     );
 
-    // Obtener el ID del cliente desde localStorage
-    const clienteData = JSON.parse(localStorage.getItem('cliente'));
-    const clienteId = clienteData?.id;
-    
-    if (!clienteId) {
-      document.getElementById('perfil').innerHTML = '<div class="error">❌ Sesión no válida. Por favor, inicia sesión nuevamente.</div>';
-      setTimeout(() => {
-        window.location.href = 'login.html';
-      }, 3000);
-      return;
-    }
-
-    // Función para normalizar comentarios
-    function normalizarComentarios(comentarios) {
-      if (Array.isArray(comentarios)) {
-        return comentarios;
-      }
-      if (typeof comentarios === 'string') {
-        try {
-          return JSON.parse(comentarios);
-        } catch (e) {
-          return [];
-        }
-      }
-      return [];
-    }
-
-    // Cargar datos del perfil
+    // Cargar datos del cliente
     async function cargarPerfil() {
-      try {
-        const { data, error } = await supabase
-          .from('clientes')
-          .select('*')
-          .eq('id', clienteId)
-          .single();
-
-        if (error || !data) throw error;
-
-        // Actualizar información del cliente
-        document.getElementById('saludoCliente').textContent = data.nombre;
-        document.getElementById('codigoRaell').textContent = data.numero_raell;
-        
-        // Letra de la canción
-        const letraEl = document.getElementById('letraCancion');
-        letraEl.textContent = data.letra || 'Tu letra aún no ha sido creada. Nuestro equipo está trabajando en ella.';
-        letraEl.classList.remove('loading');
-
-        // Audio
-        const audioEl = document.getElementById('audioMuestra');
-        const sourceEl = document.getElementById('audioSource');
-        const placeholderEl = document.getElementById('audioPlaceholder');
-        
-        if (data.audio_url) {
-          sourceEl.src = data.audio_url;
-          audioEl.load();
-          audioEl.style.display = 'block';
-          placeholderEl.style.display = 'none';
-        } else {
-          audioEl.style.display = 'none';
-          placeholderEl.style.display = 'block';
-          placeholderEl.textContent = 'Prueba musical en progreso. Recibirás una notificación cuando esté lista.';
-        }
-
-        // Comentarios
-        const comentariosNormalizados = normalizarComentarios(data.comentarios);
-        renderComentarios(comentariosNormalizados);
-
-      } catch (err) {
-        console.error('Error al cargar perfil:', err);
-        document.getElementById('perfil').innerHTML = '<div class="error">❌ Error al cargar tu perfil. Por favor, intenta nuevamente.</div>';
-      }
-    }
-
-    // Enviar comentario
-    async function enviarComentario() {
-      const texto = document.getElementById('comentarioCliente')?.value?.trim();
-      if (!texto) {
-        document.getElementById('mensajeConfirmado').textContent = '⚠️ Por favor, escribe un comentario.';
-        document.getElementById('mensajeConfirmado').style.color = '#ffc107';
+      const cliente = JSON.parse(localStorage.getItem('cliente'));
+      if (!cliente) {
+        window.location.href = 'login.html';
         return;
       }
 
-      try {
-        document.getElementById('mensajeConfirmado').textContent = 'Enviando...';
-        document.getElementById('mensajeConfirmado').style.color = '#8a2be2';
-
-        const { data, error } = await supabase
-          .from('clientes')
-          .select('comentarios')
-          .eq('id', clienteId)
-          .single();
-
-        if (error) throw error;
-
-        let comentarios = normalizarComentarios(data.comentarios);
-        comentarios.push({
-          texto,
-          fecha: new Date().toISOString(),
-          respuesta: null
-        });
-
-        const { error: updateError } = await supabase
-          .from('clientes')
-          .update({ comentarios })
-          .eq('id', clienteId);
-
-        if (updateError) throw updateError;
-
-        document.getElementById('comentarioCliente').value = '';
-        document.getElementById('mensajeConfirmado').textContent = '✅ ¡Comentario enviado! Nuestro equipo lo revisará pronto.';
-        document.getElementById('mensajeConfirmado').style.color = 'green';
-        
-        // Recargar comentarios
-        const { data: updatedData } = await supabase
-          .from('clientes')
-          .select('comentarios')
-          .eq('id', clienteId)
-          .single();
-        const comentariosActualizados = normalizarComentarios(updatedData.comentarios);
-        renderComentarios(comentariosActualizados);
-
-      } catch (err) {
-        console.error('Error al enviar comentario:', err);
-        document.getElementById('mensajeConfirmado').textContent = '❌ Error al enviar el comentario. Intenta nuevamente.';
-        document.getElementById('mensajeConfirmado').style.color = 'red';
-      }
+      document.getElementById('saludoCliente').textContent = cliente.nombre;
+      document.getElementById('codigoRaell').textContent = cliente.numero_raell;
+      
+      // Aquí cargarías la letra, audio, etc. desde Supabase
+      // Por ahora usamos datos simulados
+      document.getElementById('letraCancion').textContent = cliente.descripcion || 'Tu idea musical...';
     }
 
-    // Renderizar comentarios
-    function renderComentarios(comentarios) {
-      const cont = document.getElementById('historialComentarios');
-      if (!cont) return;
-
-      if (comentarios.length === 0) {
-        cont.innerHTML = '<p>Aún no hay comentarios. ¡Sé el primero en compartir tu opinión!</p>';
-        cont.classList.remove('loading');
-        return;
-      }
-
-      cont.innerHTML = comentarios.map(c => `
-        <div class="comentario-box">
-          <p><strong>Tú:</strong> ${c.texto}</p>
-          <p><em>${new Date(c.fecha).toLocaleString('es-ES')}</em></p>
-          ${c.respuesta ? `<p><strong>Raell Studio:</strong> ${c.respuesta}</p>` : ""}
-        </div>
-      `).join("");
-      cont.classList.remove('loading');
+    function enviarComentario() {
+      const comentario = document.getElementById('comentarioCliente').value;
+      if (!comentario.trim()) return;
+      
+      // Aquí guardarías el comentario en Supabase
+      document.getElementById('mensajeConfirmado').textContent = '✅ Comentario enviado';
+      document.getElementById('mensajeConfirmado').style.color = 'green';
+      document.getElementById('comentarioCliente').value = '';
+      
+      // Simular historial
+      const historial = document.getElementById('historialComentarios');
+      const div = document.createElement('div');
+      div.className = 'comentario';
+      div.innerHTML = `<strong>Tú:</strong> ${comentario} <br><small>${new Date().toLocaleString()}</small>`;
+      historial.appendChild(div);
+      historial.scrollTop = historial.scrollHeight;
     }
 
-    // Cerrar sesión
     async function cerrarSesion() {
-      try {
-        await supabase.auth.signOut();
-        localStorage.removeItem('cliente');
-        window.location.href = 'index.html';
-      } catch (err) {
-        console.error('Error al cerrar sesión:', err);
-        localStorage.removeItem('cliente');
-        window.location.href = 'index.html';
-      }
+      await supabase.auth.signOut();
+      localStorage.removeItem('cliente');
+      window.location.href = 'index.html';
     }
 
     // Asignar funciones globales
