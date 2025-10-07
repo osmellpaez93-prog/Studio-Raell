@@ -4,29 +4,290 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Panel de Administrador - Raell Studio</title>
-  <link rel="stylesheet" href="./assets/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: white;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      background: linear-gradient(to right, #ff6b6b, #8a2be2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .acciones-header a {
+      color: white;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .acciones-header a:hover {
+      background: rgba(138, 43, 226, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .formulario-registro {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      max-width: 1000px;
+      margin: 0 auto;
+      color: #333;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .formulario-registro h2 {
+      margin-bottom: 1.5rem;
+      color: #2c1a4d;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.8rem;
+      font-family: 'Playfair Display', serif;
+    }
+
+    #listaClientes {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .cliente-card {
+      background: rgba(0, 0, 0, 0.05);
+      padding: 1.5rem;
+      border-radius: 15px;
+      border-left: 4px solid #8a2be2;
+      transition: all 0.3s ease;
+    }
+
+    .cliente-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      border-left-color: #ff6b6b;
+    }
+
+    .cliente-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .cliente-nombre {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #2c1a4d;
+    }
+
+    .cliente-numero {
+      background: linear-gradient(to right, #8a2be2, #ff6b6b);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 600;
+    }
+
+    .cliente-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .info-label {
+      font-weight: 600;
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+
+    .info-value {
+      color: #2c1a4d;
+      font-weight: 500;
+    }
+
+    .cliente-descripcion {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 10px;
+      font-style: italic;
+      color: #495057;
+      margin-bottom: 1rem;
+    }
+
+    .editar-btn {
+      background: linear-gradient(135deg, #8a2be2, #ff6b6b);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 10px rgba(138, 43, 226, 0.3);
+    }
+
+    .editar-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #6c757d;
+    }
+
+    .error {
+      text-align: center;
+      padding: 2rem;
+      color: #dc3545;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+      
+      .cliente-info {
+        grid-template-columns: 1fr;
+      }
+      
+      .formulario-registro {
+        padding: 1.5rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
     <h1>Panel de Administrador</h1>
-    <a href="./index.html">← Volver al inicio</a>
+    <div class="acciones-header">
+      <a href="./index.html">🏠 Inicio</a>
+    </div>
   </header>
 
   <section class="formulario-registro">
     <h2>Clientes registrados</h2>
-    <div id="listaClientes">
-      <p>Cargando...</p>
-    </div>
+    <div id="listaClientes" class="loading">Cargando clientes...</div>
   </section>
 
-  <!-- Protección: solo acceso si se usó el código maestro -->
   <script>
+    // Protección de acceso
     if (localStorage.getItem('admin') !== 'true') {
       alert('Acceso denegado. Usa el código maestro en login.');
       window.location.href = 'login.html';
     }
   </script>
 
-  <script type="module" src="./assets/js/admin.js"></script>
+  <script type="module">
+    import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
+
+    const supabase = createClient(
+      'https://vgrpcnknpeihzljhnfjp.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
+    );
+
+    // Cargar lista de clientes
+    async function cargarClientes() {
+      try {
+        const { data, error } = await supabase
+          .from('clientes')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (data.length === 0) {
+          document.getElementById('listaClientes').innerHTML = '<p style="text-align:center; padding:2rem;">No hay clientes registrados aún.</p>';
+          return;
+        }
+
+        document.getElementById('listaClientes').innerHTML = data.map(cliente => `
+          <div class="cliente-card">
+            <div class="cliente-header">
+              <div>
+                <div class="cliente-nombre">${cliente.nombre}</div>
+                <div class="cliente-numero">Número Raell: ${cliente.numero_raell}</div>
+              </div>
+              <button onclick="editarCliente('${cliente.id}')" class="editar-btn">
+                Editar proyecto
+              </button>
+            </div>
+            <div class="cliente-info">
+              <div class="info-item">
+                <span class="info-label">Email</span>
+                <span class="info-value">${cliente.email}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Cantante</span>
+                <span class="info-value">${cliente.cantante}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Género</span>
+                <span class="info-value">${cliente.genero || 'No especificado'}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Ocasión</span>
+                <span class="info-value">${cliente.ocasion || 'No especificado'}</span>
+              </div>
+            </div>
+            <div class="cliente-descripcion">
+              "${cliente.descripcion.substring(0, 120)}${cliente.descripcion.length > 120 ? '...' : ''}"
+            </div>
+          </div>
+        `).join("");
+      } catch (err) {
+        console.error('Error al cargar clientes:', err);
+        document.getElementById('listaClientes').innerHTML = '<div class="error">❌ Error al cargar los clientes. Por favor, intenta nuevamente.</div>';
+      }
+    }
+
+    // Función global para editar cliente
+    window.editarCliente = function(id) {
+      window.location.href = `admin-editar.html?id=${id}`;
+    };
+
+    // Iniciar
+    cargarClientes();
+  </script>
 </body>
 </html>
