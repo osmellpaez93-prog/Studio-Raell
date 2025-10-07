@@ -145,6 +145,8 @@
       color: #8a2be2;
       text-decoration: none;
       font-weight: 600;
+      display: block;
+      margin: 0.5rem 0;
     }
 
     .registro-link a:hover {
@@ -176,6 +178,7 @@
         
         <div class="registro-link">
           <p>¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a></p>
+          <p>¿Olvidaste tu contraseña? <a href="#" id="recuperarPass">Recupérala aquí</a></p>
         </div>
       </form>
     </div>
@@ -189,13 +192,33 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
     );
 
+    // Recuperar contraseña
+    document.getElementById('recuperarPass').addEventListener('click', async (e) => {
+      e.preventDefault();
+      const email = prompt('Ingresa tu correo electrónico:');
+      if (!email) return;
+
+      try {
+        const { error } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
+          redirectTo: 'https://studio-raell.vercel.app/login.html'
+        });
+
+        if (error) throw error;
+
+        alert('✅ Hemos enviado un enlace de restablecimiento a tu correo. Revisa tu bandeja de entrada (y spam).');
+      } catch (err) {
+        console.error('Error:', err);
+        alert('❌ ' + (err.message || 'No se pudo enviar el enlace. Verifica tu correo.'));
+      }
+    });
+
     document.getElementById('formulario-login')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const mensaje = document.getElementById('mensaje');
       mensaje.textContent = 'Iniciando sesión...';
       mensaje.style.color = '#8a2be2';
 
-      const email = document.getElementById('email').value.trim();
+      const email = document.getElementById('email').value.trim().toLowerCase();
       const password = document.getElementById('password').value;
 
       // Verificar si es el administrador
@@ -217,11 +240,11 @@
 
         if (error) throw error;
 
-        // Obtener datos del cliente desde la tabla
+        // Obtener datos del cliente desde la tabla (insensible a mayúsculas)
         const {  clienteData } = await supabase
           .from('clientes')
           .select('*')
-          .eq('email', email)
+          .ilike('email', email)  // ← Corrección clave: ilike en lugar de eq
           .single();
 
         if (clienteData) {
