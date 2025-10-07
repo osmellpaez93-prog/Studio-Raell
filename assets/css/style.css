@@ -8,7 +8,7 @@
 /* Fondo general del sitio */
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: url('../img/fondo.jpg') no-repeat center center fixed;
+  background: url('./assets/img/fondo.jpg') no-repeat center center fixed;
   background-size: cover;
   color: white;
   line-height: 1.6;
@@ -52,6 +52,8 @@ header {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   transition: background 0.3s ease, transform 0.3s ease;
+  text-decoration: none;
+  color: white;
 }
 
 .icono-header:hover {
@@ -252,9 +254,16 @@ header {
   color: #2c1a4d;
 }
 
+/* Contenedor de contraseña */
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
 .formulario-registro input {
   width: 100%;
   padding: 0.75rem;
+  padding-right: 35px; /* Espacio para el botón de toggle */
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1rem;
@@ -265,6 +274,33 @@ header {
   border-color: #6a5acd;
   outline: none;
   box-shadow: 0 0 5px rgba(106, 90, 205, 0.3);
+}
+
+/* Botón de toggle de contraseña */
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.toggle-password:hover {
+  color: #6a5acd;
+  background: rgba(106, 90, 205, 0.1);
+}
+
+.toggle-password svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
 }
 
 .formulario-registro button {
@@ -284,6 +320,30 @@ header {
   background: #5a4acb;
 }
 
+/* Mensaje de feedback */
+#mensaje {
+  text-align: center;
+  margin-top: 1rem;
+  font-weight: 600;
+  min-height: 1.5rem;
+}
+
+/* Enlaces de registro */
+.registro-link {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.registro-link a {
+  color: #6a5acd;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.registro-link a:hover {
+  text-decoration: underline;
+}
+
 /* Animaciones */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-10px); }
@@ -301,7 +361,18 @@ header {
     flex-direction: column;
     gap: 1rem;
     text-align: center;
- /* Restaurar sección de inicio */
+  }
+
+  .formulario-registro input {
+    padding-right: 30px;
+  }
+
+  .toggle-password {
+    right: 8px;
+  }
+}
+
+/* Sección de inicio hero */
 .inicio-hero {
   display: flex;
   flex-direction: column;
@@ -378,7 +449,7 @@ header {
   transform: scale(1.05);
 }
 
-/* Responsive */
+/* Responsive adicional */
 @media (max-width: 768px) {
   .inicio-hero h1 {
     font-size: 1.6rem;
