@@ -240,29 +240,24 @@
 
         if (error) throw error;
 
-        // Depuración: ver qué email se está buscando
-        console.log('Buscando email en tabla clientes:', email);
+        // ✅ CORRECCIÓN DEFINITIVA: usar ilike en lugar de eq
+        const {  clienteData, error: clienteError } = await supabase
+          .from('clientes')
+          .select('*')
+          .ilike('email', email)  // ← Aquí está la clave
+          .single();
 
-        // Obtener datos del cliente desde la tabla (insensible a mayúsculas)
-        // Buscar con ilike para evitar problemas de formato
-const { data: clienteData, error: clienteError } = await supabase
-  .from('clientes')
-  .select('*')
-  .ilike('email', email)  // ← Cambia eq por ilike
-  .single();
+        if (clienteError) throw clienteError;
 
-if (clienteError) throw clienteError;
-
-if (clienteData) {
-  localStorage.setItem('cliente', JSON.stringify(clienteData));
-  mensaje.textContent = '✅ ¡Bienvenido! Redirigiendo...';
-  mensaje.style.color = 'green';
-  setTimeout(() => {
-    window.location.href = 'perfil.html';
-  }, 1500);
-} else {
-  throw new Error('Usuario no encontrado en la base de datos');
-}
+        if (clienteData) {
+          localStorage.setItem('cliente', JSON.stringify(clienteData));
+          mensaje.textContent = '✅ ¡Bienvenido! Redirigiendo...';
+          mensaje.style.color = 'green';
+          setTimeout(() => {
+            window.location.href = 'perfil.html';
+          }, 1500);
+        } else {
+          throw new Error('Usuario no encontrado en la base de datos');
         }
 
       } catch (err) {
