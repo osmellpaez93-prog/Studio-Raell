@@ -14,82 +14,82 @@
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: url('./assets/img/fondo.jpg') no-repeat center center fixed;
-      background-size: cover;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
       color: white;
-      line-height: 1.6;
       min-height: 100vh;
-      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding: 2rem;
     }
 
     header {
-      background: rgba(44, 26, 77, 0.8);
-      color: white;
-      padding: 1rem;
-      position: relative;
-      backdrop-filter: blur(10px);
+      width: 100%;
+      max-width: 1200px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      max-width: 1200px;
-      margin: 0 auto 3rem;
+      margin-bottom: 3rem;
     }
 
     .titulo-animado {
-      font-size: 1.8rem;
-      animation: fadeIn 1s ease;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      background: linear-gradient(to right, #ff6b6b, #8a2be2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
 
     .acciones-header {
       display: flex;
       gap: 1rem;
-      align-items: center;
     }
 
     .icono-header {
-      display: inline-block;
+      color: white;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.1);
       width: 45px;
       height: 45px;
-      background: rgba(255, 255, 255, 0.1);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.3s ease, transform 0.3s ease;
-      text-decoration: none;
-      color: white;
+      transition: all 0.3s ease;
       border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .icono-header:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: scale(1.1);
+      background: rgba(138, 43, 226, 0.3);
+      transform: translateY(-2px);
     }
 
     .formulario-registro {
-      background: rgba(255,255,255,0.95);
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      max-width: 600px;
-      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+      width: 100%;
       color: #333;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .formulario-registro h2 {
       margin-bottom: 1.5rem;
       color: #2c1a4d;
       text-align: center;
-      font-weight: bold;
+      font-weight: 700;
+      font-size: 1.6rem;
+      font-family: 'Playfair Display', serif;
     }
 
     .formulario-registro label {
       display: block;
-      margin: 1rem 0 0.5rem;
+      margin: 1.2rem 0 0.5rem;
       font-weight: 600;
       color: #2c1a4d;
     }
@@ -101,17 +101,17 @@
 
     .formulario-registro input {
       width: 100%;
-      padding: 0.75rem;
+      padding: 0.85rem;
       border: 1px solid #ddd;
-      border-radius: 4px;
+      border-radius: 10px;
       font-size: 1rem;
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
     }
 
     .formulario-registro input:focus {
-      border-color: #6a5acd;
+      border-color: #8a2be2;
       outline: none;
-      box-shadow: 0 0 5px rgba(106, 90, 205, 0.3);
+      box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
     }
 
     .toggle-password {
@@ -123,37 +123,27 @@
       border: none;
       color: #6c757d;
       cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 4px;
-      transition: all 0.2s ease;
-    }
-
-    .toggle-password:hover {
-      color: #6a5acd;
-      background: rgba(106, 90, 205, 0.1);
-    }
-
-    .toggle-password svg {
-      width: 16px;
-      height: 16px;
-      fill: currentColor;
+      font-size: 1.2rem;
     }
 
     .formulario-registro button {
       width: 100%;
-      padding: 0.75rem;
-      background: #6a5acd;
+      padding: 1rem;
+      background: linear-gradient(135deg, #8a2be2, #ff6b6b);
       color: white;
       border: none;
-      border-radius: 4px;
-      font-size: 1.1rem;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      font-weight: 600;
       cursor: pointer;
-      margin-top: 1rem;
+      margin-top: 1.5rem;
       transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
     }
 
     .formulario-registro button:hover {
-      background: #5a4acb;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(138, 43, 226, 0.4);
     }
 
     #mensaje {
@@ -169,19 +159,13 @@
     }
 
     .registro-link a {
-      color: #6a5acd;
+      color: #8a2be2;
       text-decoration: none;
       font-weight: 600;
     }
 
     .registro-link a:hover {
       text-decoration: underline;
-    }
-
-    /* Animaciones */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
@@ -194,30 +178,28 @@
     </div>
   </header>
 
-  <section class="formulario-registro">
-    <h2>Accede con tu cuenta</h2>
-    <form id="formulario-login">
-      <label for="email">Correo electrónico:</label>
-      <input type="email" id="email" name="email" required autocomplete="email" />
+  <main id="inicio">
+    <div class="formulario-registro">
+      <h2>Accede con tu cuenta</h2>
+      <form id="formulario-login">
+        <label for="email">Correo electrónico:</label>
+        <input type="email" id="email" name="email" required autocomplete="email" />
 
-      <label for="password">Contraseña:</label>
-      <div class="password-container">
-        <input type="password" id="password" name="password" required autocomplete="current-password" />
-        <button type="button" class="toggle-password" id="togglePassword">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M16 8s-8 8-8 8-8-8-8-8 8-8 8 8 8 8 8-8zM1.5 8a6.97 6.97 0 0 1 1.64-4.2L1.5 8l1.64 4.2A6.97 6.97 0 0 1 1.5 8zM8 8c0 2.21-.74 4.21-2.08 5.82C4.8 12.21 4 10.21 4 8s.8-4.21 1.92-5.82C7.26 3.79 8 5.79 8 8zm7.36-4.2L13.72 8l1.64 4.2A6.97 6.97 0 0 1 13.72 8 6.97 6.97 0 0 1 15.36 3.8z"/>
-          </svg>
-        </button>
-      </div>
+        <label for="password">Contraseña:</label>
+        <div class="password-container">
+          <input type="password" id="password" name="password" required autocomplete="current-password" />
+          <button type="button" class="toggle-password" id="togglePassword">👁️</button>
+        </div>
 
-      <button type="submit">Entrar</button>
-      <p id="mensaje"></p>
-      
-      <div class="registro-link">
-        <p>¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a></p>
-      </div>
-    </form>
-  </section>
+        <button type="submit">Entrar</button>
+        <p id="mensaje"></p>
+        
+        <div class="registro-link">
+          <p>¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a></p>
+        </div>
+      </form>
+    </div>
+  </main>
 
   <script type="module">
     import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
@@ -232,16 +214,14 @@
       const passwordInput = document.getElementById('password');
       const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
       passwordInput.setAttribute('type', type);
-      this.querySelector('svg').innerHTML = type === 'password' 
-        ? '<path d="M16 8s-8 8-8 8-8-8-8-8 8-8 8 8 8 8 8-8zM1.5 8a6.97 6.97 0 0 1 1.64-4.2L1.5 8l1.64 4.2A6.97 6.97 0 0 1 1.5 8zM8 8c0 2.21-.74 4.21-2.08 5.82C4.8 12.21 4 10.21 4 8s.8-4.21 1.92-5.82C7.26 3.79 8 5.79 8 8zm7.36-4.2L13.72 8l1.64 4.2A6.97 6.97 0 0 1 13.72 8 6.97 6.97 0 0 1 15.36 3.8z"/>'
-        : '<path d="M13.359 11.233c-.729-.382-1.55-.56-2.35-.56-2.21 0-4 1.79-4 4 0 .59.15 1.14.4 1.63l1.78-1.78c-.18-.39-.3-.82-.3-1.27 0-1.11.9-2 2-2 .45 0 .88.12 1.27.3l1.78-1.78c-.49-.25-1.04-.4-1.63-.4zm-3.21 5.36c-.28.12-.56.2-1.14.2-1.11 0-2-.89-2-2 0-.58.08-.86.2-1.14l2.14 2.14zm3.21-5.36c-.59 0-1.14.15-1.63.4l-1.78 1.78c.39.18.82.3 1.27.3 1.11 0 2-.9 2-2 0-.45-.12-.88-.3-1.27l1.78-1.78c.25.49.4 1.04.4 1.63 0 2.21-1.79 4-4 4-.59 0-1.14-.08-1.63-.2l2.14-2.14z"/><path d="M8 16s8-8 8-8-8-8-8-8-8 8-8 8 8 8 8-8z"/>';
+      this.textContent = type === 'password' ? '👁️' : '🔒';
     });
 
     document.getElementById('formulario-login')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const mensaje = document.getElementById('mensaje');
       mensaje.textContent = 'Iniciando sesión...';
-      mensaje.style.color = '#6a5acd';
+      mensaje.style.color = '#8a2be2';
 
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
