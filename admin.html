@@ -273,14 +273,6 @@
     <button class="exportar-btn" onclick="exportarClientes()">Exportar a CSV</button>
   </section>
 
-  <script>
-    // Protección de acceso
-    if (localStorage.getItem('admin') !== 'true') {
-      alert('Acceso denegado. Usa el código maestro en login.');
-      window.location.href = 'login.html';
-    }
-  </script>
-
   <script type="module">
     import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
 
@@ -288,6 +280,15 @@
       'https://vgrpcnknpeihzljhnfjp.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
     );
+
+    // Verificar autenticación real de admin
+    async function verificarAdmin() {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (error || !user || user.email !== 'admin@raell.com') {
+        alert('Acceso denegado. Debes iniciar sesión como administrador.');
+        window.location.href = 'login.html';
+      }
+    }
 
     // Cargar lista de clientes
     async function cargarClientes() {
@@ -323,8 +324,8 @@
               </div>
             </div>
             <div class="cliente-actions">
-              <button onclick="editarCliente('${cliente.id}')" class="editar-btn">Editar</button>
-              <button onclick="eliminarCliente('${cliente.id}')" class="eliminar-btn">Eliminar</button>
+              <button onclick="editarCliente('${cliente.user_id}')" class="editar-btn">Editar</button>
+              <button onclick="eliminarCliente('${cliente.user_id}')" class="eliminar-btn">Eliminar</button>
             </div>
           </div>
         `).join("");
@@ -335,28 +336,24 @@
     }
 
     // Función global para editar cliente
-    window.editarCliente = function(id) {
-      // Notificación automática
+    window.editarCliente = function(user_id) {
       alert('🔔 Notificación enviada: El cliente será contactado sobre la actualización.');
-      window.location.href = `admin-editar.html?id=${id}`;
+      window.location.href = `admin-editar.html?id=${user_id}`;
     };
 
     // Función global para eliminar cliente
-    window.eliminarCliente = async function(id) {
+    window.eliminarCliente = async function(user_id) {
       if (!confirm('¿Estás seguro de eliminar este cliente?')) return;
 
       try {
         const { error } = await supabase
           .from('clientes')
           .delete()
-          .eq('user_id', id);
+          .eq('user_id', user_id);  // ← CORRECCIÓN: user_id, no id
 
         if (error) throw error;
 
-        // Notificación
         alert('✅ Cliente eliminado correctamente.');
-
-        // Recargar la lista
         cargarClientes();
       } catch (err) {
         console.error('Error al eliminar cliente:', err);
@@ -405,8 +402,8 @@
                   </div>
                 </div>
                 <div class="cliente-actions">
-                  <button onclick="editarCliente('${cliente.id}')" class="editar-btn">Editar</button>
-                  <button onclick="eliminarCliente('${cliente.id}')" class="eliminar-btn">Eliminar</button>
+                  <button onclick="editarCliente('${cliente.user_id}')" class="editar-btn">Editar</button>
+                  <button onclick="eliminarCliente('${cliente.user_id}')" class="eliminar-btn">Eliminar</button>
                 </div>
               </div>
             `).join("");
@@ -431,7 +428,6 @@
           return;
         }
 
-        // Crear CSV
         const headers = ['Número Raell', 'Email', 'Estado', 'Fecha de registro'];
         const csvContent = [
           headers.join(','),
@@ -440,7 +436,6 @@
           )
         ].join('\n');
 
-        // Descargar archivo
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -457,6 +452,7 @@
     };
 
     // Iniciar
+    verificarAdmin();
     cargarClientes();
   </script>
 </body>
