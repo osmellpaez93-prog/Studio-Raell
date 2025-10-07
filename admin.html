@@ -349,7 +349,7 @@
         const { error } = await supabase
           .from('clientes')
           .delete()
-          .eq('id', id);
+          .eq('user_id', id);
 
         if (error) throw error;
 
