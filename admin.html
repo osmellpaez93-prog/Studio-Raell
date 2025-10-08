@@ -35,7 +35,7 @@
       background: rgba(255, 255, 255, 0.1);
       padding: 0.5rem 1rem;
       border-radius: 30px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 0.3);
     }
     .formulario-registro {
       background: rgba(255, 255, 255, 0.95);
@@ -166,10 +166,24 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
     );
 
-    // ✅ Protección simple de acceso
-    if (localStorage.getItem('admin') !== 'true') {
-      alert('Acceso denegado. Usa el código maestro en login.');
-      window.location.href = 'login.html';
+    async function verificarAdmin() {
+      const {  { user }, error } = await supabase.auth.getUser();
+      if (error || !user) {
+        alert('Debes iniciar sesión.');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const {  rolData, error: rolError } = await supabase
+        .from('roles')
+        .select('rol')
+        .eq('user_id', user.id)
+        .single();
+
+      if (rolError || !rolData || rolData.rol !== 'admin') {
+        alert('Acceso denegado. No tienes permisos de administrador.');
+        window.location.href = 'login.html';
+      }
     }
 
     async function cargarClientes() {
@@ -313,7 +327,7 @@
       }
     };
 
-    // Iniciar
+    verificarAdmin();
     cargarClientes();
   </script>
 </body>

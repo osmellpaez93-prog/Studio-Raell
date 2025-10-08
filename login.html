@@ -221,7 +221,7 @@
       const email = document.getElementById('email').value.trim().toLowerCase();
       const password = document.getElementById('password').value;
 
-      // ✅ ACCESO DE ADMINISTRADOR SIMPLE
+      // Verificar si es el administrador
       if (email === 'admin@raell.com' && password === 'RAELL-ADMIN-2025') {
         localStorage.setItem('admin', 'true');
         mensaje.textContent = '✅ ¡Bienvenido administrador! Redirigiendo...';
@@ -240,12 +240,14 @@
 
         if (error) throw error;
 
-        // Obtener datos del cliente desde la tabla (insensible a mayúsculas)
-        const {  clienteData } = await supabase
+        // ✅ CORRECCIÓN DEFINITIVA: usar ilike en lugar de eq
+        const {  data: clienteData, error: clienteError } = await supabase
           .from('clientes')
           .select('*')
-          .ilike('email', email)
+          .ilike('email', email)  // ← Aquí está la clave
           .single();
+
+        if (clienteError) throw clienteError;
 
         if (clienteData) {
           localStorage.setItem('cliente', JSON.stringify(clienteData));
