@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -180,7 +180,7 @@
         .eq('user_id', user.id)
         .single();
 
-      if (rolError || !rolData || rolData.rol !== 'admin') {
+      if (rolError || !rolData || rolData.rol.trim!== 'admin') {
         alert('Acceso denegado. No tienes permisos de administrador.');
         window.location.href = 'login.html';
       }
