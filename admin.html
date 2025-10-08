@@ -35,7 +35,7 @@
       background: rgba(255, 255, 255, 0.1);
       padding: 0.5rem 1rem;
       border-radius: 30px;
-      border: 1px solid rgba(255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.3);
     }
     .formulario-registro {
       background: rgba(255, 255, 255, 0.95);
@@ -167,14 +167,14 @@
     );
 
     async function verificarAdmin() {
-      const {  { user }, error } = await supabase.auth.getUser();
+      const { data: { user }, error } = await supabase.auth.getUser();
       if (error || !user) {
         alert('Debes iniciar sesión.');
         window.location.href = 'login.html';
         return;
       }
 
-      const {  rolData, error: rolError } = await supabase
+      const { data: rolData, error: rolError } = await supabase
         .from('roles')
         .select('rol')
         .eq('user_id', user.id)
@@ -226,6 +226,7 @@
       `).join("");
     }
 
+    // Funciones globales
     window.editarCliente = function(user_id) {
       alert('🔔 Notificación enviada: El cliente será contactado sobre la actualización.');
       window.location.href = `admin-editar.html?id=${user_id}`;
@@ -327,6 +328,7 @@
       }
     };
 
+    // Iniciar
     verificarAdmin();
     cargarClientes();
   </script>
