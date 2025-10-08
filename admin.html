@@ -35,7 +35,7 @@
       background: rgba(255, 255, 255, 0.1);
       padding: 0.5rem 1rem;
       border-radius: 30px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 0.3);
     }
     .formulario-registro {
       background: rgba(255, 255, 255, 0.95);
@@ -167,14 +167,14 @@
     );
 
     async function verificarAdmin() {
-      const { data: { user }, error } = await supabase.auth.getUser();
+      const {  { user }, error } = await supabase.auth.getUser();
       if (error || !user) {
         alert('Debes iniciar sesión.');
         window.location.href = 'login.html';
         return;
       }
 
-      const { data: rolData, error: rolError } = await supabase
+      const {  rolData, error: rolError } = await supabase
         .from('roles')
         .select('rol')
         .eq('user_id', user.id)
@@ -220,4 +220,115 @@
           </div>
           <div class="cliente-actions">
             <button onclick="editarCliente('${cliente.user_id}')" class="editar-btn">Editar</button>
-            <button onclick="eliminarCliente('${cliente.user_id}')"
+            <button onclick="eliminarCliente('${cliente.user_id}')" class="eliminar-btn">Eliminar</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    window.editarCliente = function(user_id) {
+      alert('🔔 Notificación enviada: El cliente será contactado sobre la actualización.');
+      window.location.href = `admin-editar.html?id=${user_id}`;
+    };
+
+    window.eliminarCliente = async function(user_id) {
+      if (!confirm('¿Estás seguro de eliminar este cliente?')) return;
+
+      try {
+        const { error } = await supabase
+          .from('clientes')
+          .delete()
+          .eq('user_id', user_id);
+
+        if (error) throw error;
+
+        alert('✅ Cliente eliminado correctamente.');
+        cargarClientes();
+      } catch (err) {
+        console.error('Error al eliminar cliente:', err);
+        alert('❌ Error al eliminar el cliente.');
+      }
+    };
+
+    window.buscarCliente = function() {
+      const termino = document.getElementById('buscador').value.trim().toLowerCase();
+
+      if (!termino) {
+        cargarClientes();
+        return;
+      }
+
+      supabase
+        .from('clientes')
+        .select('*')
+        .or(`email.ilike.%${termino}%,numero_raell.ilike.%${termino}%`)
+        .then(({ data, error }) => {
+          if (error || !data) {
+            document.getElementById('listaClientes').innerHTML = '<p style="text-align:center;">No se encontraron clientes.</p>';
+            return;
+          }
+
+          document.getElementById('listaClientes').innerHTML = data.map(cliente => `
+            <div class="cliente-card">
+              <div class="cliente-info">
+                <div>
+                  <span class="info-label">Número Raell:</span>
+                  <span class="info-value">${cliente.numero_raell}</span>
+                </div>
+                <div>
+                  <span class="info-label">Email:</span>
+                  <span class="info-value">${cliente.email}</span>
+                </div>
+                <div>
+                  <span class="info-label">Estado:</span>
+                  <span class="info-value estado estado-${cliente.estado || 'pendiente'}">${cliente.estado || 'Pendiente'}</span>
+                </div>
+              </div>
+              <div class="cliente-actions">
+                <button onclick="editarCliente('${cliente.user_id}')" class="editar-btn">Editar</button>
+                <button onclick="eliminarCliente('${cliente.user_id}')" class="eliminar-btn">Eliminar</button>
+              </div>
+            </div>
+          `).join("");
+        });
+    };
+
+    window.exportarClientes = async function() {
+      try {
+        const { data, error } = await supabase
+          .from('clientes')
+          .select('numero_raell,email,estado,created_at');
+
+        if (error || !data || data.length === 0) {
+          alert('No hay datos para exportar.');
+          return;
+        }
+
+        const headers = ['Número Raell', 'Email', 'Estado', 'Fecha de registro'];
+        const csvContent = [
+          headers.join(','),
+          ...data.map(row => 
+            `"${row.numero_raell}","${row.email}","${row.estado || 'Pendiente'}","${new Date(row.created_at).toLocaleDateString()}"`
+          )
+        ].join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('href', url);
+        a.setAttribute('download', 'clientes_raell_studio.csv');
+        a.click();
+        URL.revokeObjectURL(url);
+
+        alert('✅ Lista exportada correctamente.');
+      } catch (err) {
+        console.error('Error al exportar:', err);
+        alert('❌ Error al exportar la lista.');
+      }
+    };
+
+    verificarAdmin();
+    cargarClientes();
+  </script>
+</body>
+</html>
