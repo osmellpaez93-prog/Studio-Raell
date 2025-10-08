@@ -35,7 +35,7 @@
       background: rgba(255, 255, 255, 0.1);
       padding: 0.5rem 1rem;
       border-radius: 30px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 0.3);
     }
     .formulario-registro {
       background: rgba(255, 255, 255, 0.95);
@@ -159,10 +159,10 @@
   </section>
 
   <script type="module">
-    import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
+    import { createClient } from '  https://cdn.skypack.dev/@supabase/supabase-js@2.58.0  ';
 
     const supabase = createClient(
-      'https://vgrpcnknpeihzljhnfjp.supabase.co',
+      'https://vgrpcnknpeihzljhnfjp.supabase.co  ',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
     );
 
@@ -174,8 +174,13 @@
         return;
       }
 
-      // Verificar si es el administrador por email
-      if (user.email !== 'admin@raell.com') {
+      const { data: rolData, error: rolError } = await supabase
+        .from('roles')
+        .select('rol')
+        .eq('user_id', user.id)
+        .single();
+
+      if (rolError || !rolData || rolData.rol !== 'admin') {
         alert('Acceso denegado. No tienes permisos de administrador.');
         window.location.href = 'login.html';
       }
@@ -221,13 +226,12 @@
       `).join("");
     }
 
-    // Función global para editar cliente
+    // Funciones globales
     window.editarCliente = function(user_id) {
       alert('🔔 Notificación enviada: El cliente será contactado sobre la actualización.');
       window.location.href = `admin-editar.html?id=${user_id}`;
     };
 
-    // Función global para eliminar cliente
     window.eliminarCliente = async function(user_id) {
       if (!confirm('¿Estás seguro de eliminar este cliente?')) return;
 
@@ -247,7 +251,6 @@
       }
     };
 
-    // Función de búsqueda
     window.buscarCliente = function() {
       const termino = document.getElementById('buscador').value.trim().toLowerCase();
 
@@ -291,7 +294,6 @@
         });
     };
 
-    // Función para exportar a CSV
     window.exportarClientes = async function() {
       try {
         const { data, error } = await supabase
