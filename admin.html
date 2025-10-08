@@ -166,24 +166,10 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
     );
 
-    async function verificarAdmin() {
-      const { data: { user }, error } = await supabase.auth.getUser();
-      if (error || !user) {
-        alert('Debes iniciar sesión.');
-        window.location.href = 'login.html';
-        return;
-      }
-
-      const { data: rolData, error: rolError } = await supabase
-        .from('roles')
-        .select('rol')
-        .eq('user_id', user.id)
-        .single();
-
-      if (rolError || !rolData || rolData.rol !== 'admin') {
-        alert('Acceso denegado. No tienes permisos de administrador.');
-        window.location.href = 'login.html';
-      }
+    // ✅ Protección simple de acceso
+    if (localStorage.getItem('admin') !== 'true') {
+      alert('Acceso denegado. Usa el código maestro en login.');
+      window.location.href = 'login.html';
     }
 
     async function cargarClientes() {
@@ -226,7 +212,6 @@
       `).join("");
     }
 
-    // Funciones globales
     window.editarCliente = function(user_id) {
       alert('🔔 Notificación enviada: El cliente será contactado sobre la actualización.');
       window.location.href = `admin-editar.html?id=${user_id}`;
@@ -329,7 +314,6 @@
     };
 
     // Iniciar
-    verificarAdmin();
     cargarClientes();
   </script>
 </body>
