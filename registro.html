@@ -288,10 +288,8 @@
   </section>
 
   <script type="module">
-    // ✅ CDN oficial sin espacios
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.43.0/+esm';
+    import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
 
-    // ✅ URLs sin espacios
     const supabase = createClient(
       'https://vgrpcnknpeihzljhnfjp.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
@@ -300,6 +298,7 @@
     document.getElementById('formulario')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       
+      // Validar contraseñas
       const password = document.getElementById('password').value;
       const passwordConfirm = document.getElementById('passwordConfirm').value;
       
@@ -318,7 +317,7 @@
       const numeroRaell = "R" + Math.floor(10000 + Math.random() * 90000) + "L";
 
       try {
-        // 1. Crear usuario en Auth
+        // 1. Crear usuario en Supabase Auth
         const { data, error: authError } = await supabase.auth.signUp({
           email: email,
           password: password,
@@ -327,22 +326,15 @@
               nombre_completo: nombre,
               numero_raell: numeroRaell
             },
-            emailRedirectTo: 'https://studio-raell.vercel.app/confirmacion.html'
+            emailRedirectTo: 'https://studio-raell.vercel.app/confirmacion.html' // Cambia por tu URL real
           }
         });
 
-        if (authError) {
-          console.error('Error Auth:', authError);
-          throw new Error(authError.message || 'Error al crear usuario');
-        }
+        if (authError) throw authError;
 
-        if (!data.user) {
-          throw new Error('El correo ya está registrado. Usa otro correo o inicia sesión.');
-        }
-
-        // 2. Insertar en clientes
+        // 2. Guardar datos en tabla 'clientes'
         const clienteData = {
-          user_id: data.user.id,
+          user_id: data.user?.id,
           nombre: nombre,
           email: email,
           nombre_artistico: document.getElementById('nombreArtistico').value.trim() || null,
@@ -358,11 +350,7 @@
         };
 
         const { error: dbError } = await supabase.from('clientes').insert([clienteData]);
-        
-        if (dbError) {
-          console.error('Error DB:', dbError);
-          throw new Error(dbError.message || 'Error al guardar tus datos');
-        }
+        if (dbError) throw dbError;
 
         // 3. Guardar en localStorage
         localStorage.setItem('numeroRaellUsuario', numeroRaell);
@@ -371,11 +359,14 @@
 
         mensaje.textContent = '✅ ¡Registro exitoso! Revisa tu correo para confirmar.';
         mensaje.style.color = 'green';
-        setTimeout(() => window.location.href = 'confirmacion.html', 3000);
+        
+        setTimeout(() => {
+          window.location.href = 'confirmacion.html';
+        }, 3000);
 
       } catch (err) {
-        console.error('Error completo:', err);
-        mensaje.textContent = '❌ ' + (err.message || 'No se pudo registrar.');
+        console.error('Error:', err);
+        mensaje.textContent = '❌ Error: ' + (err.message || 'No se pudo registrar.');
         mensaje.style.color = 'red';
       }
     });
