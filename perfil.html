@@ -1,357 +1,50 @@
-﻿<!DOCTYPE html>
+<!-- perfil.html -->
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tu espacio - Raell Studio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-      color: white;
-      min-height: 100vh;
-      padding: 2rem;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      max-width: 1200px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    header h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem;
-      background: linear-gradient(to right, #ff6b6b, #8a2be2);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .acciones-header a {
-      color: white;
-      text-decoration: none;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 0.5rem 1rem;
-      border-radius: 30px;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .acciones-header a:hover {
-      background: rgba(138, 43, 226, 0.3);
-      transform: translateY(-2px);
-    }
-
-    #perfil {
-      background: rgba(255, 255, 255, 0.95);
-      padding: 2.5rem;
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-      max-width: 800px;
-      margin: 0 auto;
-      color: #333;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .info-item {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    }
-
-    .info-label {
-      font-weight: 600;
-      color: #2c1a4d;
-    }
-
-    .estado {
-      padding: 0.3rem 0.8rem;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-
-    .estado-pendiente { background: #fff3cd; color: #856404; }
-    .estado-proceso { background: #d1ecf1; color: #0c5460; }
-    .estado-completado { background: #d4edda; color: #155724; }
-
-    .bloque {
-      margin-bottom: 2rem;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    }
-
-    .bloque:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-      padding-bottom: 0;
-    }
-
-    .bloque h3 {
-      color: #2c1a4d;
-      margin-bottom: 1rem;
-      font-size: 1.3rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .bloque h3::before {
-      content: "🎵";
-    }
-
-    #letraCancion {
-      background: #f8f9fa;
-      padding: 1.5rem;
-      border-radius: 15px;
-      min-height: 80px;
-      line-height: 1.6;
-      font-style: italic;
-      color: #495057;
-    }
-
-    .audio-container {
-      background: #f8f9fa;
-      padding: 1.5rem;
-      border-radius: 15px;
-      text-align: center;
-    }
-
-    audio {
-      width: 100%;
-      max-width: 500px;
-    }
-
-    textarea {
-      width: 100%;
-      padding: 1rem;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      font-size: 1rem;
-      resize: vertical;
-      min-height: 120px;
-      font-family: 'Inter', sans-serif;
-    }
-
-    button {
-      background: linear-gradient(135deg, #8a2be2, #ff6b6b);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      padding: 0.9rem 1.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
-      font-size: 1.1rem;
-    }
-
-    button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(138, 43, 226, 0.4);
-    }
-
-    #mensajeConfirmado {
-      margin-top: 1rem;
-      font-weight: 600;
-      min-height: 1.5rem;
-    }
-
-    #historialComentarios {
-      background: #f8f9fa;
-      padding: 1.5rem;
-      border-radius: 15px;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
-    .comentario-box {
-      background: white;
-      padding: 1rem;
-      border-radius: 10px;
-      margin-bottom: 1rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-
-    .comentario-box:last-child {
-      margin-bottom: 0;
-    }
-
-    .comentario-box strong {
-      color: #8a2be2;
-    }
-
-    .comentario-box em {
-      color: #6c757d;
-      font-size: 0.9rem;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 2rem;
-      color: #6c757d;
-    }
-
-    .error {
-      text-align: center;
-      padding: 2rem;
-      color: #dc3545;
-    }
-
-    @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-      }
-      
-      #perfil {
-        padding: 1.5rem;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
   <header>
     <h1>Tu espacio creativo</h1>
-    <div class="acciones-header">
-      <a href="./index.html">🏠 Inicio</a>
-    </div>
+    <a href="./index.html">← Volver al inicio</a>
   </header>
 
-  <section id="perfil">
-    <div class="info-item">
-      <span class="info-label">Nombre:</span>
-      <span id="saludoCliente">Cargando...</span>
-    </div>
-    <div class="info-item">
-      <span class="info-label">Número Raell:</span>
-      <span id="codigoRaell">Cargando...</span>
-    </div>
-    <div class="info-item">
-      <span class="info-label">Estado del proyecto:</span>
-      <span id="estadoProyecto" class="estado estado-pendiente">Cargando...</span>
-    </div>
+  <section id="perfil" class="formulario-registro">
+    <p id="saludoCliente">Cargando...</p>
+    <p id="codigoRaell">Número Raell Studio: ...</p>
 
     <div class="bloque">
       <h3>Letra de tu canción</h3>
-      <p id="letraCancion" class="loading">Cargando letra...</p>
+      <p id="letraCancion">Aún no se ha enviado ninguna letra.</p>
     </div>
 
     <div class="bloque">
       <h3>Prueba musical</h3>
-      <div class="audio-container">
-        <audio id="audioMuestra" controls style="display:none;">
-          <source id="audioSource" src="" type="audio/mpeg">
-          Tu navegador no soporta audio.
-        </audio>
-        <p id="audioPlaceholder" style="display: block;">Aún no hay prueba musical disponible.</p>
-      </div>
+      <audio id="audioMuestra" controls style="display:none; width:100%;">
+        <source id="audioSource" src="" type="audio/mpeg">
+        Tu navegador no soporta audio.
+      </audio>
     </div>
 
     <div class="bloque">
       <h3>Tu opinión</h3>
-      <textarea id="comentarioCliente" placeholder="Escribe tu opinión o sugerencias para mejorar tu canción..."></textarea>
+      <textarea id="comentarioCliente" placeholder="Escribe tu opinión..."></textarea>
       <button onclick="enviarComentario()">Enviar comentario</button>
       <p id="mensajeConfirmado"></p>
     </div>
 
     <div class="bloque">
-      <h3>Historial de conversación</h3>
-      <div id="historialComentarios" class="loading">Cargando historial...</div>
+      <h3>Historial</h3>
+      <div id="historialComentarios"></div>
     </div>
 
-    <button onclick="cerrarSesion()" style="margin-top:20px; width:100%;">Cerrar sesión</button>
+    <button onclick="cerrarSesion()" style="margin-top:20px;">Cerrar sesión</button>
   </section>
 
-  <script type="module">
-    import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
-
-    const supabase = createClient(
-      'https://vgrpcnknpeihzljhnfjp.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
-    );
-
-    // Cargar datos del cliente desde Supabase (no solo localStorage)
-    async function cargarPerfil() {
-      const cliente = JSON.parse(localStorage.getItem('cliente'));
-      if (!cliente || !cliente.email) {
-        window.location.href = 'login.html';
-        return;
-      }
-
-      try {
-        // Obtener datos actualizados desde Supabase
-        const { data, error } = await supabase
-          .from('clientes')
-          .select('nombre, numero_raell, estado, descripcion')
-          .eq('email', cliente.email)
-          .single();
-
-        if (error) throw error;
-
-        // Actualizar interfaz
-        document.getElementById('saludoCliente').textContent = data.nombre;
-        document.getElementById('codigoRaell').textContent = data.numero_raell;
-        document.getElementById('letraCancion').textContent = data.descripcion || 'Tu idea musical...';
-
-        // Mostrar estado con clase dinámica
-        const estadoEl = document.getElementById('estadoProyecto');
-        const estado = data.estado || 'pendiente';
-        estadoEl.textContent = estado.charAt(0).toUpperCase() + estado.slice(1);
-        estadoEl.className = `estado estado-${estado}`;
-      } catch (err) {
-        console.error('Error al cargar perfil:', err);
-        document.getElementById('perfil').innerHTML = '<div class="error">❌ Error al cargar tu perfil.</div>';
-      }
-    }
-
-    function enviarComentario() {
-      const comentario = document.getElementById('comentarioCliente').value;
-      if (!comentario.trim()) return;
-      
-      document.getElementById('mensajeConfirmado').textContent = '✅ Comentario enviado';
-      document.getElementById('mensajeConfirmado').style.color = 'green';
-      document.getElementById('comentarioCliente').value = '';
-      
-      // Simular historial
-      const historial = document.getElementById('historialComentarios');
-      const div = document.createElement('div');
-      div.className = 'comentario';
-      div.innerHTML = `<strong>Tú:</strong> ${comentario} <br><small>${new Date().toLocaleString()}</small>`;
-      historial.appendChild(div);
-      historial.scrollTop = historial.scrollHeight;
-    }
-
-    async function cerrarSesion() {
-      await supabase.auth.signOut();
-      localStorage.removeItem('cliente');
-      window.location.href = 'index.html';
-    }
-
-    // Asignar funciones globales
-    window.enviarComentario = enviarComentario;
-    window.cerrarSesion = cerrarSesion;
-
-    // Inicializar
-    cargarPerfil();
-  </script>
+  <script type="module" src="./assets/js/perfil.js"></script>
 </body>
 </html>

@@ -1,22 +1,21 @@
-/* Reset básico */
+/* assets/css/style.css */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Fondo general del sitio */
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: url('./assets/img/fondo.jpg') no-repeat center center fixed;
-  background-size: cover;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #2c1a4d, #6a5acd);
   color: white;
   line-height: 1.6;
   min-height: 100vh;
-  overflow-x: hidden;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
 }
 
-/* Encabezado */
 header {
   background: rgba(44, 26, 77, 0.8);
   color: white;
@@ -38,51 +37,6 @@ header {
   text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
-/* Íconos de navegación en el encabezado */
-.acciones-header {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  margin-top: 1rem;
-}
-
-.icono-header {
-  display: inline-block;
-  padding: 0.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  transition: background 0.3s ease, transform 0.3s ease;
-  text-decoration: none;
-  color: white;
-}
-
-.icono-header:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.1);
-}
-
-.icono-header svg {
-  max-width: 24px;
-  max-height: 24px;
-  width: auto;
-  height: auto;
-  fill: white;
-}
-
-/* Hero emocional debajo del título */
-.hero-frase {
-  text-align: center;
-  font-size: 1.6rem;
-  font-style: italic;
-  color: #e0e0ff;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-  font-family: 'Playfair Display', serif;
-  animation: fadeIn 1.2s ease-out;
-}
-
-/* Menú de acceso */
 .menu-acceso {
   position: relative;
 }
@@ -103,26 +57,46 @@ header {
   transform: scale(1.05);
 }
 
-/* Animaciones de entrada por scroll */
-.aparece {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.6s ease-out;
+.menu-opciones {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  color: #2c1a4d;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  z-index: 10;
+  min-width: 150px;
 }
 
-.visible {
-  opacity: 1;
-  transform: translateY(0);
+.menu-opciones a {
+  display: block;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: #2c1a4d;
+  transition: all 0.2s ease;
 }
 
-/* Sección principal */
+.menu-opciones a:hover {
+  background: #f0f0f0;
+  color: #6a5acd;
+}
+
+.subtitulo {
+  text-align: center;
+  margin-top: 1rem;
+  font-style: italic;
+  font-size: 1.1rem;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
 #inicio {
   max-width: 1200px;
   margin: 2rem auto;
   padding: 0 1rem;
 }
 
-/* Carrusel */
 .zona-visual {
   position: relative;
   height: 400px;
@@ -145,7 +119,6 @@ header {
   background-position: center;
   opacity: 0.3;
   z-index: 1;
-  transition: background-image 1s ease-in-out, opacity 0.5s ease;
 }
 
 .carrusel {
@@ -167,7 +140,7 @@ header {
 
 .item.activo {
   display: block;
-  animation: slideIn 0.8s ease-out;
+  animation: slideIn 0.6s ease;
 }
 
 .item img {
@@ -178,11 +151,6 @@ header {
   margin-bottom: 1rem;
   border: 3px solid white;
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
-}
-
-.item img:hover {
-  transform: scale(1.08);
-  transition: transform 0.3s ease;
 }
 
 .navegacion {
@@ -203,33 +171,13 @@ header {
   transition: all 0.3s ease;
   backdrop-filter: blur(5px);
   border: 1px solid rgba(255,255,255,0.3);
-  position: relative;
-  overflow: hidden;
 }
 
-.navegacion button::after {
-  content: "";
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(255,255,255,0.1);
-  opacity: 0;
-  transition: opacity 0.3s ease;
+.navegacion button:hover {
+  background: rgba(255,255,255,0.3);
+  transform: scale(1.05);
 }
 
-.navegacion button:hover::after {
-  opacity: 1;
-}
-
-.subtitulo {
-  text-align: center;
-  margin-top: 1rem;
-  font-style: italic;
-  font-size: 1.1rem;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-}
-
-/* Formulario */
 .formulario-registro {
   background: rgba(255,255,255,0.95);
   padding: 2rem;
@@ -254,53 +202,23 @@ header {
   color: #2c1a4d;
 }
 
-/* Contenedor de contraseña */
-.password-container {
-  position: relative;
-  width: 100%;
-}
-
-.formulario-registro input {
+.formulario-registro input,
+.formulario-registro select,
+.formulario-registro textarea {
   width: 100%;
   padding: 0.75rem;
-  padding-right: 35px; /* Espacio para el botón de toggle */
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1rem;
   transition: all 0.2s ease;
 }
 
-.formulario-registro input:focus {
+.formulario-registro input:focus,
+.formulario-registro select:focus,
+.formulario-registro textarea:focus {
   border-color: #6a5acd;
   outline: none;
   box-shadow: 0 0 5px rgba(106, 90, 205, 0.3);
-}
-
-/* Botón de toggle de contraseña */
-.toggle-password {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  color: #6c757d;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  z-index: 10;
-}
-
-.toggle-password:hover {
-  color: #6a5acd;
-  background: rgba(106, 90, 205, 0.1);
-}
-
-.toggle-password svg {
-  width: 16px;
-  height: 16px;
-  fill: currentColor;
 }
 
 .formulario-registro button {
@@ -317,42 +235,18 @@ header {
 }
 
 .formulario-registro button:hover {
-  background: #5a4acb;
+  background: #5a4ac0;
+  transform: translateY(-2px);
 }
 
-/* Mensaje de feedback */
-#mensaje {
-  text-align: center;
-  margin-top: 1rem;
-  font-weight: 600;
-  min-height: 1.5rem;
-}
-
-/* Enlaces de registro */
-.registro-link {
-  text-align: center;
-  margin-top: 1.5rem;
-}
-
-.registro-link a {
-  color: #6a5acd;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.registro-link a:hover {
-  text-decoration: underline;
-}
-
-/* Animaciones */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slideIn {
-  from { opacity: 0; transform: scale(0.95) translateY(20px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 /* Responsive */
@@ -362,110 +256,17 @@ header {
     gap: 1rem;
     text-align: center;
   }
-
-  .formulario-registro input {
-    padding-right: 30px;
-  }
-
-  .toggle-password {
-    right: 8px;
-  }
-}
-
-/* Sección de inicio hero */
-.inicio-hero {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 4rem 1rem;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(6px);
-  border-radius: 12px;
-  max-width: 1000px;
-  margin: 2rem auto;
-}
-
-.inicio-hero h1 {
-  font-size: 2.2rem;
-  font-family: 'Playfair Display', serif;
-  color: #fff;
-  margin-bottom: 1rem;
-  animation: fadeIn 1s ease-out;
-}
-
-.inicio-hero p {
-  font-size: 1.3rem;
-  font-style: italic;
-  color: #e0e0ff;
-  margin-bottom: 2rem;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-}
-
-/* Botón de reproducción */
-.boton-play {
-  background: rgba(255,255,255,0.1);
-  border: 2px solid white;
-  border-radius: 50%;
-  padding: 1rem;
-  cursor: pointer;
-  transition: transform 0.3s ease, background 0.3s ease;
-}
-
-.boton-play:hover {
-  transform: scale(1.1);
-  background: rgba(255,255,255,0.2);
-}
-
-.boton-play svg {
-  width: 60px;
-  height: 60px;
-  fill: white;
-}
-
-/* Botones de navegación */
-.botones-servicio {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.botones-servicio button {
-  padding: 0.75rem 1.2rem;
-  background: rgba(255,255,255,0.15);
-  color: white;
-  border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.3s ease, transform 0.3s ease;
-}
-
-.botones-servicio button:hover {
-  background: rgba(255,255,255,0.25);
-  transform: scale(1.05);
-}
-
-/* Responsive adicional */
-@media (max-width: 768px) {
-  .inicio-hero h1 {
-    font-size: 1.6rem;
-  }
-
-  .inicio-hero p {
-    font-size: 1.1rem;
-  }
-
-  .boton-play svg {
-    width: 48px;
-    height: 48px;
-  }
-
-  .botones-servicio {
+  
+  .navegacion {
     flex-direction: column;
-    gap: 0.75rem;
+    align-items: center;
+  }
+  
+  .zona-visual {
+    height: 300px;
+  }
+  
+  .formulario-registro {
+    padding: 1.5rem;
   }
 }
