@@ -159,22 +159,26 @@
   </section>
 
   <script type="module">
-    import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
+    // ✅ CDN corregido
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.43.0/+esm';
 
+    // ✅ URLs sin espacios
     const supabase = createClient(
       'https://vgrpcnknpeihzljhnfjp.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
     );
 
+    // ✅ Verificación de roles (tu sistema de seguridad)
     async function verificarAdmin() {
-      const {  { user }, error } = await supabase.auth.getUser();
+      const {  user, error } = await supabase.auth.getUser();
+      
       if (error || !user) {
         alert('Debes iniciar sesión.');
         window.location.href = 'login.html';
         return;
       }
 
-      const {  rolData, error: rolError } = await supabase
+      const {  data: rolData, error: rolError } = await supabase
         .from('roles')
         .select('rol')
         .eq('user_id', user.id)
@@ -187,45 +191,47 @@
     }
 
     async function cargarClientes() {
-      const { data, error } = await supabase
-        .from('clientes')
-        .select('*')
-        .order('created_at', { ascending: false });
+      try {
+        const { data, error } = await supabase
+          .from('clientes')
+          .select('*')
+          .order('created_at', { ascending: false });
 
-      if (error || !data) {
+        if (error) throw error;
+        if (!data || data.length === 0) {
+          document.getElementById('listaClientes').innerHTML = '<p style="text-align:center;">No hay clientes registrados aún.</p>';
+          return;
+        }
+
+        document.getElementById('listaClientes').innerHTML = data.map(cliente => `
+          <div class="cliente-card">
+            <div class="cliente-info">
+              <div>
+                <span class="info-label">Número Raell:</span>
+                <span class="info-value">${cliente.numero_raell}</span>
+              </div>
+              <div>
+                <span class="info-label">Email:</span>
+                <span class="info-value">${cliente.email}</span>
+              </div>
+              <div>
+                <span class="info-label">Estado:</span>
+                <span class="info-value estado estado-${cliente.estado || 'pendiente'}">${cliente.estado || 'Pendiente'}</span>
+              </div>
+            </div>
+            <div class="cliente-actions">
+              <button onclick="editarCliente('${cliente.user_id}')" class="editar-btn">Editar</button>
+              <button onclick="eliminarCliente('${cliente.user_id}')" class="eliminar-btn">Eliminar</button>
+            </div>
+          </div>
+        `).join("");
+      } catch (err) {
+        console.error('Error al cargar clientes:', err);
         document.getElementById('listaClientes').innerHTML = '<div class="error">❌ Error al cargar los clientes.</div>';
-        return;
       }
-
-      if (data.length === 0) {
-        document.getElementById('listaClientes').innerHTML = '<p style="text-align:center;">No hay clientes registrados aún.</p>';
-        return;
-      }
-
-      document.getElementById('listaClientes').innerHTML = data.map(cliente => `
-        <div class="cliente-card">
-          <div class="cliente-info">
-            <div>
-              <span class="info-label">Número Raell:</span>
-              <span class="info-value">${cliente.numero_raell}</span>
-            </div>
-            <div>
-              <span class="info-label">Email:</span>
-              <span class="info-value">${cliente.email}</span>
-            </div>
-            <div>
-              <span class="info-label">Estado:</span>
-              <span class="info-value estado estado-${cliente.estado || 'pendiente'}">${cliente.estado || 'Pendiente'}</span>
-            </div>
-          </div>
-          <div class="cliente-actions">
-            <button onclick="editarCliente('${cliente.user_id}')" class="editar-btn">Editar</button>
-            <button onclick="eliminarCliente('${cliente.user_id}')" class="eliminar-btn">Eliminar</button>
-          </div>
-        </div>
-      `).join("");
     }
 
+    // Funciones globales
     window.editarCliente = function(user_id) {
       alert('🔔 Notificación enviada: El cliente será contactado sobre la actualización.');
       window.location.href = `admin-editar.html?id=${user_id}`;
@@ -241,7 +247,6 @@
           .eq('user_id', user_id);
 
         if (error) throw error;
-
         alert('✅ Cliente eliminado correctamente.');
         cargarClientes();
       } catch (err) {
@@ -250,47 +255,50 @@
       }
     };
 
-    window.buscarCliente = function() {
+    window.buscarCliente = async function() {
       const termino = document.getElementById('buscador').value.trim().toLowerCase();
-
       if (!termino) {
         cargarClientes();
         return;
       }
 
-      supabase
-        .from('clientes')
-        .select('*')
-        .or(`email.ilike.%${termino}%,numero_raell.ilike.%${termino}%`)
-        .then(({ data, error }) => {
-          if (error || !data) {
-            document.getElementById('listaClientes').innerHTML = '<p style="text-align:center;">No se encontraron clientes.</p>';
-            return;
-          }
+      try {
+        const { data, error } = await supabase
+          .from('clientes')
+          .select('*')
+          .or(`email.ilike.%${termino}%,numero_raell.ilike.%${termino}%`);
 
-          document.getElementById('listaClientes').innerHTML = data.map(cliente => `
-            <div class="cliente-card">
-              <div class="cliente-info">
-                <div>
-                  <span class="info-label">Número Raell:</span>
-                  <span class="info-value">${cliente.numero_raell}</span>
-                </div>
-                <div>
-                  <span class="info-label">Email:</span>
-                  <span class="info-value">${cliente.email}</span>
-                </div>
-                <div>
-                  <span class="info-label">Estado:</span>
-                  <span class="info-value estado estado-${cliente.estado || 'pendiente'}">${cliente.estado || 'Pendiente'}</span>
-                </div>
+        if (error || !data || data.length === 0) {
+          document.getElementById('listaClientes').innerHTML = '<p style="text-align:center;">No se encontraron clientes.</p>';
+          return;
+        }
+
+        document.getElementById('listaClientes').innerHTML = data.map(cliente => `
+          <div class="cliente-card">
+            <div class="cliente-info">
+              <div>
+                <span class="info-label">Número Raell:</span>
+                <span class="info-value">${cliente.numero_raell}</span>
               </div>
-              <div class="cliente-actions">
-                <button onclick="editarCliente('${cliente.user_id}')" class="editar-btn">Editar</button>
-                <button onclick="eliminarCliente('${cliente.user_id}')" class="eliminar-btn">Eliminar</button>
+              <div>
+                <span class="info-label">Email:</span>
+                <span class="info-value">${cliente.email}</span>
+              </div>
+              <div>
+                <span class="info-label">Estado:</span>
+                <span class="info-value estado estado-${cliente.estado || 'pendiente'}">${cliente.estado || 'Pendiente'}</span>
               </div>
             </div>
-          `).join("");
-        });
+            <div class="cliente-actions">
+              <button onclick="editarCliente('${cliente.user_id}')" class="editar-btn">Editar</button>
+              <button onclick="eliminarCliente('${cliente.user_id}')" class="eliminar-btn">Eliminar</button>
+            </div>
+          </div>
+        `).join("");
+      } catch (err) {
+        console.error('Error en búsqueda:', err);
+        document.getElementById('listaClientes').innerHTML = '<div class="error">❌ Error en la búsqueda.</div>';
+      }
     };
 
     window.exportarClientes = async function() {
@@ -319,7 +327,6 @@
         a.setAttribute('download', 'clientes_raell_studio.csv');
         a.click();
         URL.revokeObjectURL(url);
-
         alert('✅ Lista exportada correctamente.');
       } catch (err) {
         console.error('Error al exportar:', err);
@@ -327,6 +334,7 @@
       }
     };
 
+    // Iniciar
     verificarAdmin();
     cargarClientes();
   </script>
