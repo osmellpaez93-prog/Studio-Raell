@@ -1,41 +1,164 @@
-<!-- confirmacion.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gracias - Raell Studio</title>
-  <link rel="stylesheet" href="./assets/css/style.css">
+  <title>Confirmación - Raell Studio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 2.5rem;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      border: 1px solid rgba(138, 43, 226, 0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(to right, #ff6b6b, #8a2be2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .info {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 1.5rem;
+      border-radius: 15px;
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.8rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .info-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-label {
+      font-weight: 600;
+      color: #ff6b6b;
+    }
+
+    .btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #8a2be2, #ff6b6b);
+      color: white;
+      padding: 0.9rem 2rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 1.5rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(138, 43, 226, 0.6);
+    }
+
+    .instructions {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .instructions h3 {
+      margin-bottom: 1rem;
+      color: #ff6b6b;
+    }
+
+    .instructions ol {
+      text-align: left;
+      padding-left: 1.5rem;
+    }
+
+    .instructions li {
+      margin-bottom: 0.8rem;
+    }
+
+    footer {
+      margin-top: 2rem;
+      text-align: center;
+      opacity: 0.7;
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>¡Gracias por registrarte!</h1>
-    <a href="./index.html">← Volver al inicio</a>
-  </header>
-
-  <section class="formulario-registro">
-    <h2>Hemos recibido tu solicitud.</h2>
-
-    <div style="background: #f0f0ff; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
-      <p><strong>Nombre:</strong> <span id="nombre"></span></p>
-      <p><strong>Número Raell:</strong> <span id="numeroRaell"></span></p>
-      <p><strong>Idea:</strong> <span id="descripcion"></span></p>
+  <div class="container">
+    <h1>✅ ¡Registro completado!</h1>
+    
+    <div class="info">
+      <div class="info-item">
+        <span class="info-label">Nombre:</span>
+        <span id="nombre-usuario"></span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Número Raell:</span>
+        <span id="numero-raell"></span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Correo:</span>
+        <span id="email-usuario"></span>
+      </div>
     </div>
 
-    <p>Nuestro equipo se pondrá en contacto contigo pronto.</p>
-    <a href="./login.html" style="display: block; text-align: center; margin-top: 1rem; color: #6a5acd; font-weight: bold;">
-      ← Iniciar sesión
-    </a>
-  </section>
+    <a href="login.html" class="btn">Ir a iniciar sesión</a>
+
+    <div class="instructions">
+      <h3>🎉 ¡Bienvenido a Raell Studio!</h3>
+      <p>Hemos recibido tu solicitud y <strong>ya estás registrado</strong>.</p>
+      <p><strong>Guarda tu número Raell</strong> — lo necesitarás para acceder a tu perfil y para futuras comunicaciones.</p>
+      <p>Nuestro equipo se pondrá en contacto contigo muy pronto para comenzar a transformar tu historia en música.</p>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 Raell Studio. Todos los derechos reservados.</p>
+  </footer>
 
   <script>
-    const nombre = localStorage.getItem('nombreUsuario') || 'Artista';
-    const numeroRaell = localStorage.getItem('numeroRaellUsuario') || 'No asignado';
-    const descripcion = (localStorage.getItem('descripcionUsuario') || 'Tu idea').substring(0, 100) + '...';
-
-    document.getElementById('nombre').textContent = nombre;
-    document.getElementById('numeroRaell').textContent = numeroRaell;
-    document.getElementById('descripcion').textContent = descripcion;
+    // Cargar datos desde localStorage
+    document.getElementById('nombre-usuario').textContent = localStorage.getItem('nombreUsuario') || 'Cliente';
+    document.getElementById('numero-raell').textContent = localStorage.getItem('numeroRaellUsuario') || 'N/A';
+    document.getElementById('email-usuario').textContent = localStorage.getItem('emailUsuario') || 'N/A';
   </script>
 </body>
 </html>

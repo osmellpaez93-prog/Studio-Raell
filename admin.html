@@ -1,32 +1,334 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Panel de Administrador - Raell Studio</title>
-  <link rel="stylesheet" href="./assets/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: white;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      max-width: 1200px;
+      margin: auto;
+    }
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      background: linear-gradient(to right, #ff6b6b, #8a2be2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .acciones-header a {
+      color: white;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 0.3);
+    }
+    .formulario-registro {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2rem;
+      border-radius: 20px;
+      max-width: 1000px;
+      margin: auto;
+      color: #333;
+    }
+    .formulario-registro h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-family: 'Playfair Display', serif;
+      color: #2c1a4d;
+    }
+    .buscador {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .buscador input {
+      flex: 1;
+      padding: 0.85rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+    .buscador button {
+      background: linear-gradient(135deg, #8a2be2, #ff6b6b);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.85rem 1.5rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    #listaClientes {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .cliente-card {
+      background: rgba(0, 0, 0, 0.05);
+      padding: 1rem;
+      border-radius: 15px;
+      border-left: 4px solid #8a2be2;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cliente-info {
+      display: flex;
+      gap: 2rem;
+    }
+    .info-label {
+      font-weight: 600;
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+    .info-value {
+      color: #2c1a4d;
+      font-weight: 500;
+    }
+    .estado {
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .estado-pendiente { background: #fff3cd; color: #856404; }
+    .estado-proceso { background: #d1ecf1; color: #0c5460; }
+    .estado-completado { background: #d4edda; color: #155724; }
+    .cliente-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .editar-btn, .eliminar-btn {
+      background: linear-gradient(135deg, #8a2be2, #ff6b6b);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .eliminar-btn {
+      background: linear-gradient(135deg, #dc3545, #ff6b6b);
+    }
+    .exportar-btn {
+      margin-top: 1rem;
+      width: 100%;
+      background: linear-gradient(135deg, #8a2be2, #ff6b6b);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .loading, .error {
+      text-align: center;
+      padding: 2rem;
+    }
+  </style>
 </head>
 <body>
   <header>
     <h1>Panel de Administrador</h1>
-    <a href="./index.html">← Volver al inicio</a>
+    <div class="acciones-header">
+      <a href="./index.html">🏠 Inicio</a>
+    </div>
   </header>
 
   <section class="formulario-registro">
     <h2>Clientes registrados</h2>
-    <div id="listaClientes">
-      <p>Cargando...</p>
+    <div class="buscador">
+      <input type="text" id="buscador" placeholder="Buscar por email o número Raell..." />
+      <button onclick="buscarCliente()">Buscar</button>
     </div>
+    <div id="listaClientes" class="loading">Cargando clientes...</div>
+    <button class="exportar-btn" onclick="exportarClientes()">Exportar a CSV</button>
   </section>
 
-  <!-- Protección: solo acceso si se usó el código maestro -->
-  <script>
-    if (localStorage.getItem('admin') !== 'true') {
-      alert('Acceso denegado. Usa el código maestro en login.');
-      window.location.href = 'login.html';
-    }
-  </script>
+  <script type="module">
+    import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
 
-  <script type="module" src="./assets/js/admin.js"></script>
+    const supabase = createClient(
+      'https://vgrpcnknpeihzljhnfjp.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
+    );
+
+    async function verificarAdmin() {
+      const {  { user }, error } = await supabase.auth.getUser();
+      if (error || !user) {
+        alert('Debes iniciar sesión.');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const {  rolData, error: rolError } = await supabase
+        .from('roles')
+        .select('rol')
+        .eq('user_id', user.id)
+        .single();
+
+      if (rolError || !rolData || rolData.rol !== 'admin') {
+        alert('Acceso denegado. No tienes permisos de administrador.');
+        window.location.href = 'login.html';
+      }
+    }
+
+    async function cargarClientes() {
+      const { data, error } = await supabase
+        .from('clientes')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error || !data) {
+        document.getElementById('listaClientes').innerHTML = '<div class="error">❌ Error al cargar los clientes.</div>';
+        return;
+      }
+
+      if (data.length === 0) {
+        document.getElementById('listaClientes').innerHTML = '<p style="text-align:center;">No hay clientes registrados aún.</p>';
+        return;
+      }
+
+      document.getElementById('listaClientes').innerHTML = data.map(cliente => `
+        <div class="cliente-card">
+          <div class="cliente-info">
+            <div>
+              <span class="info-label">Número Raell:</span>
+              <span class="info-value">${cliente.numero_raell}</span>
+            </div>
+            <div>
+              <span class="info-label">Email:</span>
+              <span class="info-value">${cliente.email}</span>
+            </div>
+            <div>
+              <span class="info-label">Estado:</span>
+              <span class="info-value estado estado-${cliente.estado || 'pendiente'}">${cliente.estado || 'Pendiente'}</span>
+            </div>
+          </div>
+          <div class="cliente-actions">
+            <button onclick="editarCliente('${cliente.user_id}')" class="editar-btn">Editar</button>
+            <button onclick="eliminarCliente('${cliente.user_id}')" class="eliminar-btn">Eliminar</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    window.editarCliente = function(user_id) {
+      alert('🔔 Notificación enviada: El cliente será contactado sobre la actualización.');
+      window.location.href = `admin-editar.html?id=${user_id}`;
+    };
+
+    window.eliminarCliente = async function(user_id) {
+      if (!confirm('¿Estás seguro de eliminar este cliente?')) return;
+
+      try {
+        const { error } = await supabase
+          .from('clientes')
+          .delete()
+          .eq('user_id', user_id);
+
+        if (error) throw error;
+
+        alert('✅ Cliente eliminado correctamente.');
+        cargarClientes();
+      } catch (err) {
+        console.error('Error al eliminar cliente:', err);
+        alert('❌ Error al eliminar el cliente.');
+      }
+    };
+
+    window.buscarCliente = function() {
+      const termino = document.getElementById('buscador').value.trim().toLowerCase();
+
+      if (!termino) {
+        cargarClientes();
+        return;
+      }
+
+      supabase
+        .from('clientes')
+        .select('*')
+        .or(`email.ilike.%${termino}%,numero_raell.ilike.%${termino}%`)
+        .then(({ data, error }) => {
+          if (error || !data) {
+            document.getElementById('listaClientes').innerHTML = '<p style="text-align:center;">No se encontraron clientes.</p>';
+            return;
+          }
+
+          document.getElementById('listaClientes').innerHTML = data.map(cliente => `
+            <div class="cliente-card">
+              <div class="cliente-info">
+                <div>
+                  <span class="info-label">Número Raell:</span>
+                  <span class="info-value">${cliente.numero_raell}</span>
+                </div>
+                <div>
+                  <span class="info-label">Email:</span>
+                  <span class="info-value">${cliente.email}</span>
+                </div>
+                <div>
+                  <span class="info-label">Estado:</span>
+                  <span class="info-value estado estado-${cliente.estado || 'pendiente'}">${cliente.estado || 'Pendiente'}</span>
+                </div>
+              </div>
+              <div class="cliente-actions">
+                <button onclick="editarCliente('${cliente.user_id}')" class="editar-btn">Editar</button>
+                <button onclick="eliminarCliente('${cliente.user_id}')" class="eliminar-btn">Eliminar</button>
+              </div>
+            </div>
+          `).join("");
+        });
+    };
+
+    window.exportarClientes = async function() {
+      try {
+        const { data, error } = await supabase
+          .from('clientes')
+          .select('numero_raell,email,estado,created_at');
+
+        if (error || !data || data.length === 0) {
+          alert('No hay datos para exportar.');
+          return;
+        }
+
+        const headers = ['Número Raell', 'Email', 'Estado', 'Fecha de registro'];
+        const csvContent = [
+          headers.join(','),
+          ...data.map(row => 
+            `"${row.numero_raell}","${row.email}","${row.estado || 'Pendiente'}","${new Date(row.created_at).toLocaleDateString()}"`
+          )
+        ].join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('href', url);
+        a.setAttribute('download', 'clientes_raell_studio.csv');
+        a.click();
+        URL.revokeObjectURL(url);
+
+        alert('✅ Lista exportada correctamente.');
+      } catch (err) {
+        console.error('Error al exportar:', err);
+        alert('❌ Error al exportar la lista.');
+      }
+    };
+
+    verificarAdmin();
+    cargarClientes();
+  </script>
 </body>
 </html>
