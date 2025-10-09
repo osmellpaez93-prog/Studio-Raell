@@ -171,7 +171,7 @@
         <input type="email" id="email" name="email" required autocomplete="email" />
 
         <label for="password">Contraseña:</label>
-        <input type="password" id="password" name="password" required autocomplete="current-password" />
+        <input type="text" id="password" name="password" required autocomplete="current-password" />
 
         <button type="submit">Entrar</button>
         <p id="mensaje"></p>
@@ -185,15 +185,14 @@
   </main>
 
   <script type="module">
-    // ✅ CORREGIDO: sin espacios en la URL
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.43.0/+esm';
+    import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
 
-    // ✅ CORREGIDO: sin espacios en las URLs
     const supabase = createClient(
       'https://vgrpcnknpeihzljhnfjp.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
     );
 
+    // Recuperar contraseña
     document.getElementById('recuperarPass').addEventListener('click', async (e) => {
       e.preventDefault();
       const email = prompt('Ingresa tu correo electrónico:');
@@ -201,15 +200,15 @@
 
       try {
         const { error } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
-          // ✅ CORREGIDO: sin espacios
           redirectTo: 'https://studio-raell.vercel.app/login.html'
         });
 
         if (error) throw error;
+
         alert('✅ Hemos enviado un enlace de restablecimiento a tu correo. Revisa tu bandeja de entrada (y spam).');
       } catch (err) {
         console.error('Error:', err);
-        alert('❌ ' + (err.message || 'No se pudo enviar el enlace.'));
+        alert('❌ ' + (err.message || 'No se pudo enviar el enlace. Verifica tu correo.'));
       }
     });
 
@@ -222,8 +221,18 @@
       const email = document.getElementById('email').value.trim().toLowerCase();
       const password = document.getElementById('password').value;
 
+      // ✅ ACCESO DE ADMINISTRADOR SIMPLE
+      if (email === 'admin@raell.com' && password === 'RAELL-ADMIN-2025') {
+        localStorage.setItem('admin', 'true');
+        mensaje.textContent = '✅ ¡Bienvenido administrador! Redirigiendo...';
+        mensaje.style.color = 'green';
+        setTimeout(() => {
+          window.location.href = 'admin.html';
+        }, 1500);
+        return;
+      }
+
       try {
-        // ✅ Iniciar sesión real con Supabase
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password
@@ -231,38 +240,22 @@
 
         if (error) throw error;
 
-        // ✅ Verificar rol
-        const {   rolData, error: rolError } = await supabase
-          .from('roles')
-          .select('rol')
-          .eq('user_id', data.user.id)
+        // Obtener datos del cliente desde la tabla (insensible a mayúsculas)
+        const {  clienteData } = await supabase
+          .from('clientes')
+          .select('*')
+          .ilike('email', email)
           .single();
 
-        if (rolError || !rolData) {
-          throw new Error('Usuario no encontrado en la base de datos');
-        }
-
-        if (rolData.rol === 'admin') {
-          localStorage.setItem('admin', 'true');
-          mensaje.textContent = '✅ ¡Bienvenido administrador! Redirigiendo...';
-          mensaje.style.color = 'green';
-          setTimeout(() => window.location.href = 'admin.html', 1500);
-        } else {
-          // ✅ Guardar cliente normal
-          const {   clienteData, error: clienteError } = await supabase
-            .from('clientes')
-            .select('*')
-            .eq('email', email)
-            .single();
-
-          if (clienteError || !clienteData) {
-            throw new Error('Usuario no encontrado en la base de datos');
-          }
-
+        if (clienteData) {
           localStorage.setItem('cliente', JSON.stringify(clienteData));
           mensaje.textContent = '✅ ¡Bienvenido! Redirigiendo...';
           mensaje.style.color = 'green';
-          setTimeout(() => window.location.href = 'perfil.html', 1500);
+          setTimeout(() => {
+            window.location.href = 'perfil.html';
+          }, 1500);
+        } else {
+          throw new Error('Usuario no encontrado en la base de datos');
         }
 
       } catch (err) {
