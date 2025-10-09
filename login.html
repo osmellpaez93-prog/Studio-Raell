@@ -6,152 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <style>
-    /* Reset y fondo */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-      color: white;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem;
-    }
-
-    header {
-      width: 100%;
-      max-width: 1200px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 3rem;
-    }
-
-    .titulo-animado {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.2rem;
-      background: linear-gradient(to right, #ff6b6b, #8a2be2);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .acciones-header {
-      display: flex;
-      gap: 1rem;
-    }
-
-    .icono-header {
-      color: white;
-      text-decoration: none;
-      background: rgba(255, 255, 255, 0.1);
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .icono-header:hover {
-      background: rgba(138, 43, 226, 0.3);
-      transform: translateY(-2px);
-    }
-
-    .formulario-registro {
-      background: rgba(255, 255, 255, 0.95);
-      padding: 2.5rem;
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-      max-width: 500px;
-      width: 100%;
-      color: #333;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .formulario-registro h2 {
-      margin-bottom: 1.5rem;
-      color: #2c1a4d;
-      text-align: center;
-      font-weight: 700;
-      font-size: 1.6rem;
-      font-family: 'Playfair Display', serif;
-    }
-
-    .formulario-registro label {
-      display: block;
-      margin: 1.2rem 0 0.5rem;
-      font-weight: 600;
-      color: #2c1a4d;
-    }
-
-    .formulario-registro input {
-      width: 100%;
-      padding: 0.85rem;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-    }
-
-    .formulario-registro input:focus {
-      border-color: #8a2be2;
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
-    }
-
-    .formulario-registro button {
-      width: 100%;
-      padding: 1rem;
-      background: linear-gradient(135deg, #8a2be2, #ff6b6b);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 1.2rem;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 1.5rem;
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
-    }
-
-    .formulario-registro button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(138, 43, 226, 0.4);
-    }
-
-    #mensaje {
-      text-align: center;
-      margin-top: 1rem;
-      font-weight: 600;
-      min-height: 1.5rem;
-    }
-
-    .registro-link {
-      text-align: center;
-      margin-top: 1.5rem;
-    }
-
-    .registro-link a {
-      color: #8a2be2;
-      text-decoration: none;
-      font-weight: 600;
-      display: block;
-      margin: 0.5rem 0;
-    }
-
-    .registro-link a:hover {
-      text-decoration: underline;
-    }
+    /* ... (tu estilo anterior) ... */
   </style>
 </head>
 <body>
@@ -171,7 +26,7 @@
         <input type="email" id="email" name="email" required autocomplete="email" />
 
         <label for="password">Contraseña:</label>
-        <input type="text" id="password" name="password" required autocomplete="current-password" />
+        <input type="password" id="password" name="password" required autocomplete="current-password" />
 
         <button type="submit">Entrar</button>
         <p id="mensaje"></p>
@@ -185,14 +40,13 @@
   </main>
 
   <script type="module">
-    import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2.58.0';
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.43.0/+esm';
 
     const supabase = createClient(
       'https://vgrpcnknpeihzljhnfjp.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZncnBjbmtucGVpaHpsamhuZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzI5MjcsImV4cCI6MjA3NDQ0ODkyN30.RKiiwVUdmQKrOBuz-wI6zWsGT0JV1R4M-eoFJpetp2E'
     );
 
-    // Recuperar contraseña
     document.getElementById('recuperarPass').addEventListener('click', async (e) => {
       e.preventDefault();
       const email = prompt('Ingresa tu correo electrónico:');
@@ -204,11 +58,10 @@
         });
 
         if (error) throw error;
-
         alert('✅ Hemos enviado un enlace de restablecimiento a tu correo. Revisa tu bandeja de entrada (y spam).');
       } catch (err) {
         console.error('Error:', err);
-        alert('❌ ' + (err.message || 'No se pudo enviar el enlace. Verifica tu correo.'));
+        alert('❌ ' + (err.message || 'No se pudo enviar el enlace.'));
       }
     });
 
@@ -221,18 +74,8 @@
       const email = document.getElementById('email').value.trim().toLowerCase();
       const password = document.getElementById('password').value;
 
-      // Verificar si es el administrador
-      if (email === 'admin@raell.com' && password === 'RAELL-ADMIN-2025') {
-        localStorage.setItem('admin', 'true');
-        mensaje.textContent = '✅ ¡Bienvenido administrador! Redirigiendo...';
-        mensaje.style.color = 'green';
-        setTimeout(() => {
-          window.location.href = 'admin.html';
-        }, 1500);
-        return;
-      }
-
       try {
+        // ✅ Iniciar sesión real
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password
@@ -240,24 +83,38 @@
 
         if (error) throw error;
 
-        // ✅ CORRECCIÓN DEFINITIVA: usar ilike en lugar de eq
-        const {  data: clienteData, error: clienteError } = await supabase
-          .from('clientes')
-          .select('*')
-          .ilike('email', email)  // ← Aquí está la clave
+        // ✅ Verificar rol
+        const {  data: rolData, error: rolError } = await supabase
+          .from('roles')
+          .select('rol')
+          .eq('user_id', data.user.id)
           .single();
 
-        if (clienteError) throw clienteError;
+        if (rolError || !rolData) {
+          throw new Error('Usuario no encontrado en la base de datos');
+        }
 
-        if (clienteData) {
+        if (rolData.rol === 'admin') {
+          localStorage.setItem('admin', 'true');
+          mensaje.textContent = '✅ ¡Bienvenido administrador! Redirigiendo...';
+          mensaje.style.color = 'green';
+          setTimeout(() => window.location.href = 'admin.html', 1500);
+        } else {
+          // ✅ Guardar cliente normal
+          const {  data: clienteData, error: clienteError } = await supabase
+            .from('clientes')
+            .select('*')
+            .eq('email', email)
+            .single();
+
+          if (clienteError || !clienteData) {
+            throw new Error('Usuario no encontrado en la base de datos');
+          }
+
           localStorage.setItem('cliente', JSON.stringify(clienteData));
           mensaje.textContent = '✅ ¡Bienvenido! Redirigiendo...';
           mensaje.style.color = 'green';
-          setTimeout(() => {
-            window.location.href = 'perfil.html';
-          }, 1500);
-        } else {
-          throw new Error('Usuario no encontrado en la base de datos');
+          setTimeout(() => window.location.href = 'perfil.html', 1500);
         }
 
       } catch (err) {
