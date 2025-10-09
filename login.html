@@ -75,7 +75,7 @@
       const password = document.getElementById('password').value;
 
       try {
-        // ✅ Iniciar sesión real
+        // ✅ Iniciar sesión real con Supabase
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password
